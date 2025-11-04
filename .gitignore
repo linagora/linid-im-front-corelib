@@ -1,0 +1,43 @@
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+lib/
+esm/
+*.tsbuildinfo
+
+# Vue / Vite / Rollup caches
+.vite/
+.cache/
+.rollup.cache/
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Typescript
+*.tsbuildinfo
+
+# Optional: test coverage
+coverage/
+nyc_output/
+
+# Optional: environment variables
+.env
+.env.local
+.env.*.local

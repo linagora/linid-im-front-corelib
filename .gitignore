@@ -1,8 +1,9 @@
 # Node modules
 node_modules/
+
+# Lock files
 package-lock.json
 yarn.lock
-pnpm-lock.yaml
 
 # Logs
 npm-debug.log*

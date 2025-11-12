@@ -23,7 +23,6 @@ esm/
 
 # IDEs
 .idea/
-.vscode/
 *.sublime-project
 *.sublime-workspace
 

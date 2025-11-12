@@ -1,6 +1,6 @@
-export * from "./types/linidZone";
-export * from "./stores/linidZoneStore";
+export * from './types/linidZone';
+export * from './stores/linidZoneStore';
 
-import LinidZoneRenderer from "./components/LinidZoneRenderer.vue";
+import LinidZoneRenderer from './components/LinidZoneRenderer.vue';
 
-export {LinidZoneRenderer};
+export { LinidZoneRenderer };

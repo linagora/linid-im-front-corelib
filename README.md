@@ -66,6 +66,51 @@ pnpm dev
 npm run dev
 ```
 
+## Code Quality
+
+This project uses ESLint and Prettier to ensure consistent code style.
+
+### Linting
+
+```sh
+# Run ESLint
+pnpm lint
+
+# Auto-fix ESLint issues
+pnpm lint:fix
+```
+
+### Formatting
+
+```sh
+# Format code with Prettier
+pnpm format
+
+# Check formatting without modifying files
+pnpm format:check
+```
+
+### Type Checking
+
+```sh
+# Run TypeScript type check
+pnpm type-check
+```
+
+### Validate Everything
+
+```sh
+# Run all checks (type-check, lint, format, test)
+pnpm validate
+```
+
+### Editor Setup
+
+The project includes `.vscode/settings.json` which enables:
+
+- Auto-format on save
+- ESLint auto-fix on save
+
 ## License
 
 This project is licensed under the GNU Affero General Public License version 3 - see [LICENSE](LICENSE.md) for details.

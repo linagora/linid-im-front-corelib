@@ -8,14 +8,25 @@
 </template>
 
 <script setup lang="ts">
+import { defineAsyncComponent, ref, watchEffect } from 'vue';
 import { useLinidZoneStore } from '../stores/linidZoneStore';
-import { defineAsyncComponent, ref, watchEffect, type Component } from 'vue';
+import type { LinidZoneEntry } from '../types/linidZone';
 
-const props = defineProps<{ zone: string }>();
+const props = defineProps<{
+  /**
+   *  The zone identifier where to render components.
+   */
+  zone: string;
+}>();
 const linidZoneStore = useLinidZoneStore();
 
 const components = ref<
-  { component: Component; plugin: string; props?: Record<string, Component> }[]
+  ({
+    /**
+     * The component to render.
+     */
+    component: unknown;
+  } & LinidZoneEntry)[]
 >([]);
 
 watchEffect(() => {

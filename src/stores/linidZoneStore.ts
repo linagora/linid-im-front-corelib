@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import { LinidZoneEntry } from '../types/linidZone';
+import type { LinidZoneEntry } from '../types/linidZone';
 
 /**
- * State interface for the Linid Zone Store
+ * State interface for the Linid Zone Store.
  */
 interface LinidZoneState {
-  /** Map of zone names to their registered entries */
+  /** Map of zone names to their registered entries. */
   zones: Record<string, LinidZoneEntry[]>;
 }
 
@@ -18,7 +18,7 @@ interface LinidZoneState {
 export const useLinidZoneStore = defineStore('linidZoneStore', {
   /**
    * Reactive state of the Linid Zone Store.
-   * @returns The initial state containing an empty zones object
+   * @returns The initial state containing an empty zones object.
    */
   state: (): LinidZoneState => ({
     zones: {},
@@ -26,9 +26,9 @@ export const useLinidZoneStore = defineStore('linidZoneStore', {
 
   actions: {
     /**
-     * Register a new entry in a specified zone
-     * @param zone - The name of the zone
-     * @param entry - The entry to register
+     * Register a new entry in a specified zone.
+     * @param zone - The name of the zone.
+     * @param entry - The entry to register.
      */
     register(zone: string, entry: LinidZoneEntry): void {
       if (!this.zones[zone]) {

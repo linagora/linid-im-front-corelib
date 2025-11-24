@@ -7,12 +7,16 @@ export { useLinidZoneStore } from './stores/linidZoneStore';
 // Types - Zones
 export type { LinidZoneEntry } from './types/linidZone';
 
+export type {
+  ModuleHostConfig,
+  RemoteComponentModule,
+  RemoteModule,
+} from './types/module';
+
 // Types - Module Lifecycle
 export type {
-  ModuleLifecycleResult,
   ModuleLifecycleHooks,
-  RemoteModule,
-  ModuleHostConfig,
+  ModuleLifecycleResult,
 } from './types/moduleLifecycle';
 
 export { ModuleLifecyclePhase } from './types/moduleLifecycle';

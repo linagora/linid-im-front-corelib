@@ -5,10 +5,14 @@
     :key="entry.plugin + index"
     v-bind="entry.props"
   />
+  <slot v-if="isLoadingComplete && components.length === 0">
+    <div>No components to render in this zone.</div>
+  </slot>
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
+import { loadAsyncComponent } from '../services/federationService';
 import { useLinidZoneStore } from '../stores/linidZoneStore';
 import type { LinidZoneEntry } from '../types/linidZone';
 
@@ -29,12 +33,19 @@ const components = ref<
   } & LinidZoneEntry)[]
 >([]);
 
-watchEffect(() => {
-  const entries = linidZoneStore.zones[props.zone] || [];
-  components.value = entries.map((entry) => {
-    const asyncComp = defineAsyncComponent(() => import(entry.plugin));
+const isLoadingComplete = ref(false);
 
-    return { ...entry, component: asyncComp };
+watchEffect(() => {
+  isLoadingComplete.value = false;
+
+  const entries = linidZoneStore.zones[props.zone] || [];
+  components.value = entries.map((entry) => ({
+    ...entry,
+    component: loadAsyncComponent(entry.plugin),
+  }));
+
+  Promise.resolve().then(() => {
+    isLoadingComplete.value = true;
   });
 });
 </script>

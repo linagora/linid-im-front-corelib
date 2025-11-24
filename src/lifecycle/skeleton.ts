@@ -1,9 +1,6 @@
-import type {
-  RemoteModule,
-  ModuleLifecycleResult,
-  ModuleHostConfig,
-} from '../types/moduleLifecycle';
 import type { App } from 'vue';
+import type { ModuleHostConfig, RemoteModule } from '../types/module';
+import type { ModuleLifecycleResult } from '../types/moduleLifecycle';
 
 /**
  * Basic implementation of a remote module lifecycle.

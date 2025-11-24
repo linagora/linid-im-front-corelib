@@ -16,10 +16,6 @@ interface LinidZoneState {
  * and this store provides utilities to register them dynamically.
  */
 export const useLinidZoneStore = defineStore('linidZoneStore', {
-  /**
-   * Reactive state of the Linid Zone Store.
-   * @returns The initial state containing an empty zones object.
-   */
   state: (): LinidZoneState => ({
     zones: {},
   }),

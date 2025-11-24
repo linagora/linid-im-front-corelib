@@ -55,7 +55,7 @@ export default defineConfigWithVueTs(
         'error',
         {
           require: {
-            ArrowFunctionExpression: true,
+            ArrowFunctionExpression: false,
             ClassDeclaration: true,
             ClassExpression: true,
             FunctionExpression: true,
@@ -67,6 +67,7 @@ export default defineConfigWithVueTs(
             'TSEnumDeclaration',
             'TSPropertySignature',
             'TSModuleDeclaration VariableDeclaration',
+            'VariableDeclaration > VariableDeclarator > ArrowFunctionExpression',
           ],
         },
       ],

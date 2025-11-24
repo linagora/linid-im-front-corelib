@@ -39,12 +39,51 @@ interface LinidZoneState {
 
 ---
 
+## 📦 RemoteComponentModule
+
+Defines the structure of a Vue component module loaded via Module Federation.
+
+```ts
+export interface RemoteComponentModule {
+  /** The default exported Vue component */
+  default: Component;
+}
+```
+
+**Usage:**
+
+Used internally by [`loadAsyncComponent`](./helpers.md#loadasynccomponent) to ensure type safety when loading federated components.
+
+**Remote modules must export a default component:**
+
+```vue
+<!-- ✅ Correct - .vue file -->
+<template>
+  <div>My Component</div>
+</template>
+
+<script setup lang="ts">
+// Default export is automatic
+</script>
+```
+
+```typescript
+// ❌ Wrong - named export only
+export const MyComponent = defineComponent({ /* ... */ });
+
+// ✅ Correct - default export
+export default defineComponent({ /* ... */ });
+```
+
+---
+
 ## 🧰 Summary
 
-| Type / Interface    | Purpose                                       |
-| ------------------- | --------------------------------------------- |
-| `LinidZoneEntry`    | Defines the contract for a plugin component   |
-| `LinidZoneState`    | Defines the structure of the zone store       |
+| Type / Interface        | Purpose                                               |
+| ----------------------- | ----------------------------------------------------- |
+| `LinidZoneEntry`        | Defines the contract for a plugin component           |
+| `LinidZoneState`        | Defines the structure of the zone store               |
+| `RemoteComponentModule` | Defines the structure of a federated component module |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

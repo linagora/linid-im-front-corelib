@@ -5,9 +5,12 @@
   "main": "dist/core-lib.umd.js",
   "module": "dist/core-lib.es.js",
   "types": "dist/types/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
   "scripts": {
     "build": "vite build && vue-tsc --declaration --emitDeclarationOnly",
     "test": "vitest",

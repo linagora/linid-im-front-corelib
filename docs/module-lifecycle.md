@@ -727,10 +727,9 @@ Support for lazy-loaded module features that load on demand.
 
 1. Check module is listed in host's `/config/modules.json`
 2. Verify config file exists: `/config/module-<name>.json`
-3. Ensure `"enabled": true` in config file
-4. Check Module Federation remote is registered in `/public/remotes.json`
-5. Verify module exposes `./lifecycle` in its Module Federation config
-6. Check browser console for loading errors
+3. Check Module Federation remote is registered in `/public/remotes.json`
+4. Verify module exposes `./lifecycle` in its Module Federation config
+5. Check browser console for loading errors
 
 ---
 

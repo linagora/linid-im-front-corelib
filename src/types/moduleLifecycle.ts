@@ -189,11 +189,4 @@ export interface ModuleHostConfig {
    * This is the name used to load the remote module via Module Federation.
    */
   remoteName: string;
-
-  /**
-   * Enable or disable the module.
-   *
-   * When false, the module will not be loaded or initialized.
-   */
-  enabled: boolean;
 }

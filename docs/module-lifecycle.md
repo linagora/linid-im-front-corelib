@@ -657,8 +657,8 @@ Host Application
 
 The host application is responsible for:
 
-1. ✅ Loading module configurations from `/config/modules.json`
-2. ✅ Loading each module's configuration file (`/config/module-<name>.json`)
+1. ✅ Loading module configurations from `modules.json`
+2. ✅ Loading each module's configuration file (`module-<name>.json`)
 3. ✅ Loading modules via Module Federation
 4. ✅ Executing each lifecycle phase in sequence for all modules
 5. ✅ Handling errors and logging
@@ -725,9 +725,9 @@ Support for lazy-loaded module features that load on demand.
 
 **Solutions:**
 
-1. Check module is listed in host's `/config/modules.json`
-2. Verify config file exists: `/config/module-<name>.json`
-3. Check Module Federation remote is registered in `/public/remotes.json`
+1. Check module is listed in host's `modules.json`
+2. Verify config file exists: `module-<name>.json`
+3. Check Module Federation remote is registered in `remotes.json`
 4. Verify module exposes `./lifecycle` in its Module Federation config
 5. Check browser console for loading errors
 
@@ -753,7 +753,7 @@ Support for lazy-loaded module features that load on demand.
 **Solutions:**
 
 1. Verify module's `id` matches the `id` in host config
-2. Check the config file path: `/config/module-<module-name>.json`
+2. Check the config file path: `module-<module-name>.json`
 3. Validate JSON syntax in config file
 4. Check browser network tab for config file fetch (404?)
 

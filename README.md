@@ -26,13 +26,13 @@ This library ensures consistency across all front-end modules by centralizing co
 
 ## **Tech Stack 🛠️**
 
-| Area            | Technology                |
-| --------------- | ------------------------- |
-| Language        | TypeScript                |
-| Framework       | Vue.js (Composition API)  |
-| UI Toolkit      | Quasar Framework          |
-| Module System   | Webpack Module Federation |
-| Package Manager | npm / pnpm                |
+| Area            | Technology               |
+| --------------- | ------------------------ |
+| Language        | TypeScript               |
+| Framework       | Vue.js (Composition API) |
+| UI Toolkit      | Quasar Framework         |
+| Module System   | Module Federation        |
+| Package Manager | npm / pnpm               |
 
 ---
 
@@ -83,6 +83,10 @@ A full technical documentation is available in the `docs/` directory:
 - 🔌 **Plugin Zone Component**  
   Learn how to use the component that dynamically renders remote Vue plugins.  
   → [`docs/components-plugin-zones.md`](docs/components-plugin-zones.md)
+
+- 🧰 **Helper Functions**  
+  Detailed description of all functions used in the plugin system.  
+  → [`docs/helpers.md`](docs/helpers.md)
 
 - 🧩 **TypeScript Types & Interfaces**  
   Detailed description of all types and interfaces used in the plugin system.  

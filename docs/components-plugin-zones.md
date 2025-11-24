@@ -37,6 +37,62 @@ LinidZoneRenderer provides:
 | ---------- | ------------- | -------------------------------------------------- |
 | `zone`     | string        | The name of the zone to render                     |
 
+### Default Slot - Fallback Component
+
+The `LinidZoneRenderer` component provides a **default slot** that is displayed when no components are registered in the specified zone **after loading is complete**.
+
+#### Purpose
+
+The default slot allows you to:
+- Display a custom message when a zone is empty
+- Render a placeholder component
+- Show alternative content for zones without plugins
+
+#### Behavior
+
+The slot is rendered **only when**:
+1. ✅ The loading process is complete
+2. ✅ No components are registered in the zone
+
+**Important:** The slot will **not** be displayed during the initial loading phase to avoid flickering.
+
+---
+
+#### Usage
+
+##### Default Fallback (No Custom Slot)
+
+If you don't provide a custom slot, the component displays a default message:
+
+```vue
+<template>
+  <LinidZoneRenderer zone="sidebar" />
+</template>
+```
+
+**Rendered when zone is empty:**
+```html
+<div>No components to render in this zone.</div>
+```
+
+---
+
+##### Custom Fallback Component
+
+You can provide your own fallback content using the default slot:
+
+```vue
+<template>
+  <LinidZoneRenderer zone="user-actions">
+    <template #default>
+      <div>
+        <p>No actions available for this user.</p>
+      </div>
+    </template>
+  </LinidZoneRenderer>
+</template>
+```
+
 ---
 
 ## ⚡ Adding a Plugin with the Store
@@ -64,7 +120,7 @@ linidZoneStore.register("user-details", {
 ## 🧩 How It Works
 
 1. The component retrieves all entries for the given `zone` from the **Linid Zone Store**.
-2. Each entry is wrapped as an **async component** using `defineAsyncComponent(() => import(entry.plugin))`.
+2. Each entry is wrapped as an **async component** retrieved from its remote module using the `loadAsyncComponent(entry.plugin)` method.
 3. All plugins in the zone are rendered sequentially with:
 
 ```vue
@@ -91,7 +147,7 @@ export interface LinidZoneEntry {
 ```
 
 * Props are automatically forwarded to the dynamically loaded component.
-* Components are wrapped in `defineAsyncComponent` for asynchronous loading.
+* Components are wrapped in `loadAsyncComponent` for asynchronous loading.
 
 ---
 

@@ -24,7 +24,6 @@
  * LinID Identity Manager software.
  */
 
-import type { App } from 'vue';
 import type { ModuleHostConfig, RemoteModule } from '../types/module';
 import type { ModuleLifecycleResult } from '../types/moduleLifecycle';
 
@@ -81,10 +80,9 @@ export class BasicRemoteModule implements RemoteModule {
    *
    * Default implementation returns success.
    * Override this method to add custom setup logic.
-   * @param _app - The Vue application instance.
    * @returns Promise resolving to the lifecycle result.
    */
-  async onSetup(_app: App): Promise<ModuleLifecycleResult> {
+  async setup(): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 
@@ -96,13 +94,11 @@ export class BasicRemoteModule implements RemoteModule {
    *
    * Default implementation returns success.
    * Override this method to add custom configuration logic.
-   * @param _app - The Vue application instance.
-   * @param _config - Module-specific configuration from host.
+   * @param config - Module-specific configuration from host.
    * @returns Promise resolving to the lifecycle result.
    */
-  async onConfigure(
-    _app: App,
-    _config: ModuleHostConfig
+  async configure(
+    config: ModuleHostConfig /* eslint-disable-line @typescript-eslint/no-unused-vars */
   ): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
@@ -115,10 +111,9 @@ export class BasicRemoteModule implements RemoteModule {
    *
    * Default implementation returns success.
    * Override this method to add custom initialization logic.
-   * @param _app - The Vue application instance.
    * @returns Promise resolving to the lifecycle result.
    */
-  async onInitialize(_app: App): Promise<ModuleLifecycleResult> {
+  async initialize(): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 
@@ -130,10 +125,9 @@ export class BasicRemoteModule implements RemoteModule {
    *
    * Default implementation returns success.
    * Override this method to add custom ready logic.
-   * @param _app - The Vue application instance.
    * @returns Promise resolving to the lifecycle result.
    */
-  async onReady(_app: App): Promise<ModuleLifecycleResult> {
+  async ready(): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 
@@ -145,10 +139,9 @@ export class BasicRemoteModule implements RemoteModule {
    *
    * Default implementation returns success.
    * Override this method to add custom post-init logic.
-   * @param _app - The Vue application instance.
    * @returns Promise resolving to the lifecycle result.
    */
-  async onPostInit(_app: App): Promise<ModuleLifecycleResult> {
+  async postInit(): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 }

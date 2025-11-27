@@ -40,13 +40,13 @@ Each phase has a specific purpose and is executed for **all modules** before mov
 **Hook signature:**
 
 ```typescript
-async onSetup(app: App): Promise<ModuleLifecycleResult>
+async setup(): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async onSetup(app: App): Promise<ModuleLifecycleResult> {
+async setup(): Promise<ModuleLifecycleResult> {
   if (!app) {
     return {
       success: false,
@@ -75,14 +75,13 @@ async onSetup(app: App): Promise<ModuleLifecycleResult> {
 **Hook signature:**
 
 ```typescript
-async onConfigure(app: App, config: ModuleHostConfig): Promise<ModuleLifecycleResult>
+async configure(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async onConfigure(
-  app: App,
+async configure(
   config: ModuleHostConfig
 ): Promise<ModuleLifecycleResult> {
   if (!config.id) {
@@ -91,9 +90,6 @@ async onConfigure(
       error: 'Missing module ID in configuration'
     };
   }
-
-  // Store configuration for later use
-  this.config = config;
 
   return { success: true };
 }
@@ -117,13 +113,13 @@ async onConfigure(
 **Hook signature:**
 
 ```typescript
-async onInitialize(app: App): Promise<ModuleLifecycleResult>
+async initialize(): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async onInitialize(app: App): Promise<ModuleLifecycleResult> {
+async initialize(): Promise<ModuleLifecycleResult> {
   // Register Pinia store
   const pinia = app.config.globalProperties.$pinia;
   pinia.use(myStorePlugin);
@@ -155,13 +151,13 @@ async onInitialize(app: App): Promise<ModuleLifecycleResult> {
 **Hook signature:**
 
 ```typescript
-async onReady(app: App): Promise<ModuleLifecycleResult>
+async ready(): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async onReady(app: App): Promise<ModuleLifecycleResult> {
+async ready(): Promise<ModuleLifecycleResult> {
   console.log(`Module ${this.name} v${this.version} is ready!`);
 
   return {
@@ -188,39 +184,16 @@ async onReady(app: App): Promise<ModuleLifecycleResult> {
 **Hook signature:**
 
 ```typescript
-async onPostInit(app: App): Promise<ModuleLifecycleResult>
+async postInit(): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async onPostInit(app: App): Promise<ModuleLifecycleResult> {
+async postInit(): Promise<ModuleLifecycleResult> {
   // Access other modules from host's module registry
   // Set up cross-module event listeners
   // Perform integrations
-
-  return { success: true };
-}
-```
-
----
-
-## Vue App Instance
-
-All lifecycle hooks receive the Vue `app` instance as their first parameter:
-
-```typescript
-import type { App } from 'vue';
-
-async onInitialize(app: App): Promise<ModuleLifecycleResult> {
-  // Access Pinia
-  const pinia = app.config.globalProperties.$pinia;
-
-  // Access router (when available)
-  const router = app.config.globalProperties.$router;
-
-  // Access other global properties
-  const i18n = app.config.globalProperties.$i18n;
 
   return { success: true };
 }
@@ -298,9 +271,9 @@ class MyModule extends BasicRemoteModule {
   }
 
   // Override only the hooks you need
-  async onInitialize(app: App): Promise<ModuleLifecycleResult> {
-    const pinia = app.config.globalProperties.$pinia;
-    pinia.use(myStore);
+  async initialize(): Promise<ModuleLifecycleResult> {
+    // do something
+    
     return { success: true };
   }
 }
@@ -336,13 +309,12 @@ class MyModule implements RemoteModule {
   version = '1.0.0';
   description = 'Description of what the module does';
 
-  async onSetup(app: App): Promise<ModuleLifecycleResult> {
+  async setup(): Promise<ModuleLifecycleResult> {
     // Validate dependencies
     return { success: true };
   }
 
-  async onConfigure(
-    app: App,
+  async configure(
     config: ModuleHostConfig
   ): Promise<ModuleLifecycleResult> {
     // Apply configuration
@@ -352,19 +324,17 @@ class MyModule implements RemoteModule {
     return { success: true };
   }
 
-  async onInitialize(app: App): Promise<ModuleLifecycleResult> {
-    // Register stores
-    const pinia = app.config.globalProperties.$pinia;
-    pinia.use(myStore);
+  async initialize(): Promise<ModuleLifecycleResult> {
+    // do something
     return { success: true };
   }
 
-  async onReady(app: App): Promise<ModuleLifecycleResult> {
-    console.log('Module is ready!');
+  async ready(): Promise<ModuleLifecycleResult> {
+    // do something
     return { success: true };
   }
 
-  async onPostInit(app: App): Promise<ModuleLifecycleResult> {
+  async postInit(): Promise<ModuleLifecycleResult> {
     // Cross-module integrations
     return { success: true };
   }
@@ -415,9 +385,7 @@ Each phase should have a single, clear responsibility.
 ✅ **Good:**
 
 ```typescript
-async onInitialize(app: App): Promise<ModuleLifecycleResult> {
-  const pinia = app.config.globalProperties.$pinia;
-  pinia.use(myStore);
+async initialize(): Promise<ModuleLifecycleResult> {
   return { success: true };
 }
 ```
@@ -425,11 +393,9 @@ async onInitialize(app: App): Promise<ModuleLifecycleResult> {
 ❌ **Bad:**
 
 ```typescript
-async onInitialize(app: App): Promise<ModuleLifecycleResult> {
-  const pinia = app.config.globalProperties.$pinia;
-  pinia.use(myStore);
-  await fetchUserData(); // Should be in onReady or onPostInit
-  integrateWithOtherModule(); // Should be in onPostInit
+async initialize(): Promise<ModuleLifecycleResult> {
+  await fetchUserData(); // Should be in ready or postInit
+  integrateWithOtherModule(); // Should be in postInit
   return { success: true };
 }
 ```
@@ -485,7 +451,7 @@ return {
 Validate prerequisites early in the Setup phase.
 
 ```typescript
-async onSetup(app: App): Promise<ModuleLifecycleResult> {
+async setup(): Promise<ModuleLifecycleResult> {
   if (!window.someRequiredAPI) {
     return {
       success: false,
@@ -540,13 +506,11 @@ class SimpleModule extends BasicRemoteModule {
     super('simple-module', 'Simple Module', '1.0.0');
   }
 
-  async onInitialize(app: App): Promise<ModuleLifecycleResult> {
-    const pinia = app.config.globalProperties.$pinia;
-    pinia.use(myStore);
+  async initialize(): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 
-  // No need for onSetup, onConfigure, onReady, or onPostInit
+  // No need for setup, configure, ready, or postInit
 }
 
 export default new SimpleModule();
@@ -618,29 +582,29 @@ Host Application
     │   └─ Load module via Module Federation (remoteName/lifecycle)
     │
     ├─ 3. Phase 1: Setup (all modules in parallel)
-    │   ├─ module-A.onSetup(app)
-    │   ├─ module-B.onSetup(app)
-    │   └─ module-C.onSetup(app)
+    │   ├─ module-A.setup(app)
+    │   ├─ module-B.setup(app)
+    │   └─ module-C.setup(app)
     │
     ├─ 4. Phase 2: Configure (all modules in parallel)
-    │   ├─ module-A.onConfigure(app, configA)
-    │   ├─ module-B.onConfigure(app, configB)
-    │   └─ module-C.onConfigure(app, configC)
+    │   ├─ module-A.configure(app, configA)
+    │   ├─ module-B.configure(app, configB)
+    │   └─ module-C.configure(app, configC)
     │
     ├─ 5. Phase 3: Initialize (all modules in parallel)
-    │   ├─ module-A.onInitialize(app)
-    │   ├─ module-B.onInitialize(app)
-    │   └─ module-C.onInitialize(app)
+    │   ├─ module-A.initialize(app)
+    │   ├─ module-B.initialize(app)
+    │   └─ module-C.initialize(app)
     │
     ├─ 6. Phase 4: Ready (all modules in parallel)
-    │   ├─ module-A.onReady(app)
-    │   ├─ module-B.onReady(app)
-    │   └─ module-C.onReady(app)
+    │   ├─ module-A.ready(app)
+    │   ├─ module-B.ready(app)
+    │   └─ module-C.ready(app)
     │
     └─ 7. Phase 5: Post-Init (all modules in parallel)
-        ├─ module-A.onPostInit(app)
-        ├─ module-B.onPostInit(app)
-        └─ module-C.onPostInit(app)
+        ├─ module-A.postInit(app)
+        ├─ module-B.postInit(app)
+        └─ module-C.postInit(app)
 ```
 
 **Key points:**
@@ -685,12 +649,7 @@ The following features are planned for future versions:
 Add direct router access for route registration:
 
 ```typescript
-async onInitialize(app: App): Promise<ModuleLifecycleResult> {
-  const router = app.config.globalProperties.$router;
-  router.addRoute({
-    path: '/my-module',
-    component: MyComponent
-  });
+async initialize(): Promise<ModuleLifecycleResult> {
   return { success: true };
 }
 ```
@@ -748,7 +707,7 @@ Support for lazy-loaded module features that load on demand.
 
 ### Configuration Not Received
 
-**Problem:** Module's `onConfigure` receives unexpected configuration
+**Problem:** Module's `configure` receives unexpected configuration
 
 **Solutions:**
 
@@ -756,119 +715,3 @@ Support for lazy-loaded module features that load on demand.
 2. Check the config file path: `module-<module-name>.json`
 3. Validate JSON syntax in config file
 4. Check browser network tab for config file fetch (404?)
-
----
-
-## Examples
-
-### Minimal Module
-
-A module that only registers a store:
-
-```typescript
-import { BasicRemoteModule } from '@linagora/linid-im-front-corelib';
-import type { ModuleLifecycleResult } from '@linagora/linid-im-front-corelib';
-import type { App } from 'vue';
-
-class MinimalModule extends BasicRemoteModule {
-  constructor() {
-    super('minimal-module', 'Minimal Module', '1.0.0');
-  }
-
-  async onInitialize(app: App): Promise<ModuleLifecycleResult> {
-    const pinia = app.config.globalProperties.$pinia;
-    pinia.use(myStore);
-    return { success: true };
-  }
-}
-
-export default new MinimalModule();
-```
-
----
-
-### Full Module with All Hooks
-
-A complete module implementation:
-
-```typescript
-import { BasicRemoteModule } from '@linagora/linid-im-front-corelib';
-import type {
-  ModuleLifecycleResult,
-  ModuleHostConfig,
-} from '@linagora/linid-im-front-corelib';
-import type { App } from 'vue';
-
-class FullModule extends BasicRemoteModule {
-  private config: ModuleHostConfig | null = null;
-
-  constructor() {
-    super(
-      'full-module',
-      'Full Module',
-      '1.0.0',
-      'A complete module with all lifecycle hooks'
-    );
-  }
-
-  async onSetup(app: App): Promise<ModuleLifecycleResult> {
-    // Validate environment
-    if (!app) {
-      return {
-        success: false,
-        error: 'Vue app instance not available',
-      };
-    }
-
-    console.log('[Full Module] Setup phase');
-    return { success: true };
-  }
-
-  async onConfigure(
-    app: App,
-    config: ModuleHostConfig
-  ): Promise<ModuleLifecycleResult> {
-    // Validate config
-    if (!config.id || config.id !== this.id) {
-      return {
-        success: false,
-        error: 'Invalid or missing module ID in configuration',
-      };
-    }
-
-    // Store config
-    this.config = config;
-
-    console.log('[Full Module] Configure phase', config);
-    return { success: true };
-  }
-
-  async onInitialize(app: App): Promise<ModuleLifecycleResult> {
-    // Register store
-    const pinia = app.config.globalProperties.$pinia;
-    pinia.use(myStore);
-
-    console.log('[Full Module] Initialize phase');
-    return {
-      success: true,
-      metadata: { storesRegistered: 1 },
-    };
-  }
-
-  async onReady(app: App): Promise<ModuleLifecycleResult> {
-    console.log('[Full Module] Ready phase - Module is now ready!');
-    return { success: true };
-  }
-
-  async onPostInit(app: App): Promise<ModuleLifecycleResult> {
-    console.log('[Full Module] Post-init phase - Setting up integrations');
-    return { success: true };
-  }
-}
-
-export default new FullModule();
-```
-
-Each phase has a specific purpose and is executed for **all modules** before moving to the next phase.
-
----

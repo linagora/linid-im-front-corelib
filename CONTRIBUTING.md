@@ -198,6 +198,42 @@ pnpm type-check
 pnpm validate
 ```
 
+## Copyright Headers
+
+All source files located in the `src` folder must contain a copyright header at the beginning of the file. This header is based on the content of the `COPYRIGHT` file at the project root.
+
+### Affected Files
+
+Copyright headers are mandatory for the following files:
+
+- TypeScript files (`.ts`)
+- JavaScript files (`.js`)
+- Vue files (`.vue`)
+
+### Automatic Verification
+
+An ESLint rule is configured via the `eslint-plugin-headers` plugin to check for the presence of these headers.
+
+### Automatic Header Addition
+
+If a file does not contain the required copyright header, you can add it automatically by running:
+
+```bash
+pnpm lint:fix
+```
+
+This command will analyze all files in the `src` folder and add missing headers according to the `COPYRIGHT` file.
+
+### Manual Verification
+
+To check compliance without modifying files, use:
+
+```bash
+pnpm lint
+```
+
+Any file without the appropriate header will be reported as a lint error.
+
 ---
 
 # **🧪 E2E & Integration Testing**

@@ -66,7 +66,7 @@ export enum ModuleLifecyclePhase {
    *
    * Use this phase for cross-module integrations and final setup.
    */
-  POST_INIT = 'post-init',
+  POST_INIT = 'postInit',
 }
 
 /**

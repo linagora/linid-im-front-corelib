@@ -24,7 +24,6 @@
  * LinID Identity Manager software.
  */
 
-import type { App } from 'vue';
 import type { ModuleHostConfig } from './module';
 
 /**
@@ -112,52 +111,44 @@ export interface ModuleLifecycleHooks {
    *
    * Use this to prepare the module for initialization and validate
    * that all required dependencies are available.
-   * @param app - The Vue application instance.
    * @returns Promise resolving to the lifecycle result.
    */
-  onSetup?(app: App): Promise<ModuleLifecycleResult>;
+  setup(): Promise<ModuleLifecycleResult>;
 
   /**
    * Called to configure the module with application-specific settings.
    *
    * Use this to receive and validate the host configuration for your module.
    * This is where you should check that all required configuration is present.
-   * @param app - The Vue application instance.
    * @param config - Module-specific configuration from host (from module-<name>.json).
    * @returns Promise resolving to the lifecycle result.
    */
-  onConfigure?(
-    app: App,
-    config: ModuleHostConfig
-  ): Promise<ModuleLifecycleResult>;
+  configure(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
 
   /**
    * Called to initialize the module's core functionality.
    *
    * Use this to register Pinia stores and initialize any resources
    * your module needs to function.
-   * @param app - The Vue application instance.
    * @returns Promise resolving to the lifecycle result.
    */
-  onInitialize?(app: App): Promise<ModuleLifecycleResult>;
+  initialize(): Promise<ModuleLifecycleResult>;
 
   /**
    * Called when the module is ready to be used.
    *
    * Use this to perform final checks and emit ready state.
    * At this point, all other modules have completed initialization.
-   * @param app - The Vue application instance.
    * @returns Promise resolving to the lifecycle result.
    */
-  onReady?(app: App): Promise<ModuleLifecycleResult>;
+  ready(): Promise<ModuleLifecycleResult>;
 
   /**
    * Called after all modules have been initialized.
    *
    * Use this for cross-module integrations and final setup that requires
    * all modules to be ready.
-   * @param app - The Vue application instance.
    * @returns Promise resolving to the lifecycle result.
    */
-  onPostInit?(app: App): Promise<ModuleLifecycleResult>;
+  postInit(): Promise<ModuleLifecycleResult>;
 }

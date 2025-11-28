@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.2...v0.0.3) (2025-11-28)
+
+
+### Bug Fixes
+
+* retrieve valid tag for npm release ([f295e3c](https://github.com/linagora/linid-im-front-corelib/commit/f295e3c54d27b6f42970b50ccb6fd856966aa776))
+
 ### [0.0.2](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.1...v0.0.2) (2025-11-28)
 
 

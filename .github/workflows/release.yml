@@ -67,8 +67,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fetch tags
-        run: git fetch --tags
+      - name: Fetch all tags
+        run: git fetch --tags --force
+
+      - name: Checkout latest tag
+        run: |
+          LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+          git checkout $LATEST_TAG
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm

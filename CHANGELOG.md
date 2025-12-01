@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.3...v0.0.4) (2025-12-01)
+
+
+### Features
+
+* add lifecycle in RemoteModule and remove app usage ([04d0163](https://github.com/linagora/linid-im-front-corelib/commit/04d01635a3711168daa50c58e7a0c6dba7abdeaa))
+
 ### [0.0.3](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.2...v0.0.3) (2025-11-28)
 
 

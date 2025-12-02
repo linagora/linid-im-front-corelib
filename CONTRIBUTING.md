@@ -161,9 +161,14 @@ npm run dev
 ## **🧪 Run Tests**
 
 ```sh
-pnpm test
+pnpm test          # Runs the full test suite once
+pnpm test:watch    # Runs tests in watch mode
+pnpm test:coverage # Generates a coverage report
+
 # or (not recommended by the dev team)
-npm run test
+npm run test          # Runs the full test suite once
+npm run test:watch    # Runs tests in watch mode
+npm run test:coverage # Generates a coverage report
 ```
 
 ---

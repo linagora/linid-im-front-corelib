@@ -123,8 +123,9 @@ export default defineConfigWithVueTs(
     files: [
       '**/*.test.ts',
       '**/*.spec.ts',
+      '**/*.test.js',
+      '**/*.spec.js',
       '**/__tests__/**',
-      '**/*.config.*',
       '**/*.config.*',
     ],
     rules: {

@@ -120,3 +120,28 @@ jobs:
       - uses: gensecaihq/Shai-Hulud-2.0-Detector@v1
         with:
           fail-on-critical: true
+
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Run unit tests
+        run: |
+          echo '```bash' > coverage.txt
+          pnpm test:ci | sed 's/\x1b\[[0-9;]*m//g' >> coverage.txt
+          echo '```' >> coverage.txt
+
+      - name: Comment PR
+        uses: JoseThen/comment-pr@v1.2.0
+        with:
+          file_path: ./coverage.txt
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

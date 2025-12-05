@@ -24,39 +24,38 @@
  * LinID Identity Manager software.
  */
 
-export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
+import type { AxiosInstance } from 'axios';
 
-// Stores
-export { useLinidZoneStore } from './stores/linidZoneStore';
-export { useLinIdConfigurationStore } from './stores/linIdConfigurationStore';
+/**
+ * Singleton HTTP client instance shared across all modules.
+ */
+let httpClient: AxiosInstance | null = null;
 
-// Services
-export { getHttpClient, setHttpClient } from './services/httpClientService';
-export { LinIdConfigurationService as LinIdConfigurationManager } from './services/linIdConfigurationService';
+/**
+ * Initializes the shared HTTP client instance.
+ * Should be called once by the host application during boot.
+ * @param client - The Axios instance to use as the shared HTTP client.
+ */
+export function setHttpClient(client: AxiosInstance): void {
+  if (httpClient !== null) {
+    console.warn(
+      '[LinID CoreLib] HTTP client has already been initialized. Re-initialization is ignored.'
+    );
+    return;
+  }
+  httpClient = client;
+}
 
-// Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
-
-// Types - Configuration
-export type {
-  LinIdAttributeConfiguration,
-  LinIdEntityConfiguration,
-  LinIdRouteConfiguration,
-} from './types/linidConfiguration';
-
-export type {
-  ModuleHostConfig,
-  RemoteComponentModule,
-  RemoteModule,
-} from './types/module';
-
-// Types - Module Lifecycle
-export type {
-  ModuleLifecycleHooks,
-  ModuleLifecycleResult,
-} from './types/moduleLifecycle';
-
-export { ModuleLifecyclePhase } from './types/moduleLifecycle';
-
-// Lifecycle Base Class
-export { BasicRemoteModule } from './lifecycle/skeleton';
+/**
+ * Returns the shared HTTP client instance.
+ * Must be called after initialization via `setHttpClient()`.
+ * @returns The shared Axios instance.
+ */
+export function getHttpClient(): AxiosInstance {
+  if (httpClient === null) {
+    throw new Error(
+      '[LinID CoreLib] HTTP client is not initialized. Call setHttpClient() first.'
+    );
+  }
+  return httpClient;
+}

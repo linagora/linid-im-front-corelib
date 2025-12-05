@@ -24,39 +24,50 @@
  * LinID Identity Manager software.
  */
 
-export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
-
-// Stores
-export { useLinidZoneStore } from './stores/linidZoneStore';
-export { useLinIdConfigurationStore } from './stores/linIdConfigurationStore';
-
-// Services
-export { getHttpClient, setHttpClient } from './services/httpClientService';
-export { LinIdConfigurationService as LinIdConfigurationManager } from './services/linIdConfigurationService';
-
-// Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
-
-// Types - Configuration
-export type {
-  LinIdAttributeConfiguration,
+import type {
   LinIdEntityConfiguration,
   LinIdRouteConfiguration,
-} from './types/linidConfiguration';
+} from '../types/linidConfiguration';
+import { getHttpClient } from './httpClientService';
 
-export type {
-  ModuleHostConfig,
-  RemoteComponentModule,
-  RemoteModule,
-} from './types/module';
+/**
+ * Service for managing and exposing LinID entity and route configurations.
+ * Fetches metadata from the backend API.
+ */
+export const LinIdConfigurationService = {
+  /**
+   * Fetches all entity configurations from the backend.
+   * @returns A promise resolving to an array of entity configurations.
+   */
+  async getEntitiesConfiguration(): Promise<LinIdEntityConfiguration[]> {
+    const response =
+      await getHttpClient().get<LinIdEntityConfiguration[]>(
+        '/metadata/entities'
+      );
+    return response.data;
+  },
 
-// Types - Module Lifecycle
-export type {
-  ModuleLifecycleHooks,
-  ModuleLifecycleResult,
-} from './types/moduleLifecycle';
+  /**
+   * Fetches a specific entity configuration by name.
+   * @param entityId - The name/identifier of the entity.
+   * @returns A promise resolving to the entity configuration.
+   */
+  async getEntityConfiguration(
+    entityId: string
+  ): Promise<LinIdEntityConfiguration> {
+    const response = await getHttpClient().get<LinIdEntityConfiguration>(
+      `/metadata/entities/${entityId}`
+    );
+    return response.data;
+  },
 
-export { ModuleLifecyclePhase } from './types/moduleLifecycle';
-
-// Lifecycle Base Class
-export { BasicRemoteModule } from './lifecycle/skeleton';
+  /**
+   * Fetches all route configurations from the backend.
+   * @returns A promise resolving to an array of route configurations.
+   */
+  async getRoutesConfiguration(): Promise<LinIdRouteConfiguration[]> {
+    const response =
+      await getHttpClient().get<LinIdRouteConfiguration[]>('/metadata/routes');
+    return response.data;
+  },
+};

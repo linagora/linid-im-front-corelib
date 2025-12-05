@@ -24,39 +24,47 @@
  * LinID Identity Manager software.
  */
 
-export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
+/**
+ * Describes a single attribute of an entity.
+ * Corresponds to `AttributeDescription` from the backend API.
+ */
+export interface LinIdAttributeConfiguration {
+  /** The name of the attribute (e.g., "email"). */
+  name: string;
+  /** The backend type of the attribute (e.g., "string", "integer"). */
+  type: string;
+  /** Whether the attribute is required. */
+  required: boolean;
+  /** Whether the attribute has validation rules. */
+  hasValidations: boolean;
+  /** The UI input type to be used on the front-end (e.g., "text", "select"). */
+  input: string;
+  /** Settings for the input (e.g., options, placeholder). */
+  inputSettings: Record<string, unknown>;
+}
 
-// Stores
-export { useLinidZoneStore } from './stores/linidZoneStore';
-export { useLinIdConfigurationStore } from './stores/linIdConfigurationStore';
+/**
+ * Represents the configuration of an entity declared in the application.
+ * Returned by the `/metadata/entities` endpoint.
+ */
+export interface LinIdEntityConfiguration {
+  /** The name of the entity (e.g., "user", "group"). */
+  name: string;
+  /** The list of attributes defined for this entity. */
+  attributes: LinIdAttributeConfiguration[];
+}
 
-// Services
-export { getHttpClient, setHttpClient } from './services/httpClientService';
-export { LinIdConfigurationService as LinIdConfigurationManager } from './services/linIdConfigurationService';
-
-// Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
-
-// Types - Configuration
-export type {
-  LinIdAttributeConfiguration,
-  LinIdEntityConfiguration,
-  LinIdRouteConfiguration,
-} from './types/linidConfiguration';
-
-export type {
-  ModuleHostConfig,
-  RemoteComponentModule,
-  RemoteModule,
-} from './types/module';
-
-// Types - Module Lifecycle
-export type {
-  ModuleLifecycleHooks,
-  ModuleLifecycleResult,
-} from './types/moduleLifecycle';
-
-export { ModuleLifecyclePhase } from './types/moduleLifecycle';
-
-// Lifecycle Base Class
-export { BasicRemoteModule } from './lifecycle/skeleton';
+/**
+ * Represents a REST route configuration exposed by the application.
+ * Returned by the `/metadata/routes` endpoint.
+ */
+export interface LinIdRouteConfiguration {
+  /** The HTTP method (e.g., "GET", "POST", "PUT", "DELETE"). */
+  method: string;
+  /** The full route path (e.g., "/entities/{entity}"). */
+  path: string;
+  /** The name of the entity this route is related to; may be null for generic routes. */
+  entity: string | null;
+  /** The list of path variable names used in the route (e.g., ["entity", "id"]). */
+  variables: string[];
+}

@@ -54,6 +54,7 @@
   "homepage": "https://github.com/linagora/linid-im-front-corelib#readme",
   "peerDependencies": {
     "@module-federation/enhanced": "0.21.4",
+    "axios": "1.13.2",
     "pinia": "3.0.4",
     "vue": "3.5.24"
   },

@@ -7,7 +7,7 @@ on:
 
 env:
   NODE_VERSION: 22.19
-  PNPM_VERSION: 10.20.0
+  PNPM_VERSION: 10.25.0
 
 permissions:
   contents: write

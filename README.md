@@ -84,10 +84,6 @@ A full technical documentation is available in the `docs/` directory:
   Learn how to use the component that dynamically renders remote Vue plugins.  
   → [`docs/components-plugin-zones.md`](docs/components-plugin-zones.md)
 
-- 🧰 **Helper Functions**  
-  Detailed description of all functions used in the plugin system.  
-  → [`docs/helpers.md`](docs/helpers.md)
-
 - 🧰 **Services**  
   Detailed description of all services provided by the library.  
   → [`docs/services.md`](docs/services.md)

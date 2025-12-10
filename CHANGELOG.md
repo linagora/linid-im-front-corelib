@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.5...v0.0.6) (2025-12-10)
+
+
+### Features
+
+* **exports:** expose configuration store, services and types ([7a4aed0](https://github.com/linagora/linid-im-front-corelib/commit/7a4aed0c586e9a695979a748293381c5127bbe43))
+* **services:** add LinIdConfigurationService for metadata API calls ([6668028](https://github.com/linagora/linid-im-front-corelib/commit/66680287ee87b380419760244fc7aad126eeca74))
+* **services:** add singleton HTTP client wrapper ([5cf56fe](https://github.com/linagora/linid-im-front-corelib/commit/5cf56fef21ba2226ba02eaaf1f66b1679ad27b6d))
+* **stores:** add LinIdConfigurationStore for entity and route metadata ([e706fee](https://github.com/linagora/linid-im-front-corelib/commit/e706fee22552612c63131c8c2dd4f32604a2005b))
+* **types:** add LinId entity and route configuration interfaces ([e9e874b](https://github.com/linagora/linid-im-front-corelib/commit/e9e874b055160943ba711c9b5b1ae3f21f37f11c))
+
 ### [0.0.5](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.4...v0.0.5) (2025-12-03)
 
 ### [0.0.4](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.3...v0.0.4) (2025-12-01)

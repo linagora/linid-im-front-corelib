@@ -34,8 +34,8 @@ interface LinidZoneState {
 }
 ```
 
-* `zones` is a reactive object.
-* Each key corresponds to a zone, each value is an array of plugins for that zone.
+- `zones` is a reactive object.
+- Each key corresponds to a zone, each value is an array of plugins for that zone.
 
 ---
 
@@ -69,21 +69,68 @@ Used internally by [`loadAsyncComponent`](./helpers.md#loadasynccomponent) to en
 
 ```typescript
 // ❌ Wrong - named export only
-export const MyComponent = defineComponent({ /* ... */ });
+export const MyComponent = defineComponent({
+  /* ... */
+});
 
 // ✅ Correct - default export
-export default defineComponent({ /* ... */ });
+export default defineComponent({
+  /* ... */
+});
+```
+
+---
+
+## 🏢 Entity Configuration Types
+
+Types for entity and route metadata returned by the backend API.
+
+### LinIdAttributeConfiguration
+
+Describes a single attribute of an entity (name, type, input settings, validations).
+
+### LinIdEntityConfiguration
+
+Represents an entity with its name and list of attributes.
+Returned by `/metadata/entities` and `/metadata/entities/:entity`.
+
+### LinIdRouteConfiguration
+
+Represents a REST route (method, path, entity, variables).
+Returned by `/metadata/routes`.
+
+---
+
+## 🗃️ LinIdConfigurationState
+
+Represents the state of the Pinia store that manages entity and route configurations.
+
+```ts
+interface LinIdConfigurationState {
+  /** List of entity configurations fetched from the backend. */
+  entities: LinIdEntityConfiguration[];
+  /** List of route configurations fetched from the backend. */
+  routes: LinIdRouteConfiguration[];
+  /** Indicates if the configuration is currently being loaded. */
+  loading: boolean;
+  /** Error message if the configuration fetch failed. */
+  error: string | null;
+}
 ```
 
 ---
 
 ## 🧰 Summary
 
-| Type / Interface        | Purpose                                               |
-| ----------------------- | ----------------------------------------------------- |
-| `LinidZoneEntry`        | Defines the contract for a plugin component           |
-| `LinidZoneState`        | Defines the structure of the zone store               |
-| `RemoteComponentModule` | Defines the structure of a federated component module |
+| Type / Interface              | Purpose                                               |
+| ----------------------------- | ----------------------------------------------------- |
+| `LinidZoneEntry`              | Defines the contract for a plugin component           |
+| `LinidZoneState`              | Defines the structure of the zone store               |
+| `RemoteComponentModule`       | Defines the structure of a federated component module |
+| `LinIdAttributeConfiguration` | Describes an entity attribute                         |
+| `LinIdEntityConfiguration`    | Describes an entity and its attributes                |
+| `LinIdRouteConfiguration`     | Describes a REST route                                |
+| `LinIdConfigurationState`     | Defines the structure of the configuration store      |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

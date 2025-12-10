@@ -29,9 +29,20 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 
 // Stores
 export { useLinidZoneStore } from './stores/linidZoneStore';
+export { useLinIdConfigurationStore } from './stores/linIdConfigurationStore';
+
+// Services
+export { getHttpClient, setHttpClient } from './services/httpClientService';
 
 // Types - Zones
 export type { LinidZoneEntry } from './types/linidZone';
+
+// Types - Configuration
+export type {
+  LinIdAttributeConfiguration,
+  LinIdEntityConfiguration,
+  LinIdRouteConfiguration,
+} from './types/linidConfiguration';
 
 export type {
   ModuleHostConfig,

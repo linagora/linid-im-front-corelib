@@ -88,6 +88,10 @@ A full technical documentation is available in the `docs/` directory:
   Detailed description of all functions used in the plugin system.  
   → [`docs/helpers.md`](docs/helpers.md)
 
+- 🧰 **Services**  
+  Detailed description of all services provided by the library.  
+  → [`docs/services.md`](docs/services.md)
+
 - 🧩 **TypeScript Types & Interfaces**  
   Detailed description of all types and interfaces used in the plugin system.  
   → [`docs/types-and-interfaces.md`](docs/types-and-interfaces.md)

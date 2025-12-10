@@ -28,10 +28,11 @@
 export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
 
 // Stores
-export { useLinidZoneStore } from './stores/linidZoneStore';
 export { useLinIdConfigurationStore } from './stores/linIdConfigurationStore';
+export { useLinidZoneStore } from './stores/linidZoneStore';
 
 // Services
+export { loadAsyncComponent } from './services/federationService';
 export { getHttpClient, setHttpClient } from './services/httpClientService';
 
 // Types - Zones

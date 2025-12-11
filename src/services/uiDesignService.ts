@@ -24,51 +24,50 @@
  * LinID Identity Manager software.
  */
 
-// Components
-export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
+import type { UiDesign } from '../types/uiDesign';
 
-// Composables
-export { useUiDesign } from './composables/useUiDesign';
+/**
+ * Singleton instance of UI design configuration shared across all modules.
+ *
+ * This instance provides centralized access to UI personalization values,
+ * such as component styling flags, that are meant to be consistent application-wide.
+ */
+let uiDesign: UiDesign | null = null;
 
-// Stores
-export { useLinIdConfigurationStore } from './stores/linIdConfigurationStore';
-export { useLinidZoneStore } from './stores/linidZoneStore';
+/**
+ * Initializes the shared UI design instance.
+ *
+ * This function should be called **once** by the host application during the boot process,
+ * typically after loading configuration from a file (e.g., `default.json`) or API.
+ *
+ * Subsequent calls are ignored and will emit a console warning.
+ * @param client - The UI design object to set as the shared singleton instance.
+ */
+export function setUiDesign(client: UiDesign): void {
+  if (uiDesign !== null) {
+    console.warn(
+      '[LinID CoreLib] UI Design has already been initialized. Re-initialization is ignored.'
+    );
+    return;
+  }
 
-// Services
-export { loadAsyncComponent } from './services/federationService';
-export { getHttpClient, setHttpClient } from './services/httpClientService';
-export { getUiDesign, setUiDesign } from './services/uiDesignService';
+  uiDesign = client;
+}
 
-// Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
+/**
+ * Returns the shared UI design instance.
+ *
+ * Must be called **after** initialization via `setUiDesign()`.
+ * If called before initialization, an error is thrown to prevent usage of an undefined configuration.
+ * @returns The shared UI design instance.
+ * @throws {Error} If the UI design instance has not been initialized.
+ */
+export function getUiDesign(): UiDesign {
+  if (uiDesign === null) {
+    throw new Error(
+      '[LinID CoreLib] UI Design is not initialized. Call setUiDesign() first.'
+    );
+  }
 
-// Types - Configuration
-export type {
-  LinIdAttributeConfiguration,
-  LinIdEntityConfiguration,
-  LinIdRouteConfiguration,
-} from './types/linidConfiguration';
-
-export type {
-  ModuleHostConfig,
-  RemoteComponentModule,
-  RemoteModule,
-} from './types/module';
-
-// Types - Module Lifecycle
-export type {
-  ModuleLifecycleHooks,
-  ModuleLifecycleResult,
-} from './types/moduleLifecycle';
-
-// Types - UI design
-export type {
-  UiDesign,
-  UiDesignValue,
-  UiDesignNamespace,
-} from './types/uiDesign';
-
-export { ModuleLifecyclePhase } from './types/moduleLifecycle';
-
-// Lifecycle Base Class
-export { BasicRemoteModule } from './lifecycle/skeleton';
+  return uiDesign;
+}

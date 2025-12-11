@@ -92,6 +92,10 @@ A full technical documentation is available in the `docs/` directory:
   Detailed description of all types and interfaces used in the plugin system.  
   → [`docs/types-and-interfaces.md`](docs/types-and-interfaces.md)
 
+- 🎨 **UI Design Configuration (`UiDesign`)**  
+  Learn how to initialize and use the `UiDesign` singleton and the `useUiDesign` composable for dynamic UI personalization.  
+  → [`docs/ui-design.md`](docs/ui-design.md)
+
 More documents will be added as the library evolves.
 
 ---

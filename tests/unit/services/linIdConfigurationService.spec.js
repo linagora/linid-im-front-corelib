@@ -1,10 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as httpClientService from 'src/services/httpClientService';
 import {
   getEntitiesConfiguration,
   getEntityConfiguration,
   getRoutesConfiguration,
 } from 'src/services/linIdConfigurationService';
-import * as httpClientService from 'src/services/httpClientService';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('src/services/httpClientService', () => ({
   getHttpClient: vi.fn(),

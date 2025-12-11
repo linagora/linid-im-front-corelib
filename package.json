@@ -8,11 +8,11 @@
   ],
   "main": "./dist/core-lib.umd.js",
   "module": "./dist/core-lib.es.js",
-  "types": "./dist/types/index.d.ts",
+  "types": "./dist/types/src/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/core-lib.es.js",
-      "types": "./dist/types/index.d.ts"
+      "types": "./dist/types/src/index.d.ts"
     }
   },
   "scripts": {

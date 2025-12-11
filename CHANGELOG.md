@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.7...v0.0.8) (2025-12-11)
+
+
+### Bug Fixes
+
+* exporting library ([9ffdc72](https://github.com/linagora/linid-im-front-corelib/commit/9ffdc72e0b2a71643074dded14e2f1cf492e275f))
+
 ### [0.0.7](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.6...v0.0.7) (2025-12-11)
 
 

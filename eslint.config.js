@@ -4,6 +4,7 @@ import {
   defineConfigWithVueTs,
   vueTsConfigs,
 } from '@vue/eslint-config-typescript';
+import importPlugin from 'eslint-plugin-import';
 import jsdoc from 'eslint-plugin-jsdoc';
 import vue from 'eslint-plugin-vue';
 import headers from 'eslint-plugin-headers';
@@ -32,6 +33,9 @@ export default defineConfigWithVueTs(
   },
   {
     files: ['**/*.{js,mjs,cjs,ts,vue}'],
+    plugins: {
+      import: importPlugin,
+    },
     rules: {
       // Vue rules
       'vue/multi-word-component-names': 'off',
@@ -50,6 +54,26 @@ export default defineConfigWithVueTs(
         },
       ],
       '@typescript-eslint/consistent-type-imports': 'error',
+
+      // Import sorting
+      'import/order': [
+        'error',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+          ],
+          'newlines-between': 'never',
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
+        },
+      ],
 
       // JSDoc rules
       'jsdoc/require-jsdoc': [

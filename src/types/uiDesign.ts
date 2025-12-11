@@ -24,51 +24,31 @@
  * LinID Identity Manager software.
  */
 
-// Components
-export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
+/**
+ * Represents a single primitive value in the UI configuration.
+ */
+export type UiDesignValue = string | number | boolean;
 
-// Composables
-export { useUiDesign } from './composables/useUiDesign';
+/**
+ * Represents a namespace containing key-value pairs of UI configuration values.
+ * Values can be primitives or nested namespaces.
+ */
+export interface UiDesignNamespace {
+  [key: string]: UiDesignValue | UiDesignNamespace;
+}
 
-// Stores
-export { useLinIdConfigurationStore } from './stores/linIdConfigurationStore';
-export { useLinidZoneStore } from './stores/linidZoneStore';
+/**
+ * Represents the full UI design configuration used across the application.
+ * Contains multiple namespaces, including the `default` namespace used as a fallback.
+ */
+export interface UiDesign {
+  /**
+   * Default namespace providing fallback values for all components.
+   */
+  default?: UiDesignNamespace;
 
-// Services
-export { loadAsyncComponent } from './services/federationService';
-export { getHttpClient, setHttpClient } from './services/httpClientService';
-export { getUiDesign, setUiDesign } from './services/uiDesignService';
-
-// Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
-
-// Types - Configuration
-export type {
-  LinIdAttributeConfiguration,
-  LinIdEntityConfiguration,
-  LinIdRouteConfiguration,
-} from './types/linidConfiguration';
-
-export type {
-  ModuleHostConfig,
-  RemoteComponentModule,
-  RemoteModule,
-} from './types/module';
-
-// Types - Module Lifecycle
-export type {
-  ModuleLifecycleHooks,
-  ModuleLifecycleResult,
-} from './types/moduleLifecycle';
-
-// Types - UI design
-export type {
-  UiDesign,
-  UiDesignValue,
-  UiDesignNamespace,
-} from './types/uiDesign';
-
-export { ModuleLifecyclePhase } from './types/moduleLifecycle';
-
-// Lifecycle Base Class
-export { BasicRemoteModule } from './lifecycle/skeleton';
+  /**
+   * Arbitrary namespaces for component-specific overrides.
+   */
+  [namespace: string]: UiDesignNamespace | undefined;
+}

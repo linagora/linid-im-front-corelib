@@ -56,14 +56,14 @@
   },
   "homepage": "https://github.com/linagora/linid-im-front-corelib#readme",
   "peerDependencies": {
-    "@module-federation/enhanced": "0.21.4",
+    "@module-federation/enhanced": "0.21.6",
     "axios": "1.13.2",
     "pinia": "3.0.4",
-    "vue": "3.5.24"
+    "vue": "3.5.25"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
-    "@types/node": "24.10.2",
+    "@types/node": "25.0.0",
     "@vitejs/plugin-vue": "6.0.2",
     "@vitest/coverage-v8": "4.0.15",
     "@vue/eslint-config-prettier": "10.2.0",

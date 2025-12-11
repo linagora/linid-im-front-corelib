@@ -4,10 +4,10 @@ import {
   defineConfigWithVueTs,
   vueTsConfigs,
 } from '@vue/eslint-config-typescript';
+import headers from 'eslint-plugin-headers';
 import importPlugin from 'eslint-plugin-import';
 import jsdoc from 'eslint-plugin-jsdoc';
 import vue from 'eslint-plugin-vue';
-import headers from 'eslint-plugin-headers';
 
 export default defineConfigWithVueTs(
   {

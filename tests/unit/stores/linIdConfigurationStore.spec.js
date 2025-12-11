@@ -1,6 +1,6 @@
 import { createPinia, setActivePinia } from 'pinia';
-import { useLinIdConfigurationStore } from 'src/stores/linIdConfigurationStore';
 import * as linIdConfigurationService from 'src/services/linIdConfigurationService';
+import { useLinIdConfigurationStore } from 'src/stores/linIdConfigurationStore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('src/services/linIdConfigurationService', () => ({

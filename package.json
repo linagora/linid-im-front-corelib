@@ -6,13 +6,13 @@
   "files": [
     "dist"
   ],
-  "main": "./core-lib.umd.js",
-  "module": "./core-lib.es.js",
-  "types": "./types/index.d.ts",
+  "main": "./dist/core-lib.umd.js",
+  "module": "./dist/core-lib.es.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./core-lib.es.js",
-      "types": "./types/index.d.ts"
+      "import": "./dist/core-lib.es.js",
+      "types": "./dist/types/index.d.ts"
     }
   },
   "scripts": {

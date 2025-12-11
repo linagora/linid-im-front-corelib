@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.6...v0.0.7) (2025-12-11)
+
+
+### Features
+
+* **eslint:** add import sorting with eslint-plugin-import ([25c76af](https://github.com/linagora/linid-im-front-corelib/commit/25c76aff358a51ef22d3b07fd9b99247c81b7f84))
+* export loadAsyncComponent method from federation service ([668c7fe](https://github.com/linagora/linid-im-front-corelib/commit/668c7fe8dc360acb10270ab2431a04609d93e2f1))
+
 ### [0.0.6](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.5...v0.0.6) (2025-12-10)
 
 

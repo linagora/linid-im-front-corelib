@@ -9,7 +9,7 @@ This document describes the **services** provided by `linid-im-front-corelib`.
 Provides a singleton Axios instance shared across all modules.
 
 | Function                          | Description                                       |
-| --------------------------------- | ------------------------------------------------- |
+|-----------------------------------|---------------------------------------------------|
 | [`setHttpClient`](#sethttpclient) | Initializes the shared Axios instance (call once) |
 | [`getHttpClient`](#gethttpclient) | Returns the shared Axios instance                 |
 
@@ -20,13 +20,13 @@ Provides a singleton Axios instance shared across all modules.
 Initializes the shared Axios instance to be used by all modules. Should be called once during application bootstrapping.
 
 ```typescript
-import { setHttpClient } from '@linagora/linid-im-front-corelib';
+import {setHttpClient} from '@linagora/linid-im-front-corelib';
 ```
 
 #### Parameters
 
 | Parameter | Type            | Description                      |
-| --------- | --------------- | -------------------------------- |
+|-----------|-----------------|----------------------------------|
 | `client`  | `AxiosInstance` | The Axios instance to be shared. |
 
 #### Returns
@@ -35,7 +35,8 @@ No return value.
 
 #### Behavior
 
-1. **Singleton:** Only the first call sets the instance; subsequent calls log a warning and do not overwrite the instance.
+1. **Singleton:** Only the first call sets the instance; subsequent calls log a warning and do not overwrite the
+   instance.
 2. **Required:** Must be called before any call to `getHttpClient()`.
 
 ---
@@ -45,7 +46,7 @@ No return value.
 Retrieves the shared Axios instance initialized by `setHttpClient`.
 
 ```typescript
-import { getHttpClient } from '@linagora/linid-im-front-corelib';
+import {getHttpClient} from '@linagora/linid-im-front-corelib';
 ```
 
 #### Parameters
@@ -55,7 +56,7 @@ None.
 #### Returns
 
 | Type            | Description                |
-| --------------- | -------------------------- |
+|-----------------|----------------------------|
 | `AxiosInstance` | The shared Axios instance. |
 
 #### Behavior
@@ -70,7 +71,7 @@ None.
 #### Basic Usage
 
 ```typescript
-import { setHttpClient, getHttpClient } from '@linagora/linid-im-front-corelib';
+import {setHttpClient, getHttpClient} from '@linagora/linid-im-front-corelib';
 import axios from 'axios';
 
 // Host application bootstrapping
@@ -94,7 +95,7 @@ http.get('/users').then((response) => {
 ##### Calling `getHttpClient` before initialization
 
 ```typescript
-import { getHttpClient } from '@linagora/linid-im-front-corelib';
+import {getHttpClient} from '@linagora/linid-im-front-corelib';
 
 try {
   const http = getHttpClient();
@@ -107,7 +108,7 @@ try {
 ##### Attempting to re-initialize
 
 ```typescript
-import { setHttpClient } from '@linagora/linid-im-front-corelib';
+import {setHttpClient} from '@linagora/linid-im-front-corelib';
 import axios from 'axios';
 
 setHttpClient(axios.create());
@@ -123,7 +124,7 @@ setHttpClient(axios.create());
 The functions are fully typed for use with Axios:
 
 ```typescript
-import type { AxiosInstance } from 'axios';
+import type {AxiosInstance} from 'axios';
 
 const http: AxiosInstance = getHttpClient();
 ```
@@ -146,23 +147,24 @@ const http: AxiosInstance = getHttpClient();
 Provides helpers wrapping Module Federation functionalites.
 
 | Function                                    | Description                                                   |
-| ------------------------------------------- | ------------------------------------------------------------- |
+|---------------------------------------------|---------------------------------------------------------------|
 | [`loadAsyncComponent`](#loadasynccomponent) | Loads a remote Vue component from a Module Federation remote. |
 
 ### `loadAsyncComponent`
 
 Loads a remote Vue component from a Module Federation remote using the enhanced runtime.
 
-This helper wraps Vue's `defineAsyncComponent` and Module Federation's `loadRemote` to provide a simple way to load federated components asynchronously.
+This helper wraps Vue's `defineAsyncComponent` and Module Federation's `loadRemote` to provide a simple way to load
+federated components asynchronously.
 
 ```typescript
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
+import {loadAsyncComponent} from '@linagora/linid-im-front-corelib';
 ```
 
 #### Parameters
 
 | Parameter | Type     | Description                                                                                                          |
-| --------- | -------- | -------------------------------------------------------------------------------------------------------------------- |
+|-----------|----------|----------------------------------------------------------------------------------------------------------------------|
 | `plugin`  | `string` | The Module Federation remote identifier in the format `remoteName/modulePath`.<br/>Example: `'myRemote/MyComponent'` |
 
 #### Returns
@@ -182,14 +184,15 @@ Returns a Vue async component that can be used in templates or rendered programm
 ##### Basic Usage
 
 ```vue
+
 <template>
-  <component :is="remoteComponent" />
+  <component :is="remoteComponent"/>
 </template>
 
 <script setup lang="ts">
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
+  import {loadAsyncComponent} from '@linagora/linid-im-front-corelib';
 
-const remoteComponent = loadAsyncComponent('myRemote/HeaderWidget');
+  const remoteComponent = loadAsyncComponent('myRemote/HeaderWidget');
 </script>
 ```
 
@@ -198,18 +201,19 @@ const remoteComponent = loadAsyncComponent('myRemote/HeaderWidget');
 ##### Dynamic Component Loading
 
 ```vue
+
 <template>
   <component
-    v-for="plugin in plugins"
-    :key="plugin"
-    :is="loadAsyncComponent(plugin)"
+      v-for="plugin in plugins"
+      :key="plugin"
+      :is="loadAsyncComponent(plugin)"
   />
 </template>
 
 <script setup lang="ts">
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
+  import {loadAsyncComponent} from '@linagora/linid-im-front-corelib';
 
-const plugins = ['remote1/ComponentA', 'remote2/ComponentB'];
+  const plugins = ['remote1/ComponentA', 'remote2/ComponentB'];
 </script>
 ```
 
@@ -245,8 +249,8 @@ const component = loadAsyncComponent('myRemote/MyComponent');
 </template>
 
 <script setup lang="ts">
-// Default export automatic with <script setup>
-// Nothing special to do!
+  // Default export automatic with <script setup>
+  // Nothing special to do!
 </script>
 ```
 
@@ -259,12 +263,12 @@ const component = loadAsyncComponent('myRemote/MyComponent');
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+  import {defineComponent} from 'vue';
 
-export default defineComponent({
-  name: 'MyComponent',
-  // ...
-});
+  export default defineComponent({
+    name: 'MyComponent',
+    // ...
+  });
 </script>
 ```
 
@@ -309,10 +313,171 @@ interface RemoteComponentModule {
 The returned component is fully typed as a Vue `Component`:
 
 ```typescript
-import type { Component } from 'vue';
+import type {Component} from 'vue';
 
 const myComponent: Component = loadAsyncComponent('remote/Component');
 ```
+
+---
+
+## 🗄️ Entity Service
+
+The **Entity Service** provides a standardized CRUD abstraction for backend entity management.
+Each operation automatically resolves the correct backend endpoint using the module’s `instanceId` and its registered
+configuration.
+
+This service builds on top of the HTTP Client Service and the Module Host Configuration Service.
+
+| Function                                | Description                            |
+|-----------------------------------------|----------------------------------------|
+| [`saveEntity`](#saveentity)             | Creates a new entity on the backend    |
+| [`updateEntity`](#updateentity)         | Updates an existing entity             |
+| [`getEntities`](#getentities)           | Retrieves a paginated list of entities |
+| [`getEntityById`](#getentitybyid)       | Retrieves a single entity by ID        |
+| [`deleteEntityById`](#deleteentitybyid) | Deletes a single entity by ID          |
+
+---
+
+### `saveEntity`
+
+Creates and persists a new entity using the backend API associated with the module instance.
+
+#### Parameters
+
+| Parameter    | Type     | Description                       |
+|--------------|----------|-----------------------------------|
+| `instanceId` | `string` | Identifier of the module instance |
+| `record`     | `T`      | Entity data to create             |
+
+#### Returns
+
+| Type | Description                           |
+|------|---------------------------------------|
+| `Y`  | The created entity returned by server |
+
+#### Behavior
+
+1. Automatically resolves the backend endpoint through `getModuleHostConfiguration`
+2. Issues a `POST` request with the entity payload
+3. Returns the deserialized response body
+
+#### Example
+
+```ts
+const created = await saveEntity<UserInput, User>('users', newUser);
+```
+
+---
+
+### `updateEntity`
+
+Updates an existing entity in the backend.
+
+#### Parameters
+
+| Parameter    | Type     | Description                       |
+|--------------|----------|-----------------------------------|
+| `instanceId` | `string` | Identifier of the module instance |
+| `entityId`   | `string` | The ID of the entity to update    |
+| `record`     | `T`      | New data to update the entity     |
+
+#### Returns
+
+| Type | Description                           |
+|------|---------------------------------------|
+| `Y`  | The updated entity returned by server |
+
+---
+
+### `getEntities`
+
+Retrieves a paginated list of entities.
+
+#### Parameters
+
+| Parameter    | Type          | Description                       |
+|--------------|---------------|-----------------------------------|
+| `instanceId` | `string`      | Identifier of the module instance |
+| `filters`    | `QueryFilter` | Filters to apply to the search    |
+| `pagination` | `Pagination`  | Pagination parameters             |
+
+#### Returns
+
+| Type      | Description                           |
+|-----------|---------------------------------------|
+| `Page<T>` | A page object containing entity items |
+
+---
+
+### `getEntityById`
+
+Fetches a single entity by its unique identifier.
+
+#### Parameters
+
+| Parameter    | Type     | Description                       |
+|--------------|----------|-----------------------------------|
+| `instanceId` | `string` | Identifier of the module instance |
+| `entityId`   | `string` | ID of the entity to retrieve      |
+
+#### Returns
+
+| Type | Description                  |
+|------|------------------------------|
+| `T`  | The retrieved entity content |
+
+---
+
+### `deleteEntityById`
+
+Deletes a single entity by ID.
+
+#### Parameters
+
+| Parameter    | Type     | Description                       |
+|--------------|----------|-----------------------------------|
+| `instanceId` | `string` | Identifier of the module instance |
+| `entityId`   | `string` | ID of the entity to delete        |
+
+#### Returns
+
+`void`
+
+#### Behavior
+
+1. Resolves endpoint from module configuration
+2. Performs a `DELETE` HTTP request
+3. Returns an empty Promise
+
+---
+
+### Usage Example
+
+```ts
+// Create
+await saveEntity('users', {name: 'Alice'});
+
+// Update
+await updateEntity('users', '42', {name: 'Alice Cooper'});
+
+// Retrieve paginated list
+const page = await getEntities<User>(
+  'users',
+  {search: 'alice'},
+  {page: 0, size: 20}
+);
+
+// Retrieve by ID
+const user = await getEntityById<User>('users', '42');
+
+// Delete
+await deleteEntityById('users', '42');
+```
+
+---
+
+This service provides a unified, module-aware way to manage backend CRUD operations while relying on shared
+configuration and HTTP client infrastructure.
 
 ---
 

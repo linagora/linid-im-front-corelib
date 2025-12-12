@@ -24,66 +24,30 @@
  * LinID Identity Manager software.
  */
 
-// Components
-export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
+import type { ModuleHostConfig } from '../types/module';
 
-// Composables
-export { useUiDesign } from './composables/useUiDesign';
+/**
+ * Stores the configuration of all registered module hosts.
+ * Keyed by `instanceId` of each module.
+ */
+const moduleHostConfigurations = new Map<string, ModuleHostConfig>();
 
-// Stores
-export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
-export { useLinidZoneStore } from './stores/linidZoneStore';
+/**
+ * Registers a module host configuration in the global store.
+ * If a configuration with the same `instanceId` already exists, it will be overwritten.
+ * @param hostConfig - The configuration object of the module host to register.
+ */
+export function registerModuleHostConfiguration(hostConfig: ModuleHostConfig) {
+  moduleHostConfigurations.set(hostConfig.instanceId, hostConfig);
+}
 
-// Services
-export { loadAsyncComponent } from './services/federationService';
-export { getHttpClient, setHttpClient } from './services/httpClientService';
-export { getUiDesign, setUiDesign } from './services/uiDesignService';
-export {
-  getModuleHostConfiguration,
-  registerModuleHostConfiguration,
-} from './services/LinidModuleConfigurationService';
-export {
-  saveEntity,
-  updateEntity,
-  getEntities,
-  getEntityById,
-  deleteEntityById,
-} from './services/linidEntityService';
-
-// Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
-
-// Types - route
-export type { LinidRoute, LinidSubRoute } from './types/linidRoute';
-export type { Page, Pagination, QueryFilter } from './types/page';
-
-// Types - Configuration
-export type {
-  LinidAttributeConfiguration,
-  LinidEntityConfiguration,
-  LinidApiEndpointConfiguration,
-} from './types/linidConfiguration';
-
-export type {
-  ModuleHostConfig,
-  RemoteComponentModule,
-  RemoteModule,
-} from './types/module';
-
-// Types - Module Lifecycle
-export type {
-  ModuleLifecycleHooks,
-  ModuleLifecycleResult,
-} from './types/moduleLifecycle';
-
-// Types - UI design
-export type {
-  UiDesign,
-  UiDesignValue,
-  UiDesignNamespace,
-} from './types/uiDesign';
-
-export { ModuleLifecyclePhase } from './types/moduleLifecycle';
-
-// Lifecycle Base Class
-export { BasicRemoteModule } from './lifecycle/skeleton';
+/**
+ * Retrieves a module host configuration by its `instanceId`.
+ * @param instanceId - The unique identifier of the module host.
+ * @returns The `ModuleHostConfig` associated with the given `instanceId`.
+ */
+export function getModuleHostConfiguration(
+  instanceId: string
+): ModuleHostConfig {
+  return <ModuleHostConfig>moduleHostConfigurations.get(instanceId);
+}

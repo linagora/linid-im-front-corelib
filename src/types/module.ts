@@ -69,11 +69,10 @@ export interface RemoteModule extends ModuleLifecycleHooks {
  */
 export interface ModuleHostConfig {
   /**
-   * Unique module identifier (kebab-case).
-   *
-   * Must match the module's exported `id` field.
+   * Unique identifier for this instance of the module.
+   * Typically used to differentiate multiple instances of the same module within the host.
    */
-  id: string;
+  instanceId: string;
 
   /**
    * Module Federation remote name (must match a key in remotes.json).
@@ -81,6 +80,18 @@ export interface ModuleHostConfig {
    * This is the name used to load the remote module via Module Federation.
    */
   remoteName: string;
+
+  /**
+   * Name of the entity used in the host configuration.
+   * Allows the module to retrieve associated attributes and other information for this entity.
+   */
+  entity: string;
+
+  /**
+   * Base URL for the module's API endpoints.
+   * All API requests from the module should be prefixed with this endpoint.
+   */
+  apiEndpoint: string;
 }
 
 /**

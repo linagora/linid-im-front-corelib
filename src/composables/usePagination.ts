@@ -24,73 +24,51 @@
  * LinID Identity Manager software.
  */
 
-// Components
-export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
+import type { Page, Pagination, QuasarPagination } from '../types/page';
 
-// Composables
-export { usePagination } from './composables/usePagination';
-export { useUiDesign } from './composables/useUiDesign';
+/**
+ * Composable providing utility functions to convert between backend pagination
+ * models and Quasar QTable pagination formats.
+ *
+ * This helper acts as a translation layer between:
+ * - the generic `Pagination` structure used by the API layer, and
+ * - the `QuasarPagination` structure expected by Quasar components.
+ *
+ * It ensures consistent page indexing, sorting, and sizing conventions
+ * across the application.
+ * @returns An object exposing pagination conversion helpers.
+ */
+export function usePagination() {
+  /**
+   * Converts a Quasar-style pagination object to a generic `Pagination` format.
+   * @param pagination - The Quasar pagination object.
+   * @returns A new pagination object.
+   */
+  function toPagination(pagination: QuasarPagination): Pagination {
+    return {
+      page: (pagination.page || 1) - 1,
+      size: pagination.rowsPerPage || 5,
+      sort: pagination.sortBy || 'updateDate',
+      direction: pagination.descending ? 'desc' : 'asc',
+    };
+  }
 
-// Stores
-export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
-export { useLinidZoneStore } from './stores/linidZoneStore';
+  /**
+   * Converts a generic `Page<T>` object to a Quasar-compatible pagination format.
+   * @template T Type of the elements contained in the page.
+   * @param page - The page object containing pagination data.
+   * @returns A pagination object formatted for Quasar.
+   */
+  function toQuasarPagination<T>(page: Page<T>): QuasarPagination {
+    return {
+      page: page.number + 1,
+      rowsPerPage: page.size,
+      rowsNumber: page.totalElements,
+    };
+  }
 
-// Services
-export { loadAsyncComponent } from './services/federationService';
-export { getHttpClient, setHttpClient } from './services/httpClientService';
-export {
-  deleteEntityById,
-  getEntities,
-  getEntityById,
-  saveEntity,
-  updateEntity,
-} from './services/linidEntityService';
-export {
-  getModuleHostConfiguration,
-  registerModuleHostConfiguration,
-} from './services/linidModuleConfigurationService';
-export { getUiDesign, setUiDesign } from './services/uiDesignService';
-
-// Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
-
-// Types - route
-export type { LinidRoute, LinidSubRoute } from './types/linidRoute';
-export type {
-  Page,
-  Pagination,
-  QTableRequestEvent,
-  QuasarPagination,
-  QueryFilter,
-} from './types/page';
-
-// Types - Configuration
-export type {
-  LinidApiEndpointConfiguration,
-  LinidAttributeConfiguration,
-  LinidEntityConfiguration,
-} from './types/linidConfiguration';
-
-export type {
-  ModuleHostConfig,
-  RemoteComponentModule,
-  RemoteModule,
-} from './types/module';
-
-// Types - Module Lifecycle
-export type {
-  ModuleLifecycleHooks,
-  ModuleLifecycleResult,
-} from './types/moduleLifecycle';
-
-// Types - UI design
-export type {
-  UiDesign,
-  UiDesignNamespace,
-  UiDesignValue,
-} from './types/uiDesign';
-
-export { ModuleLifecyclePhase } from './types/moduleLifecycle';
-
-// Lifecycle Base Class
-export { BasicRemoteModule } from './lifecycle/skeleton';
+  return {
+    toPagination,
+    toQuasarPagination,
+  };
+}

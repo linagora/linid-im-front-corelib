@@ -42,12 +42,20 @@ export {
   getModuleHostConfiguration,
   registerModuleHostConfiguration,
 } from './services/LinidModuleConfigurationService';
+export {
+  saveEntity,
+  updateEntity,
+  getEntities,
+  getEntityById,
+  deleteEntityById,
+} from './services/linidEntityService';
 
 // Types - Zones
 export type { LinidZoneEntry } from './types/linidZone';
 
 // Types - route
 export type { LinidRoute, LinidSubRoute } from './types/linidRoute';
+export type { Page, Pagination, QueryFilter } from './types/page';
 
 // Types - Configuration
 export type {

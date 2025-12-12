@@ -3,14 +3,14 @@ import {
   getEntitiesConfiguration,
   getEntityConfiguration,
   getRoutesConfiguration,
-} from 'src/services/linIdConfigurationService';
+} from 'src/services/linidConfigurationService.ts';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('src/services/httpClientService', () => ({
   getHttpClient: vi.fn(),
 }));
 
-describe('Test service: linIdConfigurationService', () => {
+describe('Test service: linidConfigurationService', () => {
   let mockHttpClient;
 
   beforeEach(() => {

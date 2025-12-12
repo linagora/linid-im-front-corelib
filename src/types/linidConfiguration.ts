@@ -28,7 +28,7 @@
  * Describes a single attribute of an entity.
  * Corresponds to `AttributeDescription` from the backend API.
  */
-export interface LinIdAttributeConfiguration {
+export interface LinidAttributeConfiguration {
   /** The name of the attribute (e.g., "email"). */
   name: string;
   /** The backend type of the attribute (e.g., "string", "integer"). */
@@ -47,18 +47,18 @@ export interface LinIdAttributeConfiguration {
  * Represents the configuration of an entity declared in the application.
  * Returned by the `/metadata/entities` endpoint.
  */
-export interface LinIdEntityConfiguration {
+export interface LinidEntityConfiguration {
   /** The name of the entity (e.g., "user", "group"). */
   name: string;
   /** The list of attributes defined for this entity. */
-  attributes: LinIdAttributeConfiguration[];
+  attributes: LinidAttributeConfiguration[];
 }
 
 /**
  * Represents a REST route configuration exposed by the application.
  * Returned by the `/metadata/routes` endpoint.
  */
-export interface LinIdRouteConfiguration {
+export interface LinidRouteConfiguration {
   /** The HTTP method (e.g., "GET", "POST", "PUT", "DELETE"). */
   method: string;
   /** The full route path (e.g., "/entities/{entity}"). */

@@ -28,20 +28,20 @@ import { defineStore } from 'pinia';
 import {
   getEntitiesConfiguration,
   getRoutesConfiguration,
-} from '../services/linIdConfigurationService';
+} from '../services/linidConfigurationService';
 import type {
-  LinIdEntityConfiguration,
-  LinIdRouteConfiguration,
+  LinidEntityConfiguration,
+  LinidRouteConfiguration,
 } from '../types/linidConfiguration';
 
 /**
- * State interface for the LinId Configuration Store.
+ * State interface for the Linid Configuration Store.
  */
-interface LinIdConfigurationState {
+interface LinidConfigurationState {
   /** List of entity configurations fetched from the backend. */
-  entities: LinIdEntityConfiguration[];
+  entities: LinidEntityConfiguration[];
   /** List of route configurations fetched from the backend. */
-  routes: LinIdRouteConfiguration[];
+  routes: LinidRouteConfiguration[];
   /** Indicates if the configuration is currently being loaded. */
   loading: boolean;
   /** Error message if the configuration fetch failed. */
@@ -49,14 +49,14 @@ interface LinIdConfigurationState {
 }
 
 /**
- * Pinia store managing LinID entity and route configurations.
+ * Pinia store managing Linid entity and route configurations.
  *
  * Fetches and stores metadata from the backend API.
  */
-export const useLinIdConfigurationStore = defineStore(
-  'linidConfigurationStore',
+export const useLinidConfigurationStore = defineStore(
+  'LinidConfigurationStore',
   {
-    state: (): LinIdConfigurationState => ({
+    state: (): LinidConfigurationState => ({
       entities: [],
       routes: [],
       loading: false,
@@ -71,7 +71,7 @@ export const useLinIdConfigurationStore = defineStore(
        */
       getEntityByName:
         (state) =>
-        (name: string): LinIdEntityConfiguration | undefined =>
+        (name: string): LinidEntityConfiguration | undefined =>
           state.entities.find((entity) => entity.name === name),
 
       /**
@@ -81,7 +81,7 @@ export const useLinIdConfigurationStore = defineStore(
        */
       getRoutesByEntity:
         (state) =>
-        (entityName: string): LinIdRouteConfiguration[] =>
+        (entityName: string): LinidRouteConfiguration[] =>
           state.routes.filter((route) => route.entity === entityName),
     },
 
@@ -106,7 +106,7 @@ export const useLinIdConfigurationStore = defineStore(
             err instanceof Error
               ? err.message
               : 'Failed to fetch configuration';
-          console.error('[LinID CoreLib] Failed to fetch configuration:', err);
+          console.error('[Linid CoreLib] Failed to fetch configuration:', err);
         } finally {
           this.loading = false;
         }

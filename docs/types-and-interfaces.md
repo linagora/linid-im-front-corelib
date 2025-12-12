@@ -85,32 +85,32 @@ export default defineComponent({
 
 Types for entity and route metadata returned by the backend API.
 
-### LinIdAttributeConfiguration
+### LinidAttributeConfiguration
 
 Describes a single attribute of an entity (name, type, input settings, validations).
 
-### LinIdEntityConfiguration
+### LinidEntityConfiguration
 
 Represents an entity with its name and list of attributes.
 Returned by `/metadata/entities` and `/metadata/entities/:entity`.
 
-### LinIdRouteConfiguration
+### LinidRouteConfiguration
 
 Represents a REST route (method, path, entity, variables).
 Returned by `/metadata/routes`.
 
 ---
 
-## 🗃️ LinIdConfigurationState
+## 🗃️ LinidConfigurationState
 
 Represents the state of the Pinia store that manages entity and route configurations.
 
 ```ts
-interface LinIdConfigurationState {
+interface LinidConfigurationState {
   /** List of entity configurations fetched from the backend. */
-  entities: LinIdEntityConfiguration[];
+  entities: LinidEntityConfiguration[];
   /** List of route configurations fetched from the backend. */
-  routes: LinIdRouteConfiguration[];
+  routes: LinidRouteConfiguration[];
   /** Indicates if the configuration is currently being loaded. */
   loading: boolean;
   /** Error message if the configuration fetch failed. */
@@ -123,14 +123,14 @@ interface LinIdConfigurationState {
 ## 🧰 Summary
 
 | Type / Interface              | Purpose                                               |
-| ----------------------------- | ----------------------------------------------------- |
+|-------------------------------|-------------------------------------------------------|
 | `LinidZoneEntry`              | Defines the contract for a plugin component           |
 | `LinidZoneState`              | Defines the structure of the zone store               |
 | `RemoteComponentModule`       | Defines the structure of a federated component module |
-| `LinIdAttributeConfiguration` | Describes an entity attribute                         |
-| `LinIdEntityConfiguration`    | Describes an entity and its attributes                |
-| `LinIdRouteConfiguration`     | Describes a REST route                                |
-| `LinIdConfigurationState`     | Defines the structure of the configuration store      |
+| `LinidAttributeConfiguration` | Describes an entity attribute                         |
+| `LinidEntityConfiguration`    | Describes an entity and its attributes                |
+| `LinidRouteConfiguration`     | Describes a REST route                                |
+| `LinidConfigurationState`     | Defines the structure of the configuration store      |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

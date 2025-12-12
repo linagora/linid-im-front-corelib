@@ -25,13 +25,13 @@
  */
 
 import type {
-  LinIdEntityConfiguration,
-  LinIdRouteConfiguration,
+  LinidEntityConfiguration,
+  LinidRouteConfiguration,
 } from '../types/linidConfiguration';
 import { getHttpClient } from './httpClientService';
 
 /**
- * Service for managing and exposing LinID entity and route configurations.
+ * Service for managing and exposing Linid entity and route configurations.
  * Fetches metadata from the backend API.
  */
 /**
@@ -39,10 +39,10 @@ import { getHttpClient } from './httpClientService';
  * @returns A promise resolving to an array of entity configurations.
  */
 export async function getEntitiesConfiguration(): Promise<
-  LinIdEntityConfiguration[]
+  LinidEntityConfiguration[]
 > {
   const response =
-    await getHttpClient().get<LinIdEntityConfiguration[]>('/metadata/entities');
+    await getHttpClient().get<LinidEntityConfiguration[]>('/metadata/entities');
   return response.data;
 }
 
@@ -53,8 +53,8 @@ export async function getEntitiesConfiguration(): Promise<
  */
 export async function getEntityConfiguration(
   entityId: string
-): Promise<LinIdEntityConfiguration> {
-  const response = await getHttpClient().get<LinIdEntityConfiguration>(
+): Promise<LinidEntityConfiguration> {
+  const response = await getHttpClient().get<LinidEntityConfiguration>(
     `/metadata/entities/${entityId}`
   );
   return response.data;
@@ -65,9 +65,9 @@ export async function getEntityConfiguration(
  * @returns A promise resolving to an array of route configurations.
  */
 export async function getRoutesConfiguration(): Promise<
-  LinIdRouteConfiguration[]
+  LinidRouteConfiguration[]
 > {
   const response =
-    await getHttpClient().get<LinIdRouteConfiguration[]>('/metadata/routes');
+    await getHttpClient().get<LinidRouteConfiguration[]>('/metadata/routes');
   return response.data;
 }

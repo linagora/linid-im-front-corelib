@@ -38,6 +38,10 @@ export { useLinidZoneStore } from './stores/linidZoneStore';
 export { loadAsyncComponent } from './services/federationService';
 export { getHttpClient, setHttpClient } from './services/httpClientService';
 export { getUiDesign, setUiDesign } from './services/uiDesignService';
+export {
+  getModuleHostConfiguration,
+  registerModuleHostConfiguration,
+} from './services/LinidModuleConfigurationService';
 
 // Types - Zones
 export type { LinidZoneEntry } from './types/linidZone';

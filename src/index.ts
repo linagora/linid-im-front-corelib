@@ -31,7 +31,7 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 export { useUiDesign } from './composables/useUiDesign';
 
 // Stores
-export { useLinIdConfigurationStore } from './stores/linIdConfigurationStore';
+export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
 export { useLinidZoneStore } from './stores/linidZoneStore';
 
 // Services
@@ -44,9 +44,9 @@ export type { LinidZoneEntry } from './types/linidZone';
 
 // Types - Configuration
 export type {
-  LinIdAttributeConfiguration,
-  LinIdEntityConfiguration,
-  LinIdRouteConfiguration,
+  LinidAttributeConfiguration,
+  LinidEntityConfiguration,
+  LinidRouteConfiguration,
 } from './types/linidConfiguration';
 
 export type {

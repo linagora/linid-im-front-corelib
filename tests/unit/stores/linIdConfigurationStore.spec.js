@@ -1,19 +1,19 @@
 import { createPinia, setActivePinia } from 'pinia';
-import * as linIdConfigurationService from 'src/services/linIdConfigurationService';
-import { useLinIdConfigurationStore } from 'src/stores/linIdConfigurationStore';
+import * as linidConfigurationService from 'src/services/linidConfigurationService.ts';
+import { useLinidConfigurationStore } from 'src/stores/linidConfigurationStore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('src/services/linIdConfigurationService', () => ({
+vi.mock('src/services/linidConfigurationService', () => ({
   getEntitiesConfiguration: vi.fn(),
   getRoutesConfiguration: vi.fn(),
 }));
 
-describe('Test store: linIdConfigurationStore', () => {
+describe('Test store: linidConfigurationStore', () => {
   let store;
 
   beforeEach(() => {
     setActivePinia(createPinia());
-    store = useLinIdConfigurationStore();
+    store = useLinidConfigurationStore();
     vi.clearAllMocks();
   });
 
@@ -80,10 +80,10 @@ describe('Test store: linIdConfigurationStore', () => {
       ];
 
       vi.mocked(
-        linIdConfigurationService.getEntitiesConfiguration
+        linidConfigurationService.getEntitiesConfiguration
       ).mockResolvedValue(mockEntities);
       vi.mocked(
-        linIdConfigurationService.getRoutesConfiguration
+        linidConfigurationService.getRoutesConfiguration
       ).mockResolvedValue(mockRoutes);
 
       await store.fetchConfiguration();
@@ -98,13 +98,13 @@ describe('Test store: linIdConfigurationStore', () => {
       let loadingDuringFetch = false;
 
       vi.mocked(
-        linIdConfigurationService.getEntitiesConfiguration
+        linidConfigurationService.getEntitiesConfiguration
       ).mockImplementation(async () => {
         loadingDuringFetch = store.loading;
         return [];
       });
       vi.mocked(
-        linIdConfigurationService.getRoutesConfiguration
+        linidConfigurationService.getRoutesConfiguration
       ).mockResolvedValue([]);
 
       await store.fetchConfiguration();
@@ -120,7 +120,7 @@ describe('Test store: linIdConfigurationStore', () => {
       const error = new Error('Network failure');
 
       vi.mocked(
-        linIdConfigurationService.getEntitiesConfiguration
+        linidConfigurationService.getEntitiesConfiguration
       ).mockRejectedValue(error);
 
       await store.fetchConfiguration();
@@ -130,7 +130,7 @@ describe('Test store: linIdConfigurationStore', () => {
       expect(store.entities).toEqual([]);
       expect(store.routes).toEqual([]);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        '[LinID CoreLib] Failed to fetch configuration:',
+        '[Linid CoreLib] Failed to fetch configuration:',
         error
       );
 
@@ -143,7 +143,7 @@ describe('Test store: linIdConfigurationStore', () => {
         .mockImplementation(() => {});
 
       vi.mocked(
-        linIdConfigurationService.getEntitiesConfiguration
+        linidConfigurationService.getEntitiesConfiguration
       ).mockRejectedValue('String error');
 
       await store.fetchConfiguration();
@@ -157,10 +157,10 @@ describe('Test store: linIdConfigurationStore', () => {
       store.error = 'Previous error';
 
       vi.mocked(
-        linIdConfigurationService.getEntitiesConfiguration
+        linidConfigurationService.getEntitiesConfiguration
       ).mockResolvedValue([]);
       vi.mocked(
-        linIdConfigurationService.getRoutesConfiguration
+        linidConfigurationService.getRoutesConfiguration
       ).mockResolvedValue([]);
 
       await store.fetchConfiguration();

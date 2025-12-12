@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.10...v0.0.11) (2025-12-12)
+
+
+### Features
+
+* add composable to manage UI Design ([22d609f](https://github.com/linagora/linid-im-front-corelib/commit/22d609f2fd928f1dad0260938397942558011a19))
+* add types to manage Route ([ef30812](https://github.com/linagora/linid-im-front-corelib/commit/ef308120e1c0d644ae7b46664b62dd5b1555391d))
+
 ### [0.0.10](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.9...v0.0.10) (2025-12-11)
 
 

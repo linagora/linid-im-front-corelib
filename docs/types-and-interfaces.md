@@ -52,7 +52,8 @@ export interface RemoteComponentModule {
 
 **Usage:**
 
-Used internally by [`loadAsyncComponent`](./helpers.md#loadasynccomponent) to ensure type safety when loading federated components.
+Used internally by [`loadAsyncComponent`](./helpers.md#loadasynccomponent) to ensure type safety when loading federated
+components.
 
 **Remote modules must export a default component:**
 
@@ -63,7 +64,7 @@ Used internally by [`loadAsyncComponent`](./helpers.md#loadasynccomponent) to en
 </template>
 
 <script setup lang="ts">
-// Default export is automatic
+  // Default export is automatic
 </script>
 ```
 
@@ -131,6 +132,8 @@ interface LinidConfigurationState {
 | `LinidEntityConfiguration`    | Describes an entity and its attributes                |
 | `LinidRouteConfiguration`     | Describes a REST route                                |
 | `LinidConfigurationState`     | Defines the structure of the configuration store      |
+| `LinidRoute`                  | Defines the structure of a top-level route            |
+| `LinidSubRoute`               | Defines the structure of a nested child route         |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

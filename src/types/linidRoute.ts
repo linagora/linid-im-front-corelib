@@ -24,54 +24,30 @@
  * LinID Identity Manager software.
  */
 
-// Components
-export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
+/**
+ * Represents a top-level route exposed by a remote module.
+ * This mirrors Vue Router’s route structure, except that `component`
+ * refers to a remote module federation component identifier rather
+ * than a local Vue component. The host will dynamically load the
+ * remote component and register the route in the Vue Router instance.
+ */
+export interface LinidRoute {
+  /** Absolute or nested route path (e.g. "/admin" or "settings"). */
+  path: string;
+  /** Remote component name, resolved through Module Federation (e.g. "remoteA/ComponentX"). */
+  component: string;
+  /** Optional list of child routes for nested routing. */
+  children: LinidSubRoute[];
+}
 
-// Composables
-export { useUiDesign } from './composables/useUiDesign';
-
-// Stores
-export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
-export { useLinidZoneStore } from './stores/linidZoneStore';
-
-// Services
-export { loadAsyncComponent } from './services/federationService';
-export { getHttpClient, setHttpClient } from './services/httpClientService';
-export { getUiDesign, setUiDesign } from './services/uiDesignService';
-
-// Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
-
-// Types - route
-export type { LinidRoute, LinidSubRoute } from './types/linidRoute';
-
-// Types - Configuration
-export type {
-  LinidAttributeConfiguration,
-  LinidEntityConfiguration,
-  LinidRouteConfiguration,
-} from './types/linidConfiguration';
-
-export type {
-  ModuleHostConfig,
-  RemoteComponentModule,
-  RemoteModule,
-} from './types/module';
-
-// Types - Module Lifecycle
-export type {
-  ModuleLifecycleHooks,
-  ModuleLifecycleResult,
-} from './types/moduleLifecycle';
-
-// Types - UI design
-export type {
-  UiDesign,
-  UiDesignValue,
-  UiDesignNamespace,
-} from './types/uiDesign';
-
-export { ModuleLifecyclePhase } from './types/moduleLifecycle';
-
-// Lifecycle Base Class
-export { BasicRemoteModule } from './lifecycle/skeleton';
+/**
+ * Represents a child route within a parent `LinidRoute`.
+ * Same structure as Vue Router `RouteRecordRaw`, with `component`
+ * pointing to a remote module federation component.
+ */
+export interface LinidSubRoute {
+  /** Relative path under the parent route. */
+  path: string;
+  /** Remote component identifier (e.g. "remoteB/SubPage"). */
+  component: string;
+}

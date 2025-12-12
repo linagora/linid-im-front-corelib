@@ -37,6 +37,17 @@ export { useLinidZoneStore } from './stores/linidZoneStore';
 // Services
 export { loadAsyncComponent } from './services/federationService';
 export { getHttpClient, setHttpClient } from './services/httpClientService';
+export {
+  deleteEntityById,
+  getEntities,
+  getEntityById,
+  saveEntity,
+  updateEntity,
+} from './services/linidEntityService';
+export {
+  getModuleHostConfiguration,
+  registerModuleHostConfiguration,
+} from './services/linidModuleConfigurationService';
 export { getUiDesign, setUiDesign } from './services/uiDesignService';
 
 // Types - Zones
@@ -47,9 +58,9 @@ export type { LinidRoute, LinidSubRoute } from './types/linidRoute';
 
 // Types - Configuration
 export type {
+  LinidApiEndpointConfiguration,
   LinidAttributeConfiguration,
   LinidEntityConfiguration,
-  LinidApiEndpointConfiguration,
 } from './types/linidConfiguration';
 
 export type {
@@ -67,8 +78,8 @@ export type {
 // Types - UI design
 export type {
   UiDesign,
-  UiDesignValue,
   UiDesignNamespace,
+  UiDesignValue,
 } from './types/uiDesign';
 
 export { ModuleLifecyclePhase } from './types/moduleLifecycle';

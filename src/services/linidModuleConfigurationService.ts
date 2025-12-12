@@ -24,84 +24,39 @@
  * LinID Identity Manager software.
  */
 
-import type { Component } from 'vue';
-import type { ModuleLifecycleHooks } from './moduleLifecycle';
+import type { ModuleHostConfig } from '../types/module';
 
 /**
- * Remote module interface.
- *
- * All remote modules exposed via Module Federation should implement this interface.
- * This is the contract between the host application and remote modules.
+ * Stores the configuration of all registered module hosts.
+ * Keyed by `instanceId` of each module.
  */
-export interface RemoteModule extends ModuleLifecycleHooks {
-  /**
-   * Unique identifier for the module.
-   *
-   * Should be in kebab-case and match the ID in the module configuration.
-   */
-  id: string;
+const moduleHostConfigurations = new Map<string, ModuleHostConfig>();
 
-  /**
-   * Human-readable name of the module.
-   */
-  name: string;
-
-  /**
-   * Version of the module.
-   *
-   * Should follow semantic versioning (semver).
-   */
-  version: string;
-
-  /**
-   * Optional description of the module.
-   *
-   * Provide a brief description of what the module does.
-   */
-  description?: string;
+/**
+ * Registers a module host configuration in the global store.
+ * If a configuration with the same `instanceId` already exists, it will be overwritten.
+ * @param hostConfig - The configuration object of the module host to register.
+ */
+export function registerModuleHostConfiguration(hostConfig: ModuleHostConfig) {
+  moduleHostConfigurations.set(hostConfig.instanceId, hostConfig);
 }
 
 /**
- * Module configuration in the host (module-<name>.json).
- *
- * This is what the host provides to each module during the configuration phase.
- * The host reads this from `module-<name>.json` files.
+ * Retrieves a module host configuration by its `instanceId`.
+ * @param instanceId - The unique identifier of the module host.
+ * @throws {Error} If no module host configuration is found for the given instanceId.
+ * @returns The `ModuleHostConfig` associated with the given `instanceId`.
  */
-export interface ModuleHostConfig {
-  /**
-   * Unique identifier for this instance of the module.
-   * Typically used to differentiate multiple instances of the same module within the host.
-   */
-  instanceId: string;
+export function getModuleHostConfiguration(
+  instanceId: string
+): ModuleHostConfig {
+  const configuration = moduleHostConfigurations.get(instanceId);
 
-  /**
-   * Module Federation remote name (must match a key in remotes.json).
-   *
-   * This is the name used to load the remote module via Module Federation.
-   */
-  remoteName: string;
+  if (!configuration) {
+    throw new Error(
+      `[LinID CoreLib] No module host configuration found for instanceId: ${instanceId}`
+    );
+  }
 
-  /**
-   * Name of the entity used in the host configuration.
-   * Allows the module to retrieve associated attributes and other information for this entity.
-   */
-  entity: string;
-
-  /**
-   * Base URL for the module's API endpoints.
-   * All API requests from the module should be prefixed with this endpoint.
-   */
-  apiEndpoint: string;
-}
-
-/**
- * Module structure for a Vue component exposed via Module Federation.
- *
- * Remote modules must export a Vue component as their default export.
- */
-export interface RemoteComponentModule {
-  /**
-   * The default exported Vue component.
-   */
-  default: Component;
+  return configuration;
 }

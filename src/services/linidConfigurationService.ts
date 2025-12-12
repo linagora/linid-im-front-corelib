@@ -25,8 +25,8 @@
  */
 
 import type {
+  LinidApiEndpointConfiguration,
   LinidEntityConfiguration,
-  LinidRouteConfiguration,
 } from '../types/linidConfiguration';
 import { getHttpClient } from './httpClientService';
 
@@ -61,13 +61,15 @@ export async function getEntityConfiguration(
 }
 
 /**
- * Fetches all route configurations from the backend.
- * @returns A promise resolving to an array of route configurations.
+ * Fetches all api endpoint configurations from the backend.
+ * @returns A promise resolving to an array of api endpoint configurations.
  */
-export async function getRoutesConfiguration(): Promise<
-  LinidRouteConfiguration[]
+export async function getApiEndpointsConfiguration(): Promise<
+  LinidApiEndpointConfiguration[]
 > {
   const response =
-    await getHttpClient().get<LinidRouteConfiguration[]>('/metadata/routes');
+    await getHttpClient().get<LinidApiEndpointConfiguration[]>(
+      '/metadata/routes'
+    );
   return response.data;
 }

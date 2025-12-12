@@ -55,16 +55,16 @@ export interface LinidEntityConfiguration {
 }
 
 /**
- * Represents a REST route configuration exposed by the application.
+ * Represents a REST api endpoint configuration exposed by the application.
  * Returned by the `/metadata/routes` endpoint.
  */
-export interface LinidRouteConfiguration {
+export interface LinidApiEndpointConfiguration {
   /** The HTTP method (e.g., "GET", "POST", "PUT", "DELETE"). */
   method: string;
-  /** The full route path (e.g., "/entities/{entity}"). */
+  /** The full api endpoint path (e.g., "/entities/{entity}"). */
   path: string;
-  /** The name of the entity this route is related to; may be null for generic routes. */
+  /** The name of the entity this api endpoint is related to; may be null for generic api endpoints. */
   entity: string | null;
-  /** The list of path variable names used in the route (e.g., ["entity", "id"]). */
+  /** The list of path variable names used in the api endpoint (e.g., ["entity", "id"]). */
   variables: string[];
 }

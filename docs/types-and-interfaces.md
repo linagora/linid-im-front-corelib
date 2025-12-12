@@ -64,7 +64,7 @@ components.
 </template>
 
 <script setup lang="ts">
-  // Default export is automatic
+// Default export is automatic
 </script>
 ```
 
@@ -95,7 +95,7 @@ Describes a single attribute of an entity (name, type, input settings, validatio
 Represents an entity with its name and list of attributes.
 Returned by `/metadata/entities` and `/metadata/entities/:entity`.
 
-### LinidRouteConfiguration
+### LinidApiEndpointConfiguration
 
 Represents a REST route (method, path, entity, variables).
 Returned by `/metadata/routes`.
@@ -110,8 +110,8 @@ Represents the state of the Pinia store that manages entity and route configurat
 interface LinidConfigurationState {
   /** List of entity configurations fetched from the backend. */
   entities: LinidEntityConfiguration[];
-  /** List of route configurations fetched from the backend. */
-  routes: LinidRouteConfiguration[];
+  /** List of api endpoint configurations fetched from the backend. */
+  apiEndpoints: LinidApiEndpointConfiguration[];
   /** Indicates if the configuration is currently being loaded. */
   loading: boolean;
   /** Error message if the configuration fetch failed. */
@@ -123,17 +123,17 @@ interface LinidConfigurationState {
 
 ## 🧰 Summary
 
-| Type / Interface              | Purpose                                               |
-|-------------------------------|-------------------------------------------------------|
-| `LinidZoneEntry`              | Defines the contract for a plugin component           |
-| `LinidZoneState`              | Defines the structure of the zone store               |
-| `RemoteComponentModule`       | Defines the structure of a federated component module |
-| `LinidAttributeConfiguration` | Describes an entity attribute                         |
-| `LinidEntityConfiguration`    | Describes an entity and its attributes                |
-| `LinidRouteConfiguration`     | Describes a REST route                                |
-| `LinidConfigurationState`     | Defines the structure of the configuration store      |
-| `LinidRoute`                  | Defines the structure of a top-level route            |
-| `LinidSubRoute`               | Defines the structure of a nested child route         |
+| Type / Interface                | Purpose                                               |
+| ------------------------------- | ----------------------------------------------------- |
+| `LinidZoneEntry`                | Defines the contract for a plugin component           |
+| `LinidZoneState`                | Defines the structure of the zone store               |
+| `RemoteComponentModule`         | Defines the structure of a federated component module |
+| `LinidAttributeConfiguration`   | Describes an entity attribute                         |
+| `LinidEntityConfiguration`      | Describes an entity and its attributes                |
+| `LinidApiEndpointConfiguration` | Describes a REST route                                |
+| `LinidConfigurationState`       | Defines the structure of the configuration store      |
+| `LinidRoute`                    | Defines the structure of a top-level route            |
+| `LinidSubRoute`                 | Defines the structure of a nested child route         |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

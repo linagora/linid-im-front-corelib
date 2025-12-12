@@ -49,7 +49,7 @@ export type { LinidRoute, LinidSubRoute } from './types/linidRoute';
 export type {
   LinidAttributeConfiguration,
   LinidEntityConfiguration,
-  LinidRouteConfiguration,
+  LinidApiEndpointConfiguration,
 } from './types/linidConfiguration';
 
 export type {

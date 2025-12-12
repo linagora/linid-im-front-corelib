@@ -1,8 +1,8 @@
 import * as httpClientService from 'src/services/httpClientService';
 import {
+  getApiEndpointsConfiguration,
   getEntitiesConfiguration,
   getEntityConfiguration,
-  getRoutesConfiguration,
 } from 'src/services/linidConfigurationService.ts';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -90,24 +90,26 @@ describe('Test service: linidConfigurationService', () => {
     });
   });
 
-  describe('Test function: getRoutesConfiguration', () => {
-    it('should fetch all routes from /metadata/routes', async () => {
-      const mockRoutes = [
+  describe('Test function: getApiEndpointsConfiguration', () => {
+    it('should fetch all api endpoints from /metadata/routes', async () => {
+      const mockApiEndpoints = [
         { method: 'GET', path: '/users', entity: 'user', variables: [] },
         { method: 'POST', path: '/users', entity: 'user', variables: [] },
       ];
-      mockHttpClient.get.mockResolvedValue({ data: mockRoutes });
+      mockHttpClient.get.mockResolvedValue({ data: mockApiEndpoints });
 
-      const result = await getRoutesConfiguration();
+      const result = await getApiEndpointsConfiguration();
 
       expect(mockHttpClient.get).toHaveBeenCalledWith('/metadata/routes');
-      expect(result).toEqual(mockRoutes);
+      expect(result).toEqual(mockApiEndpoints);
     });
 
     it('should propagate errors from HTTP client', async () => {
       mockHttpClient.get.mockRejectedValue(new Error('Server error'));
 
-      await expect(getRoutesConfiguration()).rejects.toThrow('Server error');
+      await expect(getApiEndpointsConfiguration()).rejects.toThrow(
+        'Server error'
+      );
     });
   });
 });

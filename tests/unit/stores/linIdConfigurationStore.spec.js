@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('src/services/linidConfigurationService', () => ({
   getEntitiesConfiguration: vi.fn(),
-  getRoutesConfiguration: vi.fn(),
+  getApiEndpointsConfiguration: vi.fn(),
 }));
 
 describe('Test store: linidConfigurationStore', () => {
@@ -20,7 +20,7 @@ describe('Test store: linidConfigurationStore', () => {
   describe('Test initial state', () => {
     it('should have empty initial state', () => {
       expect(store.entities).toEqual([]);
-      expect(store.routes).toEqual([]);
+      expect(store.apiEndpoints).toEqual([]);
       expect(store.loading).toBe(false);
       expect(store.error).toBeNull();
     });
@@ -45,37 +45,37 @@ describe('Test store: linidConfigurationStore', () => {
     });
   });
 
-  describe('Test getter: getRoutesByEntity', () => {
-    it('should return empty array when no routes match', () => {
-      store.routes = [
+  describe('Test getter: getApiEndpointsByEntity', () => {
+    it('should return empty array when no apiEndpoints match', () => {
+      store.apiEndpoints = [
         { method: 'GET', path: '/groups', entity: 'group', variables: [] },
       ];
 
-      const result = store.getRoutesByEntity('user');
+      const result = store.getApiEndpointsByEntity('user');
 
       expect(result).toEqual([]);
     });
 
-    it('should return all routes for the specified entity', () => {
-      const userRoutes = [
+    it('should return all apiEndpoints for the specified entity', () => {
+      const userApiEndpoints = [
         { method: 'GET', path: '/users', entity: 'user', variables: [] },
         { method: 'POST', path: '/users', entity: 'user', variables: [] },
       ];
-      store.routes = [
-        ...userRoutes,
+      store.apiEndpoints = [
+        ...userApiEndpoints,
         { method: 'GET', path: '/groups', entity: 'group', variables: [] },
       ];
 
-      const result = store.getRoutesByEntity('user');
+      const result = store.getApiEndpointsByEntity('user');
 
-      expect(result).toEqual(userRoutes);
+      expect(result).toEqual(userApiEndpoints);
     });
   });
 
   describe('Test action: fetchConfiguration', () => {
-    it('should fetch entities and routes successfully', async () => {
+    it('should fetch entities and apiEndpoints successfully', async () => {
       const mockEntities = [{ name: 'user', attributes: [] }];
-      const mockRoutes = [
+      const mockApiEndpoints = [
         { method: 'GET', path: '/users', entity: 'user', variables: [] },
       ];
 
@@ -83,13 +83,13 @@ describe('Test store: linidConfigurationStore', () => {
         linidConfigurationService.getEntitiesConfiguration
       ).mockResolvedValue(mockEntities);
       vi.mocked(
-        linidConfigurationService.getRoutesConfiguration
-      ).mockResolvedValue(mockRoutes);
+        linidConfigurationService.getApiEndpointsConfiguration
+      ).mockResolvedValue(mockApiEndpoints);
 
       await store.fetchConfiguration();
 
       expect(store.entities).toEqual(mockEntities);
-      expect(store.routes).toEqual(mockRoutes);
+      expect(store.apiEndpoints).toEqual(mockApiEndpoints);
       expect(store.loading).toBe(false);
       expect(store.error).toBeNull();
     });
@@ -104,7 +104,7 @@ describe('Test store: linidConfigurationStore', () => {
         return [];
       });
       vi.mocked(
-        linidConfigurationService.getRoutesConfiguration
+        linidConfigurationService.getApiEndpointsConfiguration
       ).mockResolvedValue([]);
 
       await store.fetchConfiguration();
@@ -128,7 +128,7 @@ describe('Test store: linidConfigurationStore', () => {
       expect(store.error).toBe('Network failure');
       expect(store.loading).toBe(false);
       expect(store.entities).toEqual([]);
-      expect(store.routes).toEqual([]);
+      expect(store.apiEndpoints).toEqual([]);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         '[Linid CoreLib] Failed to fetch configuration:',
         error
@@ -160,7 +160,7 @@ describe('Test store: linidConfigurationStore', () => {
         linidConfigurationService.getEntitiesConfiguration
       ).mockResolvedValue([]);
       vi.mocked(
-        linidConfigurationService.getRoutesConfiguration
+        linidConfigurationService.getApiEndpointsConfiguration
       ).mockResolvedValue([]);
 
       await store.fetchConfiguration();

@@ -26,12 +26,12 @@
 
 import { defineStore } from 'pinia';
 import {
+  getApiEndpointsConfiguration,
   getEntitiesConfiguration,
-  getRoutesConfiguration,
 } from '../services/linidConfigurationService';
 import type {
+  LinidApiEndpointConfiguration,
   LinidEntityConfiguration,
-  LinidRouteConfiguration,
 } from '../types/linidConfiguration';
 
 /**
@@ -40,8 +40,8 @@ import type {
 interface LinidConfigurationState {
   /** List of entity configurations fetched from the backend. */
   entities: LinidEntityConfiguration[];
-  /** List of route configurations fetched from the backend. */
-  routes: LinidRouteConfiguration[];
+  /** List of api endpoint configurations fetched from the backend. */
+  apiEndpoints: LinidApiEndpointConfiguration[];
   /** Indicates if the configuration is currently being loaded. */
   loading: boolean;
   /** Error message if the configuration fetch failed. */
@@ -58,7 +58,7 @@ export const useLinidConfigurationStore = defineStore(
   {
     state: (): LinidConfigurationState => ({
       entities: [],
-      routes: [],
+      apiEndpoints: [],
       loading: false,
       error: null,
     }),
@@ -75,32 +75,34 @@ export const useLinidConfigurationStore = defineStore(
           state.entities.find((entity) => entity.name === name),
 
       /**
-       * Returns all routes for a specific entity.
+       * Returns all api endpoints for a specific entity.
        * @param state - The store state.
-       * @returns A function that takes an entity name and returns its routes.
+       * @returns A function that takes an entity name and returns its api endpoints.
        */
-      getRoutesByEntity:
+      getApiEndpointsByEntity:
         (state) =>
-        (entityName: string): LinidRouteConfiguration[] =>
-          state.routes.filter((route) => route.entity === entityName),
+        (entityName: string): LinidApiEndpointConfiguration[] =>
+          state.apiEndpoints.filter(
+            (apiEndpoint) => apiEndpoint.entity === entityName
+          ),
     },
 
     actions: {
       /**
-       * Fetches all entity and route configurations from the backend.
+       * Fetches all entity and api endpoint configurations from the backend.
        */
       async fetchConfiguration(): Promise<void> {
         this.loading = true;
         this.error = null;
 
         try {
-          const [entities, routes] = await Promise.all([
+          const [entities, apiEndpoints] = await Promise.all([
             getEntitiesConfiguration(),
-            getRoutesConfiguration(),
+            getApiEndpointsConfiguration(),
           ]);
 
           this.entities = entities;
-          this.routes = routes;
+          this.apiEndpoints = apiEndpoints;
         } catch (err) {
           this.error =
             err instanceof Error

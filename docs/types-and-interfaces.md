@@ -39,14 +39,28 @@ interface LinidZoneState {
 
 ---
 
-## 📦 RemoteComponentModule
+## 📦 FederatedModule
 
-Defines the structure of a Vue component module loaded via Module Federation.
+Defines the structure of a remote module loaded via Module Federation.
 
 ```ts
-export interface RemoteComponentModule {
-  /** The default exported Vue component */
-  default: Component;
+/**
+ * ESM namespace object returned when loading a remote module through
+ * Module Federation (for example via `loadRemote`).
+ *
+ * In a Vite + native ESM environment, federated modules are not auto-unwrapped:
+ * the effective export is exposed on the `default` property of the namespace.
+ * @template T Type of the value exported as `default` by the federated module.
+ */
+export interface FederatedModule<T> {
+  /**
+   * Default export of the federated module.
+   *
+   * This commonly represents a concrete runtime value such as a lifecycle
+   * instance, service, or class instance, but may also be a function, class,
+   * or plain object depending on the remote’s contract.
+   */
+  default: T;
 }
 ```
 
@@ -295,7 +309,7 @@ export interface QueryFilter {
 | ------------------------------- | ----------------------------------------------------- |
 | `LinidZoneEntry`                | Defines the contract for a plugin component           |
 | `LinidZoneState`                | Defines the structure of the zone store               |
-| `RemoteComponentModule`         | Defines the structure of a federated component module |
+| `FederatedModule`               | Defines the structure of a federated component module |
 | `LinidAttributeConfiguration`   | Describes an entity attribute                         |
 | `LinidEntityConfiguration`      | Describes an entity and its attributes                |
 | `LinidApiEndpointConfiguration` | Describes a REST route                                |

@@ -24,7 +24,6 @@
  * LinID Identity Manager software.
  */
 
-import type { Component } from 'vue';
 import type { ModuleLifecycleHooks } from './moduleLifecycle';
 
 /**
@@ -95,13 +94,20 @@ export interface ModuleHostConfig {
 }
 
 /**
- * Module structure for a Vue component exposed via Module Federation.
+ * ESM namespace object returned when loading a remote module through
+ * Module Federation (for example via `loadRemote`).
  *
- * Remote modules must export a Vue component as their default export.
+ * In a Vite + native ESM environment, federated modules are not auto-unwrapped:
+ * the effective export is exposed on the `default` property of the namespace.
+ * @template T Type of the value exported as `default` by the federated module.
  */
-export interface RemoteComponentModule {
+export interface FederatedModule<T> {
   /**
-   * The default exported Vue component.
+   * Default export of the federated module.
+   *
+   * This commonly represents a concrete runtime value such as a lifecycle
+   * instance, service, or class instance, but may also be a function, class,
+   * or plain object depending on the remote’s contract.
    */
-  default: Component;
+  default: T;
 }

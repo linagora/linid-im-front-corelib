@@ -36,7 +36,11 @@ export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
 export { useLinidZoneStore } from './stores/linidZoneStore';
 
 // Services
-export { loadAsyncComponent } from './services/federationService';
+export {
+  getModuleFederation,
+  loadAsyncComponent,
+  setModuleFederation,
+} from './services/federationService';
 export { getHttpClient, setHttpClient } from './services/httpClientService';
 export {
   deleteEntityById,

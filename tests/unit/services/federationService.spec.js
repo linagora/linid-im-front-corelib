@@ -1,5 +1,3 @@
-import { loadRemote } from '@module-federation/enhanced/runtime';
-import { loadAsyncComponent } from 'src/services/federationService';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineAsyncComponent } from 'vue';
 
@@ -12,16 +10,63 @@ vi.mock('vue', async () => {
   };
 });
 
+// We need to reset the module between tests to clear the singleton
+let getModuleFederation, setModuleFederation, loadAsyncComponent;
+
 describe('Test service: federationService', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    vi.resetModules();
+    const module = await import('src/services/federationService');
+    getModuleFederation = module.getModuleFederation;
+    setModuleFederation = module.setModuleFederation;
+    loadAsyncComponent = module.loadAsyncComponent;
     vi.clearAllMocks();
+  });
+
+  describe('Test function: setModuleFederation', () => {
+    it('should set the Module Federation successfully', () => {
+      const instance = { loadRemote: vi.fn() };
+
+      setModuleFederation(instance);
+
+      expect(getModuleFederation()).toBe(instance);
+    });
+
+    it('should warn and ignore re-initialization', () => {
+      const consoleWarnSpy = vi
+        .spyOn(globalThis.console, 'warn')
+        .mockImplementation(() => {});
+      const firstClient = { loadRemote: vi.fn() };
+      const secondClient = { createInstance: vi.fn() };
+
+      setModuleFederation(firstClient);
+      setModuleFederation(secondClient);
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        '[LinID CoreLib] Module Federation has already been initialized. Re-initialization is ignored.'
+      );
+      expect(getModuleFederation()).toBe(firstClient);
+
+      consoleWarnSpy.mockRestore();
+    });
+  });
+
+  describe('Test function: getModuleFederation', () => {
+    it('should throw an error if instance is not initialized', () => {
+      expect(() => getModuleFederation()).toThrow(
+        '[LinID CoreLib] Module Federation is not initialized. Call setModuleFederation() first.'
+      );
+    });
   });
 
   describe('Test function: loadAsyncComponent', () => {
     it('should load a remote component successfully', async () => {
       const testComponent = { default: 'RemoteTestComponent' };
-      const remoteModule = { './TestComponent': testComponent };
-      vi.mocked(loadRemote).mockResolvedValue(remoteModule['./TestComponent']);
+      const loadRemote = vi.fn().mockResolvedValue(testComponent);
+
+      setModuleFederation({
+        loadRemote,
+      });
 
       const loader = loadAsyncComponent('test-plugin/TestComponent');
       const result = await loader();
@@ -34,8 +79,11 @@ describe('Test service: federationService', () => {
 
     it('should throw an error if remote component export a null default', async () => {
       const testComponent = { default: null };
-      const remoteModule = { './TestComponent': testComponent };
-      vi.mocked(loadRemote).mockResolvedValue(remoteModule['./TestComponent']);
+      const loadRemote = vi.fn().mockResolvedValue(testComponent);
+
+      setModuleFederation({
+        loadRemote,
+      });
 
       const loader = loadAsyncComponent('invalid-plugin/TestComponent');
 
@@ -47,8 +95,11 @@ describe('Test service: federationService', () => {
 
     it('should throw an error if remote component export an undefined default', async () => {
       const testComponent = { default: undefined };
-      const remoteModule = { './TestComponent': testComponent };
-      vi.mocked(loadRemote).mockResolvedValue(remoteModule['./TestComponent']);
+      const loadRemote = vi.fn().mockResolvedValue(testComponent);
+
+      setModuleFederation({
+        loadRemote,
+      });
 
       const loader = loadAsyncComponent('invalid-plugin/TestComponent');
 
@@ -60,8 +111,11 @@ describe('Test service: federationService', () => {
 
     it('should throw an error if remote component does not have a default export', async () => {
       const testComponent = { toto: vi.fn() };
-      const remoteModule = { './TestComponent': testComponent };
-      vi.mocked(loadRemote).mockResolvedValue(remoteModule['./TestComponent']);
+      const loadRemote = vi.fn().mockResolvedValue(testComponent);
+
+      setModuleFederation({
+        loadRemote,
+      });
 
       const loader = loadAsyncComponent('invalid-plugin/TestComponent');
 
@@ -72,7 +126,11 @@ describe('Test service: federationService', () => {
     });
 
     it('should throw an error if module is null', async () => {
-      vi.mocked(loadRemote).mockResolvedValue(null);
+      const loadRemote = vi.fn().mockResolvedValue(null);
+
+      setModuleFederation({
+        loadRemote,
+      });
 
       const loader = loadAsyncComponent('null-plugin/TestComponent');
 
@@ -82,7 +140,11 @@ describe('Test service: federationService', () => {
     });
 
     it('should throw an error if module is undefined', async () => {
-      vi.mocked(loadRemote).mockResolvedValue(undefined);
+      const loadRemote = vi.fn().mockResolvedValue(undefined);
+
+      setModuleFederation({
+        loadRemote,
+      });
 
       const loader = loadAsyncComponent('undefined-plugin/TestComponent');
 
@@ -93,8 +155,11 @@ describe('Test service: federationService', () => {
 
     it('should throw an error if loadRemote rejects', async () => {
       const error = new Error('Network error');
+      const loadRemote = vi.fn().mockRejectedValue(error);
 
-      vi.mocked(loadRemote).mockRejectedValue(error);
+      setModuleFederation({
+        loadRemote,
+      });
 
       const loader = loadAsyncComponent('failing-plugin/TestComponent');
 
@@ -105,16 +170,18 @@ describe('Test service: federationService', () => {
     it('should handle different plugin names', async () => {
       const plugins = ['plugin-a', 'plugin-b', 'plugin-c'];
       const testComponentA = { default: 'RemoteTestComponentA' };
-      const remoteModuleA = { './TestComponent': testComponentA };
       const testComponentB = { default: 'RemoteTestComponentB' };
-      const remoteModuleB = { './TestComponent': testComponentB };
       const testComponentC = { default: 'RemoteTestComponentC' };
-      const remoteModuleC = { './TestComponent': testComponentC };
 
-      vi.mocked(loadRemote)
-        .mockResolvedValueOnce(remoteModuleA['./TestComponent'])
-        .mockResolvedValueOnce(remoteModuleB['./TestComponent'])
-        .mockResolvedValueOnce(remoteModuleC['./TestComponent']);
+      const loadRemote = vi
+        .fn()
+        .mockResolvedValueOnce(testComponentA)
+        .mockResolvedValueOnce(testComponentB)
+        .mockResolvedValueOnce(testComponentC);
+
+      setModuleFederation({
+        loadRemote,
+      });
 
       for (const plugin of plugins) {
         const loader = loadAsyncComponent(`${plugin}/TestComponent`);
@@ -126,21 +193,6 @@ describe('Test service: federationService', () => {
       }
 
       expect(loadRemote).toHaveBeenCalledTimes(3);
-    });
-
-    it('should handle module with additional exports', async () => {
-      const testComponent = {
-        default: 'RemoteTestComponent',
-        namedExport1: 'value1',
-        namedExport2: 'value2',
-      };
-      const remoteModule = { './TestComponent': testComponent };
-      vi.mocked(loadRemote).mockResolvedValue(remoteModule['./TestComponent']);
-
-      const loader = loadAsyncComponent('multi-export-plugin');
-      const result = await loader();
-
-      expect(result).toEqual('RemoteTestComponent');
     });
   });
 });

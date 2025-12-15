@@ -24,10 +24,59 @@
  * LinID Identity Manager software.
  */
 
-import { loadRemote } from '@module-federation/enhanced/runtime';
+import type { ModuleFederation } from '@module-federation/enhanced/runtime';
 import type { Component } from 'vue';
 import { defineAsyncComponent } from 'vue';
 import type { FederatedModule } from '../types/module';
+
+/**
+ * Singleton Module Federation instance shared across all modules.
+ */
+let moduleFederationInstance: ModuleFederation | null = null;
+
+/**
+ * Registers the active Module Federation instance from host for the application.
+ *
+ * This function must be called exactly once during application startup,
+ * after the Module Federation instance has been retrieved  using
+ * `getInstance()` from `@module-federation/enhanced/runtime`).
+ *
+ * Subsequent calls are ignored to prevent accidental re-initialization,
+ * which could lead to inconsistent remote resolution or shared dependency
+ * conflicts.
+ * @param instance - The active Module Federation instance from host.
+ */
+export function setModuleFederation(instance: ModuleFederation): void {
+  if (moduleFederationInstance !== null) {
+    console.warn(
+      '[LinID CoreLib] Module Federation has already been initialized. Re-initialization is ignored.'
+    );
+    return;
+  }
+
+  moduleFederationInstance = instance;
+}
+
+/**
+ * Returns the active Module Federation instance.
+ *
+ * This accessor enforces correct initialization order by throwing an error
+ * if the instance has not been registered yet.
+ *
+ * Consumers must ensure that `setModuleFederation()` has been called during
+ * application bootstrap before invoking this function.
+ * @throws {Error} If the active Module Federation has not been registered.
+ * @returns The registered Module Federation instance.
+ */
+export function getModuleFederation(): ModuleFederation {
+  if (moduleFederationInstance === null) {
+    throw new Error(
+      '[LinID CoreLib] Module Federation is not initialized. Call setModuleFederation() first.'
+    );
+  }
+
+  return moduleFederationInstance;
+}
 
 /**
  * Loads a remote component using the module federation enhanced runtime.
@@ -36,10 +85,12 @@ import type { FederatedModule } from '../types/module';
  */
 export const loadAsyncComponent = (plugin: string) =>
   defineAsyncComponent(() =>
-    loadRemote<FederatedModule<Component>>(plugin).then((module) => {
-      if (!module?.default) {
-        throw new Error(`Failed to load component from ${plugin}`);
-      }
-      return module.default;
-    })
+    getModuleFederation()
+      .loadRemote<FederatedModule<Component>>(plugin)
+      .then((module) => {
+        if (!module?.default) {
+          throw new Error(`Failed to load component from ${plugin}`);
+        }
+        return module.default;
+      })
   );

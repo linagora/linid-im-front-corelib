@@ -174,7 +174,7 @@ Returns a Vue async component that can be used in templates or rendered programm
 
 1. **Lazy loading:** The component is only loaded when it's actually rendered
 2. **Error handling:** Throws an error if the remote module doesn't export a default component
-3. **Type safety:** Expects the remote module to follow the `RemoteComponentModule` structure
+3. **Type safety:** Expects the remote module to follow the `FederatedModule` structure
 
 ---
 
@@ -297,9 +297,13 @@ The function expects remotes to follow this structure:
 
 ```typescript
 /**
- * Module structure for a Vue component exposed via Module Federation.
+ * ESM namespace object returned when loading a remote component through
+ * Module Federation (for example via `loadRemote`).
+ *
+ * In a Vite + native ESM environment, federated modules are not auto-unwrapped:
+ * the effective export is exposed on the `default` property of the namespace.
  */
-interface RemoteComponentModule {
+interface FederatedModule<Component> {
   /**
    * The default exported Vue component.
    */

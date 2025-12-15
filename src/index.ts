@@ -72,8 +72,8 @@ export type {
 } from './types/linidConfiguration';
 
 export type {
+  FederatedModule,
   ModuleHostConfig,
-  RemoteComponentModule,
   RemoteModule,
 } from './types/module';
 

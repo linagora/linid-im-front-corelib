@@ -25,8 +25,9 @@
  */
 
 import { loadRemote } from '@module-federation/enhanced/runtime';
+import type { Component } from 'vue';
 import { defineAsyncComponent } from 'vue';
-import type { RemoteComponentModule } from '../types/module';
+import type { FederatedModule } from '../types/module';
 
 /**
  * Loads a remote component using the module federation enhanced runtime.
@@ -35,7 +36,7 @@ import type { RemoteComponentModule } from '../types/module';
  */
 export const loadAsyncComponent = (plugin: string) =>
   defineAsyncComponent(() =>
-    loadRemote<RemoteComponentModule>(plugin).then((module) => {
+    loadRemote<FederatedModule<Component>>(plugin).then((module) => {
       if (!module?.default) {
         throw new Error(`Failed to load component from ${plugin}`);
       }

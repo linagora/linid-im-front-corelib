@@ -59,7 +59,7 @@ export { getUiDesign, setUiDesign } from './services/uiDesignService';
 export type { LinidZoneEntry } from './types/linidZone';
 
 // Types - route
-export type { LinidRoute, LinidSubRoute } from './types/linidRoute';
+export type { LinidRoute, LinidRoutes } from './types/linidRoute';
 export type {
   Page,
   Pagination,

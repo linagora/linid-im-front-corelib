@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.11...v0.0.12) (2025-12-18)
+
+
+### Features
+
+* add crud operation for all entities ([0b6e684](https://github.com/linagora/linid-im-front-corelib/commit/0b6e6848df20e8fa6d00590d52a931d8e2a1c8df))
+* rework on ModuleHostConfig access and it's properties ([fc62191](https://github.com/linagora/linid-im-front-corelib/commit/fc62191c0c62aa761b0866155163df2fa4adb56d))
+* store instance of ModuleFederation ([4a8f537](https://github.com/linagora/linid-im-front-corelib/commit/4a8f5370ac2af7c2ef0c646a3b562c9cad1646f3))
+
 ### [0.0.11](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.10...v0.0.11) (2025-12-12)
 
 

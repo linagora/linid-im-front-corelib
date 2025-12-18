@@ -84,10 +84,17 @@ async configure(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
 async configure(
   config: ModuleHostConfig
 ): Promise<ModuleLifecycleResult> {
-  if (!config.id) {
+  // Example: check for required config fields
+  if (!config.instanceId) {
     return {
       success: false,
-      error: 'Missing module ID in configuration'
+      error: 'Missing module instanceId in configuration'
+    };
+  }
+  if (!config.basePath) {
+    return {
+      success: false,
+      error: 'Missing basePath in configuration'
     };
   }
 
@@ -273,7 +280,7 @@ class MyModule extends BasicRemoteModule {
   // Override only the hooks you need
   async initialize(): Promise<ModuleLifecycleResult> {
     // do something
-    
+
     return { success: true };
   }
 }
@@ -314,12 +321,13 @@ class MyModule implements RemoteModule {
     return { success: true };
   }
 
-  async configure(
-    config: ModuleHostConfig
-  ): Promise<ModuleLifecycleResult> {
+  async configure(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
     // Apply configuration
-    if (!config.id) {
-      return { success: false, error: 'Missing module ID' };
+    if (!config.instanceId) {
+      return { success: false, error: 'Missing module instanceId' };
+    }
+    if (!config.basePath) {
+      return { success: false, error: 'Missing basePath' };
     }
     return { success: true };
   }

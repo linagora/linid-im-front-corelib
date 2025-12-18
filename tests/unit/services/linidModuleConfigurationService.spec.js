@@ -10,6 +10,7 @@ describe('Test service: linidModuleConfigurationService', () => {
     name: 'Test Module',
     version: '1.0.0',
     url: '/test-module',
+    basePath: '/app',
   };
 
   beforeEach(() => {
@@ -27,12 +28,17 @@ describe('Test service: linidModuleConfigurationService', () => {
     });
 
     it('should overwrite an existing configuration with the same instanceId', () => {
-      const updatedConfig = { ...mockConfig, name: 'Updated Module' };
+      const updatedConfig = {
+        ...mockConfig,
+        name: 'Updated Module',
+        basePath: '/new-app',
+      };
       registerModuleHostConfiguration(mockConfig);
       registerModuleHostConfiguration(updatedConfig);
 
       const storedConfig = getModuleHostConfiguration(mockConfig.instanceId);
       expect(storedConfig.name).toBe('Updated Module');
+      expect(storedConfig.basePath).toBe('/new-app');
     });
   });
 

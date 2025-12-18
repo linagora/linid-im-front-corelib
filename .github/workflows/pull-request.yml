@@ -136,6 +136,7 @@ jobs:
 
       - name: Run unit tests
         run: |
+          set -o pipefail
           echo '```bash' > coverage.txt
           pnpm test:ci | sed 's/\x1b\[[0-9;]*m//g' >> coverage.txt
           echo '```' >> coverage.txt

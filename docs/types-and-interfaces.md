@@ -132,6 +132,30 @@ interface LinidConfigurationState {
 
 ---
 
+## 🛣️ LinidRoute & LinidRoutes
+
+Defines the structure for application routes, supporting recursive nesting for multi-level routes.
+
+```ts
+export type LinidRoutes = LinidRoute[];
+
+export interface LinidRoute {
+  /** Absolute or nested route path (e.g. "/admin" or "settings"). */
+  path: string;
+  /** Remote component name, resolved through Module Federation (e.g. "remoteA/ComponentX"). */
+  component: string;
+  /** Optional list of child routes for nested routing. */
+  children?: LinidRoutes;
+}
+```
+
+**Usage:**
+
+- Used to describe both top-level and nested routes in the application.
+- Enables recursive route definitions for complex navigation structures.
+
+---
+
 ## 📄 Pagination & Page Types
 
 Utility types used to represent **paginated API responses**, **standard pagination**, and **Quasar QTable events**. Defined in `src/type/page.ts`.
@@ -314,8 +338,8 @@ export interface QueryFilter {
 | `LinidEntityConfiguration`      | Describes an entity and its attributes                |
 | `LinidApiEndpointConfiguration` | Describes a REST route                                |
 | `LinidConfigurationState`       | Defines the structure of the configuration store      |
-| `LinidRoute`                    | Defines the structure of a top-level route            |
-| `LinidSubRoute`                 | Defines the structure of a nested child route         |
+| `LinidRoute`                    | Defines the structure of a route (recursive children) |
+| `LinidRoutes`                   | Array of LinidRoute for nested routes                 |
 | `Page<T>`                       | Paginated API response                                |
 | `Pagination`                    | Backend pagination model                              |
 | `QTableRequestEvent`            | Quasar table server-side request payload              |

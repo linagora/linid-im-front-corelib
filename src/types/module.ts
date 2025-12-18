@@ -91,6 +91,12 @@ export interface ModuleHostConfig {
    * All API requests from the module should be prefixed with this endpoint.
    */
   apiEndpoint: string;
+
+  /**
+   * Base path (default route) for the module in the host application.
+   * Used to mount the module at a specific route.
+   */
+  basePath: string;
 }
 
 /**

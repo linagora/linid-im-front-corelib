@@ -1,4 +1,4 @@
-import usePagination from 'src/composables/usePagination';
+import { usePagination } from 'src/composables/usePagination';
 import { describe, expect, it } from 'vitest';
 
 describe('Test composable: usePagination', () => {

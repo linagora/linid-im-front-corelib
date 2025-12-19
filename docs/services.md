@@ -603,4 +603,179 @@ This service provides a unified, module-aware way to manage backend CRUD operati
 
 ---
 
+## 🍍 Pinia Store Service
+
+Provides a singleton Pinia store instance shared across all modules, ensuring a unified state management context for the entire application.
+
+| Function                          | Description                                    |
+| --------------------------------- | ---------------------------------------------- |
+| [`setPiniaStore`](#setpiniastore) | Initializes the shared Pinia store (call once) |
+| [`getPiniaStore`](#getpiniastore) | Returns the shared Pinia store instance        |
+
+---
+
+### `setPiniaStore`
+
+Initializes the shared Pinia store instance to be used by all modules. Should be called **once** during application bootstrapping by the host application.
+
+```typescript
+import { setPiniaStore } from '@linagora/linid-im-front-corelib';
+import { createPinia } from 'pinia';
+
+const pinia = createPinia();
+setPiniaStore(pinia);
+```
+
+#### Parameters
+
+| Parameter | Type    | Description                      |
+| --------- | ------- | -------------------------------- |
+| `store`   | `Pinia` | The Pinia instance to be shared. |
+
+#### Returns
+
+No return value.
+
+#### Behavior
+
+1. **Singleton:** Only the first call sets the instance; subsequent calls log a warning and do not overwrite the instance.
+2. **Required:** Must be called before any call to `getPiniaStore()`.
+
+#### Error Handling
+
+- If called more than once, logs a warning:  
+  `[LinID CoreLib] Pinia store has already been initialized. Re-initialization is ignored.`
+
+---
+
+### `getPiniaStore`
+
+Retrieves the shared Pinia store instance initialized by `setPiniaStore`.
+
+```typescript
+import { getPiniaStore } from '@linagora/linid-im-front-corelib';
+
+const pinia = getPiniaStore();
+```
+
+#### Parameters
+
+None.
+
+#### Returns
+
+| Type    | Description                |
+| ------- | -------------------------- |
+| `Pinia` | The shared Pinia instance. |
+
+#### Behavior
+
+1. **Singleton:** Always returns the same instance set by `setPiniaStore`.
+2. **Error Handling:** Throws an error if called before initialization.
+
+#### Error Handling
+
+- If called before initialization, throws:  
+  `[LinID CoreLib] Pinia store is not initialized. Call setPiniaStore() first.`
+
+---
+
+### Usage in Store Definitions
+
+All Pinia stores defined in this library (such as `linidConfigurationStore` and `linidZoneStore`) internally use `getPiniaStore()` to ensure they are attached to the singleton Pinia instance created by the host application.
+
+When defining a new store (either in the host or a module), you should follow the same architecture:
+
+1. **Export a composable function** (e.g., `useMyStore`) that calls your internal store definition with the Pinia instance returned by `getPiniaStore()`.
+2. **Do not call `defineStore` directly in the host/module**—always use the exported composable to ensure the correct Pinia context.
+
+#### Example Pattern
+
+```typescript
+// myStore.ts
+import { defineStore } from 'pinia';
+import { getPiniaStore } from '@linagora/linid-im-front-corelib';
+
+export const useMyStore = () => _useMyStore(getPiniaStore());
+
+const _useMyStore = defineStore('myStore', {
+  // state, getters, actions...
+});
+```
+
+This ensures your store is always registered on the singleton Pinia instance shared across all modules.
+
+---
+
+### Usage Examples
+
+#### Basic Usage
+
+```typescript
+import { setPiniaStore, getPiniaStore } from '@linagora/linid-im-front-corelib';
+import { createPinia } from 'pinia';
+
+// Host application bootstrapping
+const pinia = createPinia();
+setPiniaStore(pinia);
+
+// In any module
+const store = getPiniaStore();
+```
+
+#### Using a Store
+
+```typescript
+import { useLinidConfigurationStore } from '@linagora/linid-im-front-corelib';
+
+const configStore = useLinidConfigurationStore();
+```
+
+#### Defining and using a Custom Store in a Module
+
+```typescript
+import { defineStore } from 'pinia';
+import { getPiniaStore } from '@linagora/linid-im-front-corelib';
+
+export const useCustomStore = () => _useCustomStore(getPiniaStore());
+
+const _useCustomStore = defineStore('customStore', {
+  // state, getters, actions...
+});
+```
+
+Then use it in your module:
+
+```typescript
+import { useCustomStore } from './customStore';
+
+const store = useCustomStore();
+```
+
+---
+
+### TypeScript Support
+
+The functions are fully typed for use with Pinia:
+
+```typescript
+import type { Pinia } from 'pinia';
+
+const pinia: Pinia = getPiniaStore();
+```
+
+---
+
+> The Pinia Store Service ensures all modules share a single, consistent Pinia instance for state management.
+
+### Rules
+
+- ✅ Host calls `setPiniaStore()` once during boot
+- ✅ Modules use `getPiniaStore()` to access the same instance
+- ✅ All stores must be defined using a composable that injects the singleton Pinia instance
+- ⚠️ Warning logged if re-initialization is attempted
+- ❌ Error thrown if `getPiniaStore()` is called before initialization
+
+---
+
 > Additional services will be added as new features are implemented in the library.

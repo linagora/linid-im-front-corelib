@@ -25,6 +25,7 @@
  */
 
 import { defineStore } from 'pinia';
+import { getPiniaStore } from '../services/piniaStoreService';
 import type { LinidZoneEntry } from '../types/linidZone';
 
 /**
@@ -36,12 +37,18 @@ interface LinidZoneState {
 }
 
 /**
+ * Returns the Linid Zone Store instance.
+ * @returns The Linid Zone Store instance.
+ */
+export const useLinidZoneStore = () => _useLinidZoneStore(getPiniaStore());
+
+/**
  * Pinia store managing Linid zones and their registered entries.
  *
  * Each zone can contain multiple {@link LinidZoneEntry} objects,
  * and this store provides utilities to register them dynamically.
  */
-export const useLinidZoneStore = defineStore('linidZoneStore', {
+const _useLinidZoneStore = defineStore('linidZoneStore', {
   state: (): LinidZoneState => ({
     zones: {},
   }),

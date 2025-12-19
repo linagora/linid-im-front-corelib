@@ -29,6 +29,7 @@ import {
   getApiEndpointsConfiguration,
   getEntitiesConfiguration,
 } from '../services/linidConfigurationService';
+import { getPiniaStore } from '../services/piniaStoreService';
 import type {
   LinidApiEndpointConfiguration,
   LinidEntityConfiguration,
@@ -49,70 +50,72 @@ interface LinidConfigurationState {
 }
 
 /**
+ * Returns the Linid Configuration Store instance.
+ * @returns The Linid Configuration Store instance.
+ */
+export const useLinidConfigurationStore = () =>
+  _useLinidConfigurationStore(getPiniaStore());
+
+/**
  * Pinia store managing Linid entity and route configurations.
  *
  * Fetches and stores metadata from the backend API.
  */
-export const useLinidConfigurationStore = defineStore(
-  'LinidConfigurationStore',
-  {
-    state: (): LinidConfigurationState => ({
-      entities: [],
-      apiEndpoints: [],
-      loading: false,
-      error: null,
-    }),
+const _useLinidConfigurationStore = defineStore('LinidConfigurationStore', {
+  state: (): LinidConfigurationState => ({
+    entities: [],
+    apiEndpoints: [],
+    loading: false,
+    error: null,
+  }),
 
-    getters: {
-      /**
-       * Returns an entity configuration by name.
-       * @param state - The store state.
-       * @returns A function that takes an entity name and returns the configuration.
-       */
-      getEntityByName:
-        (state) =>
-        (name: string): LinidEntityConfiguration | undefined =>
-          state.entities.find((entity) => entity.name === name),
+  getters: {
+    /**
+     * Returns an entity configuration by name.
+     * @param state - The store state.
+     * @returns A function that takes an entity name and returns the configuration.
+     */
+    getEntityByName:
+      (state) =>
+      (name: string): LinidEntityConfiguration | undefined =>
+        state.entities.find((entity) => entity.name === name),
 
-      /**
-       * Returns all api endpoints for a specific entity.
-       * @param state - The store state.
-       * @returns A function that takes an entity name and returns its api endpoints.
-       */
-      getApiEndpointsByEntity:
-        (state) =>
-        (entityName: string): LinidApiEndpointConfiguration[] =>
-          state.apiEndpoints.filter(
-            (apiEndpoint) => apiEndpoint.entity === entityName
-          ),
+    /**
+     * Returns all api endpoints for a specific entity.
+     * @param state - The store state.
+     * @returns A function that takes an entity name and returns its api endpoints.
+     */
+    getApiEndpointsByEntity:
+      (state) =>
+      (entityName: string): LinidApiEndpointConfiguration[] =>
+        state.apiEndpoints.filter(
+          (apiEndpoint) => apiEndpoint.entity === entityName
+        ),
+  },
+
+  actions: {
+    /**
+     * Fetches all entity and api endpoint configurations from the backend.
+     */
+    async fetchConfiguration(): Promise<void> {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const [entities, apiEndpoints] = await Promise.all([
+          getEntitiesConfiguration(),
+          getApiEndpointsConfiguration(),
+        ]);
+
+        this.entities = entities;
+        this.apiEndpoints = apiEndpoints;
+      } catch (err) {
+        this.error =
+          err instanceof Error ? err.message : 'Failed to fetch configuration';
+        console.error('[Linid CoreLib] Failed to fetch configuration:', err);
+      } finally {
+        this.loading = false;
+      }
     },
-
-    actions: {
-      /**
-       * Fetches all entity and api endpoint configurations from the backend.
-       */
-      async fetchConfiguration(): Promise<void> {
-        this.loading = true;
-        this.error = null;
-
-        try {
-          const [entities, apiEndpoints] = await Promise.all([
-            getEntitiesConfiguration(),
-            getApiEndpointsConfiguration(),
-          ]);
-
-          this.entities = entities;
-          this.apiEndpoints = apiEndpoints;
-        } catch (err) {
-          this.error =
-            err instanceof Error
-              ? err.message
-              : 'Failed to fetch configuration';
-          console.error('[Linid CoreLib] Failed to fetch configuration:', err);
-        } finally {
-          this.loading = false;
-        }
-      },
-    },
-  }
-);
+  },
+});

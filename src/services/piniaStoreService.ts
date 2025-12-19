@@ -24,78 +24,38 @@
  * LinID Identity Manager software.
  */
 
-// Components
-export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
+import type { Pinia } from 'pinia';
 
-// Composables
-export { usePagination } from './composables/usePagination';
-export { useUiDesign } from './composables/useUiDesign';
+/**
+ * Singleton Pinia store instance shared across all modules.
+ */
+let piniaStore: Pinia | null = null;
 
-// Stores
-export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
-export { useLinidZoneStore } from './stores/linidZoneStore';
+/**
+ * Initializes the shared Pinia store instance.
+ * Should be called once by the host application during boot.
+ * @param store - The Pinia instance to use as the shared store.
+ */
+export function setPiniaStore(store: Pinia): void {
+  if (piniaStore !== null) {
+    console.warn(
+      '[LinID CoreLib] Pinia store has already been initialized. Re-initialization is ignored.'
+    );
+    return;
+  }
+  piniaStore = store;
+}
 
-// Services
-export {
-  getModuleFederation,
-  loadAsyncComponent,
-  setModuleFederation,
-} from './services/federationService';
-export { getHttpClient, setHttpClient } from './services/httpClientService';
-export {
-  deleteEntityById,
-  getEntities,
-  getEntityById,
-  saveEntity,
-  updateEntity,
-} from './services/linidEntityService';
-export {
-  getModuleHostConfiguration,
-  registerModuleHostConfiguration,
-} from './services/linidModuleConfigurationService';
-export { getPiniaStore, setPiniaStore } from './services/piniaStoreService';
-export { getUiDesign, setUiDesign } from './services/uiDesignService';
-
-// Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
-
-// Types - route
-export type { LinidRoute, LinidRoutes } from './types/linidRoute';
-export type {
-  Page,
-  Pagination,
-  QTableRequestEvent,
-  QuasarPagination,
-  QueryFilter,
-} from './types/page';
-
-// Types - Configuration
-export type {
-  LinidApiEndpointConfiguration,
-  LinidAttributeConfiguration,
-  LinidEntityConfiguration,
-} from './types/linidConfiguration';
-
-export type {
-  FederatedModule,
-  ModuleHostConfig,
-  RemoteModule,
-} from './types/module';
-
-// Types - Module Lifecycle
-export type {
-  ModuleLifecycleHooks,
-  ModuleLifecycleResult,
-} from './types/moduleLifecycle';
-
-// Types - UI design
-export type {
-  UiDesign,
-  UiDesignNamespace,
-  UiDesignValue,
-} from './types/uiDesign';
-
-export { ModuleLifecyclePhase } from './types/moduleLifecycle';
-
-// Lifecycle Base Class
-export { BasicRemoteModule } from './lifecycle/skeleton';
+/**
+ * Returns the shared Pinia store instance.
+ * Must be called after initialization via `setPiniaStore()`.
+ * @returns The shared Pinia instance.
+ */
+export function getPiniaStore(): Pinia {
+  if (piniaStore === null) {
+    throw new Error(
+      '[LinID CoreLib] Pinia store is not initialized. Call setPiniaStore() first.'
+    );
+  }
+  return piniaStore;
+}

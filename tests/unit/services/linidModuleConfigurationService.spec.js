@@ -44,10 +44,8 @@ describe('Test service: linidModuleConfigurationService', () => {
 
   describe('Test function: getModuleHostConfiguration', () => {
     it('should throw an error if no module host configuration is found for the given instanceId', () => {
-      expect(() =>
-        getModuleHostConfiguration('non-existent-id').toThrow(
-          '[LinID CoreLib] No module host configuration found for instanceId: unknown'
-        )
+      expect(() => getModuleHostConfiguration('non-existent-id')).toThrow(
+        '[LinID CoreLib] No module host configuration found for instanceId: non-existent-id'
       );
     });
   });

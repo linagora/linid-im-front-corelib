@@ -2,12 +2,18 @@ import { flushPromises, shallowMount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import LinidZoneRenderer from 'src/components/LinidZoneRenderer.vue';
 import * as federationService from 'src/services/federationService';
+import * as piniaStoreService from 'src/services/piniaStoreService.ts';
 import { useLinidZoneStore } from 'src/stores/linidZoneStore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick, watch } from 'vue';
 
 vi.mock('src/services/federationService', () => ({
   loadAsyncComponent: vi.fn(),
+}));
+
+vi.mock('src/services/piniaStoreService', () => ({
+  getPiniaStore: vi.fn(),
+  setPiniaStore: vi.fn(),
 }));
 
 describe('Test component: LinidZoneRenderer', () => {
@@ -18,6 +24,7 @@ describe('Test component: LinidZoneRenderer', () => {
   beforeEach(() => {
     pinia = createPinia();
     setActivePinia(pinia);
+    vi.mocked(piniaStoreService.getPiniaStore).mockReturnValue(pinia);
     store = useLinidZoneStore();
     wrapper = shallowMount(LinidZoneRenderer, {
       props: { zone: '' },

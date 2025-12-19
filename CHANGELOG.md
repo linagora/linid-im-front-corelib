@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.13](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.12...v0.0.13) (2025-12-19)
+
+
+### Features
+
+* add basePath property to ModuleHostConfig ([2f01d4c](https://github.com/linagora/linid-im-front-corelib/commit/2f01d4c7d6e59383e4a8b24c938adaac96e65901))
+* make LinidRoute recursive for multi-level nested routes ([b864776](https://github.com/linagora/linid-im-front-corelib/commit/b86477678f6a019b7a1bace9d62bfc923c2f613a))
+
+
+### Bug Fixes
+
+* **ci:** fail workflow if unit tests fail in pull-request workflow ([5e7a50b](https://github.com/linagora/linid-im-front-corelib/commit/5e7a50b602e92d75d7fae49b17d48be080dd3ebf))
+
 ### [0.0.12](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.11...v0.0.12) (2025-12-18)
 
 

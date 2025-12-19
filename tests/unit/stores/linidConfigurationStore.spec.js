@@ -1,5 +1,6 @@
 import { createPinia, setActivePinia } from 'pinia';
 import * as linidConfigurationService from 'src/services/linidConfigurationService.ts';
+import * as piniaStoreService from 'src/services/piniaStoreService.ts';
 import { useLinidConfigurationStore } from 'src/stores/linidConfigurationStore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -8,11 +9,19 @@ vi.mock('src/services/linidConfigurationService', () => ({
   getApiEndpointsConfiguration: vi.fn(),
 }));
 
+vi.mock('src/services/piniaStoreService', () => ({
+  getPiniaStore: vi.fn(),
+  setPiniaStore: vi.fn(),
+}));
+
 describe('Test store: linidConfigurationStore', () => {
   let store;
+  let pinia;
 
   beforeEach(() => {
-    setActivePinia(createPinia());
+    pinia = createPinia();
+    setActivePinia(pinia);
+    vi.mocked(piniaStoreService.getPiniaStore).mockReturnValue(pinia);
     store = useLinidConfigurationStore();
     vi.clearAllMocks();
   });

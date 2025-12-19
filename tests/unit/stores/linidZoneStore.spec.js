@@ -1,10 +1,19 @@
 import { createPinia, setActivePinia } from 'pinia';
+import * as piniaStoreService from 'src/services/piniaStoreService.ts';
 import { useLinidZoneStore } from 'src/stores/linidZoneStore';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('src/services/piniaStoreService', () => ({
+  getPiniaStore: vi.fn(),
+  setPiniaStore: vi.fn(),
+}));
 
 describe('Test store: linidZoneStore', () => {
+  let pinia;
   beforeEach(() => {
-    setActivePinia(createPinia());
+    pinia = createPinia();
+    setActivePinia(pinia);
+    vi.mocked(piniaStoreService.getPiniaStore).mockReturnValue(pinia);
   });
 
   describe('Test initial state', () => {

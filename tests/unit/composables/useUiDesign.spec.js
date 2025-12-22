@@ -1,64 +1,120 @@
 import { useUiDesign } from 'src/composables/useUiDesign.ts';
-import { setUiDesign } from 'src/services/uiDesignService.ts';
-import { describe, expect, it } from 'vitest';
+import * as uiDesignService from 'src/services/uiDesignService.ts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('src/services/uiDesignService', () => ({
+  getUiDesign: vi.fn(),
+  setUiDesign: vi.fn(),
+}));
 
 describe('Test composable: useUiDesign', () => {
-  const configuration = {
-    default: {
-      button: {
-        flat: true,
-        icon: 'icon',
-        color: 'primary',
-      },
-    },
-    custom: {
-      button: {
-        flat: false,
-      },
-      other: {
-        button: {
-          color: 'secondary',
+  describe('Test function: ui', () => {
+    const configuration = {
+      default: {
+        'q-btn': {
+          flat: true,
+          textColor: 'accent',
+          color: 'primary',
         },
       },
-    },
-  };
+      custom: {
+        'q-btn': {
+          flat: false,
+        },
+        other: {
+          'q-btn': {
+            color: 'secondary',
+          },
+        },
+      },
+    };
+    beforeEach(() => {
+      vi.clearAllMocks();
+      vi.mocked(uiDesignService.getUiDesign).mockReturnValue(configuration);
+    });
 
-  setUiDesign(configuration);
-
-  describe('Test function: ui', () => {
     it('should retrieve default value', () => {
       const { ui } = useUiDesign();
 
-      expect(ui('unknown', 'button.flat')).toEqual(true);
-      expect(ui('custom.other', 'button.icon')).toEqual('icon');
+      expect(ui('unknown', 'q-btn').flat).toEqual(true);
+      expect(ui('custom.other', 'q-btn').textColor).toEqual('accent');
     });
 
     it('should retrieve overcharge value', () => {
       const { ui } = useUiDesign();
 
-      expect(ui('custom', 'button.flat')).toEqual(false);
-      expect(ui('custom.other', 'button.color')).toEqual('secondary');
+      expect(ui('custom', 'q-btn').flat).toEqual(false);
+      expect(ui('custom.other', 'q-btn').color).toEqual('secondary');
     });
 
-    it('should throw error without fallback', () => {
+    it('should retrieve value with override', () => {
       const { ui } = useUiDesign();
 
-      expect(() => ui('unknownNamespace', 'button.dense')).toThrowError(
-        "[UiDesign] Value not found for 'unknownNamespace.button.dense' and no default fallback."
+      const result = ui('custom', 'q-btn', {
+        flat: true,
+        size: 'lg',
+      });
+
+      expect(result.flat).toEqual(true);
+      expect(result.size).toEqual('lg');
+      expect(result.color).toEqual('primary');
+    });
+
+    it('should throw if component is not supported', () => {
+      const { ui } = useUiDesign();
+
+      expect(() => ui('custom', 'q-falsy')).toThrowError(
+        "[UiDesign] The component 'q-falsy' is not supported for UI design retrieval."
       );
-      expect(() => ui('', 'button.dense')).toThrowError(
-        "[UiDesign] Value not found for '.button.dense' and no default fallback."
-      );
+
       expect(() => ui('custom', '')).toThrowError(
-        "[UiDesign] Value not found for 'custom.' and no default fallback."
+        "[UiDesign] The component '' is not supported for UI design retrieval."
       );
     });
 
-    it('should throw error on invalid namespace', () => {
+    it('should ignore non-configurable properties for a component', () => {
+      const { ui } = useUiDesign();
+      const result = ui('custom', 'q-btn');
+
+      expect('label' in result).toBe(false);
+    });
+
+    it('should ignore configurable properties if no default fallback', () => {
+      const { ui } = useUiDesign();
+      const result = ui('custom', 'q-btn');
+
+      expect('fab' in result).toBe(false);
+    });
+
+    it('should throw error if component property value is null', () => {
+      vi.mocked(uiDesignService.getUiDesign).mockReturnValue({
+        ...configuration,
+        custom: {
+          ...configuration.custom,
+          'q-btn': { flat: null },
+        },
+      });
+
       const { ui } = useUiDesign();
 
-      expect(() => ui('custom', 'button')).toThrowError(
-        "[UiDesign] Value for 'custom.button' is a nested object or null, expected a primitive."
+      expect(() => ui('custom', 'q-btn')).toThrowError(
+        "[UiDesign] Value for 'custom.q-btn.flat' is a nested object or null, expected a primitive."
+      );
+    });
+
+    it('should throw error if component property value is a nested object', () => {
+      vi.mocked(uiDesignService.getUiDesign).mockReturnValue({
+        ...configuration,
+        custom: {
+          ...configuration.custom,
+          'q-btn': { flat: { nested: false } },
+        },
+      });
+
+      const { ui } = useUiDesign();
+
+      expect(() => ui('custom', 'q-btn')).toThrowError(
+        "[UiDesign] Value for 'custom.q-btn.flat' is a nested object or null, expected a primitive."
       );
     });
   });

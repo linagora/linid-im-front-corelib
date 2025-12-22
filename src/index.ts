@@ -93,6 +93,14 @@ export type {
 
 // Types - UI design
 export type {
+  LinidQAvatarProps,
+  LinidQBadgeProps,
+  LinidQBtnProps,
+  LinidQHeaderProps,
+  LinidQRouteTabProps,
+  LinidQTabsProps,
+  LinidQToolbarProps,
+  LinidQToolbarTitleProps,
   UiDesign,
   UiDesignNamespace,
   UiDesignValue,

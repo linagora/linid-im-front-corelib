@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.13...v0.0.14) (2025-12-22)
+
+
+### Features
+
+* store Pinia instance globally ([432bd60](https://github.com/linagora/linid-im-front-corelib/commit/432bd60378bd2ea9d7d27f11c216ef7eeb574a8b))
+
 ### [0.0.13](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.12...v0.0.13) (2025-12-19)
 
 

@@ -2,15 +2,19 @@
 
 ## **🧩 Overview**
 
-`linid-im-front-corelib` is a TypeScript library designed as a core front-end module for the LinID Identity Management ecosystem.
-It provides shared interfaces, types, default services, and plugin-zone components used across the LinID front-end applications, including:
+`linid-im-front-corelib` is a TypeScript library designed as a core front-end module for the LinID Identity Management
+ecosystem.
+It provides shared interfaces, types, default services, and plugin-zone components used across the LinID front-end
+applications, including:
 
 - The **Vue.js/Quasar module federation host**
 - The **remote plugin repositories**
 
-This library ensures consistency across all front-end modules by centralizing common logic, validation tools, and data structures for identity management features such as CRUD operations on persons, users, and related entities.
+This library ensures consistency across all front-end modules by centralizing common logic, validation tools, and data
+structures for identity management features such as CRUD operations on persons, users, and related entities.
 
-> This library is part of a larger ecosystem including Java back-end services, workflow APIs, multiple plugins, and front-end modules.
+> This library is part of a larger ecosystem including Java back-end services, workflow APIs, multiple plugins, and
+> front-end modules.
 
 ---
 
@@ -27,7 +31,7 @@ This library ensures consistency across all front-end modules by centralizing co
 ## **Tech Stack 🛠️**
 
 | Area            | Technology               |
-| --------------- | ------------------------ |
+|-----------------|--------------------------|
 | Language        | TypeScript               |
 | Framework       | Vue.js (Composition API) |
 | UI Toolkit      | Quasar Framework         |
@@ -93,8 +97,13 @@ A full technical documentation is available in the `docs/` directory:
   → [`docs/types-and-interfaces.md`](docs/types-and-interfaces.md)
 
 - 🎨 **UI Design Configuration (`UiDesign`)**  
-  Learn how to initialize and use the `UiDesign` singleton and the `useUiDesign` composable for dynamic UI personalization.  
+  Learn how to initialize and use the `UiDesign` singleton and the `useUiDesign` composable for dynamic UI
+  personalization.  
   → [`docs/ui-design.md`](docs/ui-design.md)
+
+- 🎨 **I18n Configuration (`i18n`)**  
+  Learn how to initialize and use the `i18n` singleton and the `useScopedI18n` composable for internationalization.  
+  → [`docs/i18n.md`](docs/ui-design.md)
 
 More documents will be added as the library evolves.
 

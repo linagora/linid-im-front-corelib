@@ -30,6 +30,7 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 // Composables
 export { usePagination } from './composables/usePagination';
 export { useUiDesign } from './composables/useUiDesign';
+export { useScopedI18n } from './composables/useScopedI18n';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
@@ -55,6 +56,7 @@ export {
 } from './services/linidModuleConfigurationService';
 export { getPiniaStore, setPiniaStore } from './services/piniaStoreService';
 export { getUiDesign, setUiDesign } from './services/uiDesignService';
+export { getI18nInstance, setI18nInstance } from './services/i18nService';
 
 // Types - Zones
 export type { LinidZoneEntry } from './types/linidZone';

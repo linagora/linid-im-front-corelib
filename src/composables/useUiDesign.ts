@@ -27,10 +27,13 @@
 import type { ComputedRef } from 'vue';
 import { computed } from 'vue';
 import { getUiDesign } from '../services/uiDesignService';
-import type {
-  UiDesign,
-  UiDesignNamespace,
-  UiDesignValue,
+import type { LinidQComponentProps } from '../types/uiDesign';
+import {
+  Q_COMPONENT_PROPS,
+  type QComponentName,
+  type UiDesign,
+  type UiDesignNamespace,
+  type UiDesignValue,
 } from '../types/uiDesign';
 
 /**
@@ -48,11 +51,58 @@ function getNested(
     .split('.')
     .reduce<UiDesignValue | UiDesignNamespace | undefined>((acc, key) => {
       if (acc && typeof acc === 'object') {
-        return acc[key];
+        return (
+          acc as Record<string, UiDesignValue | UiDesignNamespace | undefined>
+        )[key];
       }
 
       return undefined;
     }, obj);
+}
+
+/**
+ * Retrieve a UI configuration value from a namespace with fallback to `default`.
+ * Always returns a UiDesignValue. Throws if the value is not found or is a nested object.
+ * @param config - The UI design configuration object.
+ * @param namespace - The namespace to look for (can be nested using dot notation).
+ * @param type - The key within the namespace (can be nested using dot notation).
+ * @returns The primitive configuration value.
+ */
+function getUiDesignValue(
+  config: UiDesign,
+  namespace: string,
+  type: string
+): UiDesignValue {
+  let value = getNested(config, `${namespace}.${type}`);
+
+  // fallback to default
+  if (value === undefined) {
+    value = getNested(config, `default.${type}`);
+  }
+
+  // ensure we only return a primitive
+  if (typeof value === 'object') {
+    throw new Error(
+      `[UiDesign] Value for '${namespace}.${type}' is a nested object or null, expected a primitive.`
+    );
+  }
+
+  return value as UiDesignValue;
+}
+
+/**
+ * Retrieve the list of prop keys for a given Quasar component.
+ * @param component - The Quasar component name.
+ * @returns An array of prop keys for the component.
+ */
+function getQComponentProps<T>(component: QComponentName): Array<keyof T> {
+  if (!(component in Q_COMPONENT_PROPS)) {
+    throw new Error(
+      `[UiDesign] The component '${component}' is not supported for UI design retrieval.`
+    );
+  }
+
+  return Q_COMPONENT_PROPS[component] as Array<keyof T>;
 }
 
 /**
@@ -66,34 +116,31 @@ export function useUiDesign() {
   const cfg: ComputedRef<UiDesign> = computed(() => getUiDesign());
 
   /**
-   * Retrieve a UI configuration value from a namespace with fallback to `default`.
-   * Always returns a UiDesignValue. Throws if the value is not found or is a nested object.
-   * @param namespace - The namespace to look for (can be nested using dot notation).
-   * @param type - The key within the namespace (can be nested using dot notation).
-   * @returns The primitive configuration value.
+   * Retrieve typed props for a Quasar component from a UI namespace.
+   * @template T - The Quasar component name type.
+   * @param uiNamespace - The UI namespace to fetch properties from.
+   * @param component - The Quasar component name (e.g., 'q-btn', 'q-input').
+   * @param overrideProps - Optional partial props to override the retrieved values.
+   * @returns An object containing the component props with correct types.
    */
-  function ui(namespace: string, type: string): UiDesignValue {
-    let value = getNested(cfg.value, `${namespace}.${type}`);
+  function ui<T extends LinidQComponentProps>(
+    uiNamespace: string,
+    component: QComponentName,
+    overrideProps?: Partial<T>
+  ): T {
+    const keys = getQComponentProps<T>(component);
+    const result = {} as T;
 
-    // fallback to default
-    if (value === undefined) {
-      value = getNested(cfg.value, `default.${type}`);
+    for (const key of keys) {
+      const value =
+        overrideProps?.[key] ??
+        getUiDesignValue(cfg.value, uiNamespace, `${component}.${String(key)}`);
+      if (value !== undefined) {
+        result[key] = value as T[typeof key];
+      }
     }
 
-    if (value === undefined) {
-      throw new Error(
-        `[UiDesign] Value not found for '${namespace}.${type}' and no default fallback.`
-      );
-    }
-
-    // ensure we only return a primitive
-    if (typeof value === 'object') {
-      throw new Error(
-        `[UiDesign] Value for '${namespace}.${type}' is a nested object or null, expected a primitive.`
-      );
-    }
-
-    return value as UiDesignValue;
+    return result;
   }
 
   return { ui };

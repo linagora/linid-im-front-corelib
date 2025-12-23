@@ -53,6 +53,7 @@ export {
   getModuleHostConfiguration,
   registerModuleHostConfiguration,
 } from './services/linidModuleConfigurationService';
+export { fromDot, isObject, merge, renameKeys } from './services/objectService';
 export { getPiniaStore, setPiniaStore } from './services/piniaStoreService';
 export { getUiDesign, setUiDesign } from './services/uiDesignService';
 

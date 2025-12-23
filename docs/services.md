@@ -778,4 +778,253 @@ const pinia: Pinia = getPiniaStore();
 
 ---
 
+## 🧩 Object Service
+
+The **Object Service** provides utility helpers for manipulating plain JavaScript objects in a predictable and type-safe way.
+It is designed for **JSON-like structures**, configuration objects, and data transformation scenarios commonly encountered across modules.
+
+This service focuses on **immutability**, **deep operations**, and **safe object introspection**.
+
+| Function                    | Description                                                         |
+|-----------------------------|---------------------------------------------------------------------|
+| [`merge`](#merge)           | Performs an immutable deep merge of two plain objects               |
+| [`fromDot`](#fromdot)       | Expands dot-notation keys into a nested object structure            |
+| [`isObject`](#isobject)     | Determines whether a value is a non-null plain object               |
+| [`renameKeys`](#renamekeys) | Recursively renames keys of an object using a provided key modifier |
+
+
+```js
+import { merge, fromDot, isObject, renameKeys } from '@linagora/linid-im-front-corelib';
+```
+
+---
+
+### 🧠 Design Principles
+
+* **Immutable by default** — input objects are never mutated
+* **Deep-safe** — recursive handling of nested objects
+* **JSON-oriented** — optimized for plain objects, not class instances
+* **Type-safe** — relies on `unknown` and explicit narrowing
+* **Framework-agnostic** — no external dependencies
+
+---
+
+### `merge`
+
+Performs a **deep merge** of two plain objects.
+
+Nested objects are merged recursively, while primitive values from the source overwrite those in the target.
+
+#### Signature
+
+```ts
+merge<T extends PlainObject, S extends PlainObject>(
+  target: T,
+  source: S
+): T & S;
+```
+
+#### Parameters
+
+| Parameter | Type          | Description                             |
+| --------- | ------------- | --------------------------------------- |
+| `target`  | `PlainObject` | The base object to merge into           |
+| `source`  | `PlainObject` | The object whose values override target |
+
+#### Returns
+
+| Type    | Description                                  |
+| ------- | -------------------------------------------- |
+| `T & S` | A new object containing the merged structure |
+
+#### Behavior
+
+1. Performs a recursive merge when both values are plain objects
+2. Overwrites primitive values from `target` with `source`
+3. Does **not mutate** either input object
+4. Returns `source` if either argument is not a plain object
+
+#### Example
+
+```ts
+const target = {
+  a: {
+    b: {
+      c: 'x',
+      d: 'y'
+    }
+  }
+};
+
+const source = {
+  a: {
+    d: 'z',
+    b: {
+      e: 'w'
+    }
+  }
+};
+
+const result = merge(target, source);
+
+/*
+{
+  a: {
+    b: {
+      c: 'x',
+      d: 'y',
+      e: 'w'
+    },
+    d: 'z'
+  }
+}
+*/
+```
+
+---
+
+### `fromDot`
+
+Converts an object using **dot-notation keys** into a nested object structure.
+
+Each segment separated by `.` represents a deeper level in the resulting object.
+
+#### Signature
+
+```ts
+fromDot(obj: PlainObject): PlainObject;
+```
+
+#### Parameters
+
+| Parameter | Type          | Description                   |
+| --------- | ------------- | ----------------------------- |
+| `obj`     | `PlainObject` | Object with dot-notation keys |
+
+#### Returns
+
+| Type          | Description                        |
+| ------------- | ---------------------------------- |
+| `PlainObject` | A new object with nested structure |
+
+#### Behavior
+
+1. Splits keys using `.` as a path delimiter
+2. Creates nested objects as needed
+3. Overwrites non-object paths when expanding deeper levels
+4. Preserves immutability of the input object
+
+#### Example
+
+```ts
+fromDot({
+  'a.b.c': 'value',
+  'a.b.d': 'other',
+  'a.e': 'test'
+});
+
+/*
+{
+  a: {
+    b: {
+      c: 'value',
+      d: 'other'
+    },
+    e: 'test'
+  }
+}
+*/
+```
+
+---
+
+### `isObject`
+
+Determines whether a value is a **non-null plain object**.
+
+Arrays, `null`, and primitive values are explicitly excluded.
+
+#### Signature
+
+```ts
+isObject(value: unknown): value is PlainObject;
+```
+
+#### Parameters
+
+| Parameter | Type      | Description   |
+| --------- | --------- | ------------- |
+| `value`   | `unknown` | Value to test |
+
+#### Returns
+
+| Type      | Description                       |
+| --------- | --------------------------------- |
+| `boolean` | `true` if value is a plain object |
+
+#### Example
+
+```ts
+isObject({});        // true
+isObject([]);        // false
+isObject(null);      // false
+isObject('text');   // false
+```
+
+---
+
+### `renameKeys`
+
+Recursively renames the keys of a plain object using a provided key modifier function.
+
+#### Signature
+
+```ts
+renameKeys(obj: unknown, keyModifier: (key: string) => string): unknown;
+```
+
+#### Parameters
+
+| Parameter     | Type                      | Description                                          |
+| ------------- | ------------------------- | ---------------------------------------------------- |
+| `obj`         | `unknown`                 | The object whose keys will be renamed                |
+| `keyModifier` | `(key: string) => string` | Function that receives a key and returns the new key |
+
+#### Returns
+
+| Type      | Description                                |
+| --------- | ------------------------------------------ |
+| `unknown` | A new object with keys renamed recursively |
+
+#### Behavior
+
+1. Recursively traverses nested objects
+2. Applies `keyModifier` to every key
+3. Preserves arrays and primitive values as-is
+4. Returns non-object values unchanged
+5. Original object is not mutated
+
+#### Example
+
+```ts
+renameKeys(
+  { first_name: 'Alice', address: { city_name: 'Paris' } },
+  key => key.toUpperCase()
+);
+// { FIRST_NAME: 'Alice', ADDRESS: { CITY_NAME: 'Paris' } }
+```
+
+---
+
+### 🧾 Summary
+
+* `merge` enables safe, immutable deep merging of configuration objects
+* `fromDot` simplifies transformation from flat, dot-based keys to nested objects
+* `isObject` provides a reliable runtime guard for plain object detection
+* `renameKeys` — recursive key renaming
+
+This service is intended as a **foundational utility layer** for configuration handling, data normalization, and object manipulation across the application.
+
+---
+
 > Additional services will be added as new features are implemented in the library.

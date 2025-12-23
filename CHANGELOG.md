@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.15...v0.0.16) (2025-12-23)
+
+
+### Features
+
+* add i18n management ([1f11e39](https://github.com/linagora/linid-im-front-corelib/commit/1f11e39c27831482f49f420c2ec7836d479e6f3f))
+
 ### [0.0.15](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.14...v0.0.15) (2025-12-23)
 
 

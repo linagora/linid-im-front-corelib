@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.17](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.16...v0.0.17) (2025-12-24)
+
+
+### Features
+
+* define types for UI design of Quasar components ([03f6ff6](https://github.com/linagora/linid-im-front-corelib/commit/03f6ff6d685ce6993bd95018fcf9a3620ab32d13))
+* make ui() return typed Quasar component props ([2429fc7](https://github.com/linagora/linid-im-front-corelib/commit/2429fc7a57c7d1d51fbb251976ef8d692bfae63a))
+
 ### [0.0.16](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.15...v0.0.16) (2025-12-23)
 
 

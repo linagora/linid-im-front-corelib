@@ -165,12 +165,12 @@ export interface Pagination {
   /**
    * Property name used for ordering.
    */
-  sort: string;
+  sort?: string;
 
   /**
    * Sort direction, either ascending ('asc') or descending ('desc').
    */
-  direction: 'asc' | 'desc';
+  direction?: 'asc' | 'desc';
 }
 
 /**

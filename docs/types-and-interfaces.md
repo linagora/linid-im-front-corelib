@@ -336,10 +336,10 @@ export interface Pagination {
   size: number;
 
   /** Property name used for ordering. */
-  sort: string;
+  sort?: string;
 
   /** Sort direction. */
-  direction: 'asc' | 'desc';
+  direction?: 'asc' | 'desc';
 }
 ```
 

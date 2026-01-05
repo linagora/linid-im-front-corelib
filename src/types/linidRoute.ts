@@ -45,4 +45,6 @@ export interface LinidRoute {
   component: string;
   /** Optional list of child routes for nested routing. */
   children?: LinidRoutes;
+  /** Optional metadata associated with the route. */
+  meta?: Record<string, unknown>;
 }

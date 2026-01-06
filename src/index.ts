@@ -29,11 +29,12 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 
 // Composables
 export { usePagination } from './composables/usePagination';
-export { useUiDesign } from './composables/useUiDesign';
 export { useScopedI18n } from './composables/useScopedI18n';
+export { useUiDesign } from './composables/useUiDesign';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
+export { useLinidUiStore } from './stores/linidUiStore';
 export { useLinidZoneStore } from './stores/linidZoneStore';
 
 // Services
@@ -43,6 +44,7 @@ export {
   setModuleFederation,
 } from './services/federationService';
 export { getHttpClient, setHttpClient } from './services/httpClientService';
+export { getI18nInstance, setI18nInstance } from './services/i18nService';
 export {
   deleteEntityById,
   getEntities,
@@ -57,7 +59,6 @@ export {
 export { fromDot, isObject, merge, renameKeys } from './services/objectService';
 export { getPiniaStore, setPiniaStore } from './services/piniaStoreService';
 export { getUiDesign, setUiDesign } from './services/uiDesignService';
-export { getI18nInstance, setI18nInstance } from './services/i18nService';
 
 // Types - Zones
 export type { LinidZoneEntry } from './types/linidZone';
@@ -105,6 +106,9 @@ export type {
   UiDesignNamespace,
   UiDesignValue,
 } from './types/uiDesign';
+
+// Types - UI
+export type { NavigationMenuItem } from './types/linidUi';
 
 export { ModuleLifecyclePhase } from './types/moduleLifecycle';
 

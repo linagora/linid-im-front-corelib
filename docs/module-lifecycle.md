@@ -184,6 +184,7 @@ async ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
 **Use cases:**
 
 - Receive configuration from host (`module-<name>.json`)
+- Register module information in shared Pinia store states (e.g., navigation items)
 - Integrate with other modules
 - Set up cross-module communication
 - Perform final setup that requires all modules to be ready
@@ -198,6 +199,14 @@ async postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
 
 ```typescript
 async postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+  // Register module in main navigation items of Ui Store
+  const store = useLinidUiStore();
+  const { t } = useScopedI18n('user');
+
+  store.addMainNavigationMenuItems(
+    { id: config.instanceId, label: t(`${config.instanceId}.menu.label`), path: config.basePath || '/users' }
+  );
+
   // Access other modules from host's module registry
   // Set up cross-module event listeners
   // Perform integrations
@@ -344,6 +353,17 @@ class MyModule implements RemoteModule {
 
   async postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
     // Cross-module integrations
+
+    // Register module in main navigation items of Ui Store
+    const store = useLinidUiStore();
+    const { t } = useScopedI18n('my-module');
+
+    store.addMainNavigationMenuItems({
+      id: config.instanceId,
+      label: t(`${config.instanceId}.menu.label`),
+      path: config.basePath || '/my-module',
+    });
+
     return { success: true };
   }
 }

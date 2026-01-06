@@ -621,6 +621,36 @@ See description in [Ui design documentation](./ui-design.md#q-table).
 
 ---
 
+## 🖼️ Linid Ui Store types
+
+### LinidUiState
+
+Represents the state of the Pinia store that manages UI-related configurations.
+
+```ts
+interface LinidUiState {
+  /** List of main navigation menu items. */
+  mainNavigationItems: NavigationMenuItem[];
+}
+```
+
+### NavigationMenuItem
+
+Describes a single item in the main navigation menu.
+
+```ts
+export interface NavigationMenuItem {
+  /** Unique identifier of the navigation item. */
+  id: string;
+  /** Label of the navigation item. */
+  label: string;
+  /** Path/route of the navigation item. */
+  path: string;
+}
+```
+
+---
+
 ## 🧰 Summary
 
 | Type / Interface                | Purpose                                                   |
@@ -658,6 +688,8 @@ See description in [Ui design documentation](./ui-design.md#q-table).
 | `LinidQAvatarProps`             | QAvatar component properties supported by Ui Design       |
 | `LinidQBadgeProps`              | QBadge component properties supported by Ui Design        |
 | `LinidQTableProps`              | QTable component properties supported by Ui Design        |
+| `LinidUiState`                  | Defines the structure of the UI store                     |
+| `NavigationMenuItem`            | Describes a main navigation menu item                     |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

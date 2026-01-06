@@ -47,10 +47,11 @@ async setup(): Promise<ModuleLifecycleResult>
 
 ```typescript
 async setup(): Promise<ModuleLifecycleResult> {
-  if (!app) {
+  // Example: Check Vue version compatibility
+  if (!window.Vue || !window.Vue.version.startsWith('3.')) {
     return {
       success: false,
-      error: 'Vue app instance not available'
+      error: 'Incompatible Vue version, Vue 3.x is required'
     };
   }
   return { success: true };
@@ -91,6 +92,7 @@ async configure(
       error: 'Missing module instanceId in configuration'
     };
   }
+
   if (!config.basePath) {
     return {
       success: false,
@@ -106,13 +108,12 @@ async configure(
 
 ### 3. Initialize Phase
 
-**Purpose:** Register stores and initialize resources
+**Purpose:** Initialize resources
 
 **When executed:** After configuration
 
 **Use cases:**
 
-- Register Pinia stores
 - Set up event listeners
 - Initialize module-specific resources
 - Prepare data structures
@@ -127,10 +128,6 @@ async initialize(): Promise<ModuleLifecycleResult>
 
 ```typescript
 async initialize(): Promise<ModuleLifecycleResult> {
-  // Register Pinia store
-  const pinia = app.config.globalProperties.$pinia;
-  pinia.use(myStorePlugin);
-
   // Initialize module resources
   await this.loadInitialData();
 
@@ -366,7 +363,7 @@ Expose the lifecycle in your module's `vite.config.ts`:
 
 ```typescript
 import { defineConfig } from 'vite';
-import federation from '@originjs/vite-plugin-federation';
+import federation from '@module-federation/vite';
 
 export default defineConfig({
   plugins: [
@@ -467,13 +464,6 @@ async setup(): Promise<ModuleLifecycleResult> {
     };
   }
 
-  if (!app) {
-    return {
-      success: false,
-      error: 'Vue app instance not available'
-    };
-  }
-
   return { success: true };
 }
 ```
@@ -487,16 +477,16 @@ Return failure results instead of throwing errors.
 ✅ **Good:**
 
 ```typescript
-if (!config.id) {
-  return { success: false, error: 'Missing module ID' };
+if (!config.instanceId) {
+  return { success: false, error: 'Missing module instanceId' };
 }
 ```
 
 ❌ **Bad:**
 
 ```typescript
-if (!config.id) {
-  throw new Error('Missing module ID'); // Will be caught by host but not clean
+if (!config.instanceId) {
+  throw new Error('Missing module instanceId'); // Will be caught by host but not clean
 }
 ```
 
@@ -538,9 +528,7 @@ If a module fails to load via Module Federation, the host will log an error:
 
 **Consequences:**
 
-- Module is not added to the registry
-- Module does not participate in lifecycle phases
-- Other modules continue normally
+- The host crashes.
 
 ---
 
@@ -590,29 +578,29 @@ Host Application
     │   └─ Load module via Module Federation (remoteName/lifecycle)
     │
     ├─ 3. Phase 1: Setup (all modules in parallel)
-    │   ├─ module-A.setup(app)
-    │   ├─ module-B.setup(app)
-    │   └─ module-C.setup(app)
+    │   ├─ module-A.setup()
+    │   ├─ module-B.setup()
+    │   └─ module-C.setup()
     │
     ├─ 4. Phase 2: Configure (all modules in parallel)
-    │   ├─ module-A.configure(app, configA)
-    │   ├─ module-B.configure(app, configB)
-    │   └─ module-C.configure(app, configC)
+    │   ├─ module-A.configure(configA)
+    │   ├─ module-B.configure(configB)
+    │   └─ module-C.configure(configC)
     │
     ├─ 5. Phase 3: Initialize (all modules in parallel)
-    │   ├─ module-A.initialize(app)
-    │   ├─ module-B.initialize(app)
-    │   └─ module-C.initialize(app)
+    │   ├─ module-A.initialize()
+    │   ├─ module-B.initialize()
+    │   └─ module-C.initialize()
     │
     ├─ 6. Phase 4: Ready (all modules in parallel)
-    │   ├─ module-A.ready(app)
-    │   ├─ module-B.ready(app)
-    │   └─ module-C.ready(app)
+    │   ├─ module-A.ready()
+    │   ├─ module-B.ready()
+    │   └─ module-C.ready()
     │
     └─ 7. Phase 5: Post-Init (all modules in parallel)
-        ├─ module-A.postInit(app)
-        ├─ module-B.postInit(app)
-        └─ module-C.postInit(app)
+        ├─ module-A.postInit()
+        ├─ module-B.postInit()
+        └─ module-C.postInit()
 ```
 
 **Key points:**
@@ -634,7 +622,6 @@ The host application is responsible for:
 3. ✅ Loading modules via Module Federation
 4. ✅ Executing each lifecycle phase in sequence for all modules
 5. ✅ Handling errors and logging
-6. ✅ Providing the Vue `app` instance to modules
 
 ### Module Responsibilities
 
@@ -644,7 +631,6 @@ Business modules are responsible for:
 2. ✅ Implementing the `RemoteModule` interface (or extending `BasicRemoteModule`)
 3. ✅ Returning valid `ModuleLifecycleResult` from all hooks
 4. ✅ Handling their own errors gracefully
-5. ✅ Using the provided `app` instance correctly
 
 ---
 
@@ -719,7 +705,6 @@ Support for lazy-loaded module features that load on demand.
 
 **Solutions:**
 
-1. Verify module's `id` matches the `id` in host config
-2. Check the config file path: `module-<module-name>.json`
-3. Validate JSON syntax in config file
-4. Check browser network tab for config file fetch (404?)
+1. Check the config file path: `module-<module-name>.json`
+2. Validate JSON syntax in config file
+3. Check browser network tab for config file fetch (404?)

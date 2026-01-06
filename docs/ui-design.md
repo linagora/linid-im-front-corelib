@@ -216,6 +216,7 @@ export type QComponentName =
   | 'q-avatar'
   | 'q-badge'
   | 'q-table';
+
 /**
  * Union type of all supported Quasar component props subsets.
  */

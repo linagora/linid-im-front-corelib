@@ -558,29 +558,103 @@ export interface ModuleLifecycleHooks {
 
 ---
 
+## 🎨 Ui design types
+
+### UiDesignValue
+
+See description in [Ui design documentation](./ui-design.md#5-typescript-support).
+
+### UiDesignNamespace
+
+See description in [Ui design documentation](./ui-design.md#5-typescript-support).
+
+### UiDesign
+
+See description in [Ui design documentation](./ui-design.md#5-typescript-support).
+
+### QComponentName
+
+See description in [Ui design documentation](./ui-design.md#5-typescript-support).
+
+### LinidQComponentProps
+
+See description in [Ui design documentation](./ui-design.md#5-typescript-support).
+
+### LinidQBtnProps
+
+See description in [Ui design documentation](./ui-design.md#q-btn).
+
+### LinidQTabsProps
+
+See description in [Ui design documentation](./ui-design.md#q-tabs).
+
+### LinidQRouteTabProps
+
+See description in [Ui design documentation](./ui-design.md#q-route-tab).
+
+### LinidQHeaderProps
+
+See description in [Ui design documentation](./ui-design.md#q-header).
+
+### LinidQToolbarProps
+
+See description in [Ui design documentation](./ui-design.md#q-toolbar).
+
+### LinidQToolbarTitleProps
+
+See description in [Ui design documentation](./ui-design.md#q-toolbar-title).
+
+### LinidQAvatarProps
+
+See description in [Ui design documentation](./ui-design.md#q-avatar).
+
+### LinidQBadgeProps
+
+See description in [Ui design documentation](./ui-design.md#q-badge).
+
+### LinidQTableProps
+
+See description in [Ui design documentation](./ui-design.md#q-table).
+
+---
+
 ## 🧰 Summary
 
-| Type / Interface                | Purpose                                               |
-| ------------------------------- | ----------------------------------------------------- |
-| `LinidZoneEntry`                | Defines the contract for a plugin component           |
-| `LinidZoneState`                | Defines the structure of the zone store               |
-| `FederatedModule`               | Defines the structure of a federated component module |
-| `ModuleHostConfig`              | Configuration provided to remote modules              |
-| `RemoteModule`                  | Defines the structure of a remote module              |
-| `LinidAttributeConfiguration`   | Describes an entity attribute                         |
-| `LinidEntityConfiguration`      | Describes an entity and its attributes                |
-| `LinidApiEndpointConfiguration` | Describes a REST route                                |
-| `LinidConfigurationState`       | Defines the structure of the configuration store      |
-| `LinidRoute`                    | Defines the structure of a route (recursive children) |
-| `LinidRoutes`                   | Array of LinidRoute for nested routes                 |
-| `Page<T>`                       | Paginated API response                                |
-| `Pagination`                    | Backend pagination model                              |
-| `QTableRequestEvent`            | Quasar table server-side request payload              |
-| `QuasarPagination`              | Quasar-specific pagination structure                  |
-| `QueryFilter`                   | Flexible query parameter map                          |
-| `ModuleLifecyclePhase`          | Enum of module lifecycle phases                       |
-| `ModuleLifecycleResult`         | Result of a lifecycle phase execution                 |
-| `ModuleLifecycleHooks`          | Lifecycle hooks for remote modules                    |
+| Type / Interface                | Purpose                                                   |
+| ------------------------------- | --------------------------------------------------------- |
+| `LinidZoneEntry`                | Defines the contract for a plugin component               |
+| `LinidZoneState`                | Defines the structure of the zone store                   |
+| `FederatedModule`               | Defines the structure of a federated component module     |
+| `ModuleHostConfig`              | Configuration provided to remote modules                  |
+| `RemoteModule`                  | Defines the structure of a remote module                  |
+| `LinidAttributeConfiguration`   | Describes an entity attribute                             |
+| `LinidEntityConfiguration`      | Describes an entity and its attributes                    |
+| `LinidApiEndpointConfiguration` | Describes a REST route                                    |
+| `LinidConfigurationState`       | Defines the structure of the configuration store          |
+| `LinidRoute`                    | Defines the structure of a route (recursive children)     |
+| `LinidRoutes`                   | Array of LinidRoute for nested routes                     |
+| `Page<T>`                       | Paginated API response                                    |
+| `Pagination`                    | Backend pagination model                                  |
+| `QTableRequestEvent`            | Quasar table server-side request payload                  |
+| `QuasarPagination`              | Quasar-specific pagination structure                      |
+| `QueryFilter`                   | Flexible query parameter map                              |
+| `ModuleLifecyclePhase`          | Enum of module lifecycle phases                           |
+| `ModuleLifecycleResult`         | Result of a lifecycle phase execution                     |
+| `ModuleLifecycleHooks`          | Lifecycle hooks for remote modules                        |
+| `UiDesignValue`                 | Single primitive value in the UI configuration            |
+| `UiDesignNamespace`             | Namespace with key-value pairs of UI configuration values |
+| `UiDesign`                      | The full UI design configuration                          |
+| `QComponentName`                | Valid Quasar component names for type-safe UI design      |
+| `LinidQComponentProps`          | All supported Quasar component props subsets              |
+| `LinidQBtnProps`                | QBtn component properties supported by Ui Design          |
+| `LinidQTabsProps`               | QTabs component properties supported by Ui Design         |
+| `LinidQRouteTabProps`           | QRouteTab component properties supported by Ui Design     |
+| `LinidQHeaderProps`             | QHeader component properties supported by Ui Design       |
+| `LinidQToolbarProps`            | QToolbar component properties supported by Ui Design      |
+| `LinidQToolbarTitleProps`       | QToolbarTitle component properties supported by Ui Design |
+| `LinidQAvatarProps`             | QAvatar component properties supported by Ui Design       |
+| `LinidQBadgeProps`              | QBadge component properties supported by Ui Design        |
+| `LinidQTableProps`              | QTable component properties supported by Ui Design        |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

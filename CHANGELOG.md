@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.18](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.17...v0.0.18) (2026-01-06)
+
+
+### Features
+
+* add LinidUiStore for shared UI state management ([8e1b86a](https://github.com/linagora/linid-im-front-corelib/commit/8e1b86a62f318e8c15870543c39defa9a10c4054))
+* add optional meta property to LinidRoute for route metadata ([294312e](https://github.com/linagora/linid-im-front-corelib/commit/294312e837f468e31539b666f566b9f0e0a95850))
+* **lifecycle:** pass ModuleHostConfig to initialize, ready and postInit ([787f8e1](https://github.com/linagora/linid-im-front-corelib/commit/787f8e1904f10dc7bf2ee277050eadad025d713a))
+
+
+### Bug Fixes
+
+* make sort and direction optional in Pagination interface ([b5e5886](https://github.com/linagora/linid-im-front-corelib/commit/b5e5886dc46ee486c5cdf0a16efb86e1f623815c))
+
 ### [0.0.17](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.16...v0.0.17) (2025-12-24)
 
 

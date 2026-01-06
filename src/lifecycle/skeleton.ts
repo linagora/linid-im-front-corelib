@@ -107,13 +107,16 @@ export class BasicRemoteModule implements RemoteModule {
    * Initialize phase - register stores and initialize resources.
    *
    * This is called after configuration.
-   * Use it to register Pinia stores and initialize module resources.
+   * Use it to initialize module resources.
    *
    * Default implementation returns success.
    * Override this method to add custom initialization logic.
+   * @param config - Module-specific configuration from host.
    * @returns Promise resolving to the lifecycle result.
    */
-  async initialize(): Promise<ModuleLifecycleResult> {
+  async initialize(
+    config: ModuleHostConfig /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  ): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 
@@ -125,9 +128,12 @@ export class BasicRemoteModule implements RemoteModule {
    *
    * Default implementation returns success.
    * Override this method to add custom ready logic.
+   * @param config - Module-specific configuration from host.
    * @returns Promise resolving to the lifecycle result.
    */
-  async ready(): Promise<ModuleLifecycleResult> {
+  async ready(
+    config: ModuleHostConfig /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  ): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 
@@ -139,9 +145,12 @@ export class BasicRemoteModule implements RemoteModule {
    *
    * Default implementation returns success.
    * Override this method to add custom post-init logic.
+   * @param config - Module-specific configuration from host.
    * @returns Promise resolving to the lifecycle result.
    */
-  async postInit(): Promise<ModuleLifecycleResult> {
+  async postInit(
+    config: ModuleHostConfig /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  ): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 }

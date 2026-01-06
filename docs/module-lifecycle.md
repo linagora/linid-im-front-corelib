@@ -114,6 +114,7 @@ async configure(
 
 **Use cases:**
 
+- Receive configuration from host (`module-<name>.json`)
 - Set up event listeners
 - Initialize module-specific resources
 - Prepare data structures
@@ -121,13 +122,13 @@ async configure(
 **Hook signature:**
 
 ```typescript
-async initialize(): Promise<ModuleLifecycleResult>
+async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async initialize(): Promise<ModuleLifecycleResult> {
+async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
   // Initialize module resources
   await this.loadInitialData();
 
@@ -148,6 +149,7 @@ async initialize(): Promise<ModuleLifecycleResult> {
 
 **Use cases:**
 
+- Receive configuration from host (`module-<name>.json`)
 - Perform final checks
 - Emit ready events
 - Log readiness status
@@ -155,13 +157,13 @@ async initialize(): Promise<ModuleLifecycleResult> {
 **Hook signature:**
 
 ```typescript
-async ready(): Promise<ModuleLifecycleResult>
+async ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async ready(): Promise<ModuleLifecycleResult> {
+async ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
   console.log(`Module ${this.name} v${this.version} is ready!`);
 
   return {
@@ -181,6 +183,7 @@ async ready(): Promise<ModuleLifecycleResult> {
 
 **Use cases:**
 
+- Receive configuration from host (`module-<name>.json`)
 - Integrate with other modules
 - Set up cross-module communication
 - Perform final setup that requires all modules to be ready
@@ -188,13 +191,13 @@ async ready(): Promise<ModuleLifecycleResult> {
 **Hook signature:**
 
 ```typescript
-async postInit(): Promise<ModuleLifecycleResult>
+async postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async postInit(): Promise<ModuleLifecycleResult> {
+async postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
   // Access other modules from host's module registry
   // Set up cross-module event listeners
   // Perform integrations
@@ -275,7 +278,7 @@ class MyModule extends BasicRemoteModule {
   }
 
   // Override only the hooks you need
-  async initialize(): Promise<ModuleLifecycleResult> {
+  async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
     // do something
 
     return { success: true };
@@ -329,17 +332,17 @@ class MyModule implements RemoteModule {
     return { success: true };
   }
 
-  async initialize(): Promise<ModuleLifecycleResult> {
+  async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
     // do something
     return { success: true };
   }
 
-  async ready(): Promise<ModuleLifecycleResult> {
+  async ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
     // do something
     return { success: true };
   }
 
-  async postInit(): Promise<ModuleLifecycleResult> {
+  async postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
     // Cross-module integrations
     return { success: true };
   }
@@ -390,7 +393,7 @@ Each phase should have a single, clear responsibility.
 ✅ **Good:**
 
 ```typescript
-async initialize(): Promise<ModuleLifecycleResult> {
+async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
   return { success: true };
 }
 ```
@@ -398,7 +401,7 @@ async initialize(): Promise<ModuleLifecycleResult> {
 ❌ **Bad:**
 
 ```typescript
-async initialize(): Promise<ModuleLifecycleResult> {
+async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
   await fetchUserData(); // Should be in ready or postInit
   integrateWithOtherModule(); // Should be in postInit
   return { success: true };
@@ -504,7 +507,7 @@ class SimpleModule extends BasicRemoteModule {
     super('simple-module', 'Simple Module', '1.0.0');
   }
 
-  async initialize(): Promise<ModuleLifecycleResult> {
+  async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 
@@ -588,19 +591,19 @@ Host Application
     │   └─ module-C.configure(configC)
     │
     ├─ 5. Phase 3: Initialize (all modules in parallel)
-    │   ├─ module-A.initialize()
-    │   ├─ module-B.initialize()
-    │   └─ module-C.initialize()
+    │   ├─ module-A.initialize(configA)
+    │   ├─ module-B.initialize(configB)
+    │   └─ module-C.initialize(configC)
     │
     ├─ 6. Phase 4: Ready (all modules in parallel)
-    │   ├─ module-A.ready()
-    │   ├─ module-B.ready()
-    │   └─ module-C.ready()
+    │   ├─ module-A.ready(configA)
+    │   ├─ module-B.ready(configB)
+    │   └─ module-C.ready(configC)
     │
     └─ 7. Phase 5: Post-Init (all modules in parallel)
-        ├─ module-A.postInit()
-        ├─ module-B.postInit()
-        └─ module-C.postInit()
+        ├─ module-A.postInit(configA)
+        ├─ module-B.postInit(configB)
+        └─ module-C.postInit(configC)
 ```
 
 **Key points:**
@@ -643,7 +646,7 @@ The following features are planned for future versions:
 Add direct router access for route registration:
 
 ```typescript
-async initialize(): Promise<ModuleLifecycleResult> {
+async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
   return { success: true };
 }
 ```

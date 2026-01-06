@@ -526,29 +526,32 @@ export interface ModuleLifecycleHooks {
   /**
    * Called to initialize the module's core functionality.
    *
-   * Use this to register Pinia stores and initialize any resources
+   * Use this to initialize any resources
    * your module needs to function.
+   * @param config - Module-specific configuration from host (from module-<name>.json).
    * @returns Promise resolving to the lifecycle result.
    */
-  initialize(): Promise<ModuleLifecycleResult>;
+  initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
 
   /**
    * Called when the module is ready to be used.
    *
    * Use this to perform final checks and emit ready state.
    * At this point, all other modules have completed initialization.
+   * @param config - Module-specific configuration from host (from module-<name>.json).
    * @returns Promise resolving to the lifecycle result.
    */
-  ready(): Promise<ModuleLifecycleResult>;
+  ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
 
   /**
    * Called after all modules have been initialized.
    *
    * Use this for cross-module integrations and final setup that requires
    * all modules to be ready.
+   * @param config - Module-specific configuration from host (from module-<name>.json).
    * @returns Promise resolving to the lifecycle result.
    */
-  postInit(): Promise<ModuleLifecycleResult>;
+  postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
 }
 ```
 

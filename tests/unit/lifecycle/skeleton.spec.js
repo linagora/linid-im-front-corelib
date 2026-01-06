@@ -33,6 +33,13 @@ describe('Test class: BasicRemoteModule', () => {
 
   describe('Test lifecycle hooks', () => {
     let module;
+    const config = {
+      instanceId: 'test-module',
+      remoteName: 'testModule',
+      entity: 'TestModuleEntity',
+      apiEndpoint: '/api/test-module',
+      basePath: '/test-module',
+    };
 
     beforeEach(() => {
       module = new BasicRemoteModule(
@@ -59,11 +66,6 @@ describe('Test class: BasicRemoteModule', () => {
       });
 
       it('should return success with valid config', async () => {
-        const config = {
-          id: 'test-module',
-          remoteName: 'testModule',
-        };
-
         const result = await module.configure(config);
 
         expect(result).toEqual({ success: true });
@@ -71,24 +73,42 @@ describe('Test class: BasicRemoteModule', () => {
     });
 
     describe('Test hook: initialize', () => {
-      it('should return success by default', async () => {
-        const result = await module.initialize();
+      it('should return success with empty config', async () => {
+        const result = await module.initialize({});
+
+        expect(result).toEqual({ success: true });
+      });
+
+      it('should return success with valid config', async () => {
+        const result = await module.initialize(config);
 
         expect(result).toEqual({ success: true });
       });
     });
 
     describe('Test hook: ready', () => {
-      it('should return success by default', async () => {
-        const result = await module.ready();
+      it('should return success with empty config', async () => {
+        const result = await module.ready({});
+
+        expect(result).toEqual({ success: true });
+      });
+
+      it('should return success with valid config', async () => {
+        const result = await module.ready(config);
 
         expect(result).toEqual({ success: true });
       });
     });
 
     describe('Test hook: postInit', () => {
-      it('should return success by default', async () => {
-        const result = await module.postInit();
+      it('should return success with empty config', async () => {
+        const result = await module.postInit({});
+
+        expect(result).toEqual({ success: true });
+      });
+
+      it('should return success with valid config', async () => {
+        const result = await module.postInit(config);
 
         expect(result).toEqual({ success: true });
       });

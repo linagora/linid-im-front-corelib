@@ -29,6 +29,8 @@ import type {
   QAvatarProps,
   QBadgeProps,
   QBtnProps,
+  QCardActionsProps,
+  QCardProps,
   QHeaderProps,
   QRouteTabProps,
   QTableProps,
@@ -225,6 +227,16 @@ const Q_TABLE_PROPS = [
 ] as const;
 
 /**
+ * List of QCardProps keys for type-safe UI design retrieval.
+ */
+const Q_CARD_PROPS = ['dark', 'square', 'flat', 'bordered'] as const;
+
+/**
+ * List of QCardActionsProps keys for type-safe UI design retrieval.
+ */
+const Q_CARD_ACTIONS_PROPS = ['align', 'vertical'] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -237,6 +249,8 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-avatar': Q_AVATAR_PROPS,
   'q-badge': Q_BADGE_PROPS,
   'q-table': Q_TABLE_PROPS,
+  'q-card': Q_CARD_PROPS,
+  'q-card-actions': Q_CARD_ACTIONS_PROPS,
 } as const;
 
 /**
@@ -304,6 +318,20 @@ export type LinidQTableProps = Pick<
   QTableProps,
   (typeof Q_TABLE_PROPS)[number]
 >;
+
+/**
+ * Subset of QCard props supported in UI design configuration.
+ */
+export type LinidQCardProps = Pick<QCardProps, (typeof Q_CARD_PROPS)[number]>;
+
+/**
+ * Subset of QCardActions props supported in UI design configuration.
+ */
+export type LinidQCardActionsProps = Pick<
+  QCardActionsProps,
+  (typeof Q_CARD_ACTIONS_PROPS)[number]
+>;
+
 /**
  * Union type of all supported Quasar component props subsets.
  */
@@ -316,7 +344,9 @@ export type LinidQComponentProps =
   | LinidQToolbarTitleProps
   | LinidQAvatarProps
   | LinidQBadgeProps
-  | LinidQTableProps;
+  | LinidQTableProps
+  | LinidQCardProps
+  | LinidQCardActionsProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -330,4 +360,6 @@ export type QComponentName =
   | 'q-toolbar-title'
   | 'q-avatar'
   | 'q-badge'
-  | 'q-table';
+  | 'q-table'
+  | 'q-card'
+  | 'q-card-actions';

@@ -744,6 +744,58 @@ type LinidQTableProps = {
 
 For more details, refer to the [Quasar QTable API documentation](https://quasar.dev/vue-components/table#qtable-api).
 
+### q-card
+
+```ts
+type LinidQCardProps = {
+  /**
+   * Notify the component that the background is a dark color
+   * Default value: null
+   */
+  dark?: boolean | null | undefined;
+  /**
+   * Removes border-radius so borders are squared
+   */
+  square?: boolean | undefined;
+  /**
+   * Applies a 'flat' design (no default shadow)
+   */
+  flat?: boolean | undefined;
+  /**
+   * Applies a default border to the component
+   */
+  bordered?: boolean | undefined;
+};
+```
+
+For more details, refer to the [Quasar QCard API documentation](https://quasar.dev/vue-components/card#qcard-api).
+
+### q-card-actions
+
+```ts
+type LinidQCardActionsProps = {
+  /**
+   * Specify how to align the actions; For horizontal mode, the default is 'left', while for vertical mode, the default is 'stretch'
+   * Default value: # 'left'/'stretch'
+   */
+  align?:
+    | 'left'
+    | 'center'
+    | 'right'
+    | 'between'
+    | 'around'
+    | 'evenly'
+    | 'stretch'
+    | undefined;
+  /**
+   * Display actions one below the other
+   */
+  vertical?: boolean | undefined;
+};
+```
+
+For more details, refer to the [Quasar QCardActions API documentation](https://quasar.dev/vue-components/card#qcardactions-api).
+
 More components can be added as needed.
 
 ---

@@ -541,49 +541,29 @@ export default new SimpleModule();
 
 ## Error Handling
 
-### Module Fails to Load
+### Module configuration files list fails to load
 
-If a module fails to load via Module Federation, the host will log an error:
+If `modules.json` cannot be loaded, the host application will log an error and skip the module lifecycle system:
 
 ```
-[Module Lifecycle] Failed to load module myBusinessModule/lifecycle: <error>
+[Module Lifecycle] Failed to load module configurations: Failed to fetch /modules.json
 ```
-
-**Consequences:**
-
-- The host crashes.
 
 ---
 
-### Phase Execution Fails
+### Module configuration fails to load
 
-If a lifecycle phase returns `success: false` or throws an error:
+If a module’s configuration file cannot be loaded, the host will log an error and skip that module:
 
 ```
-[Module Lifecycle] my-module: Error in initialize phase: <error>
+[Module Lifecycle] [Module Lifecycle] Config file not found: moduleMyModule.json
 ```
-
-**Consequences:**
-
-- Error is logged by the host
-- Module continues through remaining phases
-- Other modules are not affected
 
 ---
 
-### Invalid Phase Result
+### Module fails to load
 
-If a lifecycle hook returns an invalid result (not a `ModuleLifecycleResult` object):
-
-```
-[Module Lifecycle] my-module: Phase setup returned invalid result, treating as success
-```
-
-**Consequences:**
-
-- Host treats the phase as successful
-- Module continues through remaining phases
-- Warning is logged for debugging
+If a module’s remote lifecycle cannot be loaded, the host application will crash.
 
 ---
 

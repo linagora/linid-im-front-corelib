@@ -837,6 +837,70 @@ type LinidQIconProps = {
 For more details, refer to
 the [Quasar QIcon API documentation](https://quasar.dev/vue-components/icon#qicon-api).
 
+### q-toggle
+
+```ts
+type LinidQToggleProps = {
+  /**
+   * Determines toggle order of the two states ('t' stands for state of true, 'f' for state of false); If 'toggle-indeterminate' is true, then the order
+   * is: indet -> first state -> second state -> indet (and repeat), otherwise: indet -> first state -> second state -> first state -> second state -> ...
+   */
+  toggleOrder?: string | undefined,
+  /**
+   * When user clicks/taps on the component, should we toggle through the indeterminate state too?
+   */
+  toggleIndeterminate?: boolean | undefined,
+  /**
+   * Should the color (if specified any) be kept when the component is unticked/ off?
+   */
+  keepColor?: boolean | undefined,
+  /**
+   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix;
+   * If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
+   */
+  icon?: string | undefined,
+  /**
+   * The icon to be used when the toggle is on
+   */
+  checkedIcon?: string | undefined,
+  /**
+   * The icon to be used when the toggle is off
+   */
+  uncheckedIcon?: string | undefined,
+  /**
+   * The icon to be used when the model is indeterminate
+   */
+  indeterminateIcon?: string | undefined,
+  /**
+   * Label (if any specified) should be displayed on the left side of the component
+   */
+  leftLabel?: boolean | undefined,
+  /**
+   * Size in CSS units, including unit name or standard size name (xs|sm|md|lg|xl)
+   */
+  size?: string | undefined,
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  color?: string | undefined,
+  /**
+   * Notify the component that the background is a dark color
+   */
+  dark?: boolean | null | undefined;
+  /**
+   * Dense mode; occupies less space
+   */
+  dense?: boolean | undefined,
+  /**
+   * Override default icon color (for truthy state only); Color name for component from the Quasar Color Palette
+   */
+  iconColor?: string | undefined,
+};
+```
+
+For more details, refer to
+the [Quasar QToggle API documentation](https://quasar.dev/vue-components/toggle#qtoggle-api).
+
 More components can be added as needed.
 
 ---

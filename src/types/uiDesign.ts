@@ -36,6 +36,7 @@ import type {
   QRouteTabProps,
   QTableProps,
   QTabsProps,
+  QToggleProps,
   QToolbarProps,
   QToolbarTitleProps,
   VueClassProp,
@@ -243,6 +244,25 @@ const Q_CARD_ACTIONS_PROPS = ['align', 'vertical'] as const;
 const Q_ICON_PROPS = ['left', 'right', 'name', 'size', 'color'] as const;
 
 /**
+ * List of QToggleProps keys for type-safe UI design retrieval.
+ */
+const Q_TOGGLE_PROPS = [
+  'toggleOrder',
+  'toggleIndeterminate',
+  'keepColor',
+  'icon',
+  'checkedIcon',
+  'uncheckedIcon',
+  'indeterminateIcon',
+  'leftLabel',
+  'size',
+  'color',
+  'dark',
+  'dense',
+  'iconColor',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -258,6 +278,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-card': Q_CARD_PROPS,
   'q-card-actions': Q_CARD_ACTIONS_PROPS,
   'q-icon': Q_ICON_PROPS,
+  'q-toggle': Q_TOGGLE_PROPS,
 } as const;
 
 /**
@@ -340,9 +361,17 @@ export type LinidQCardActionsProps = Pick<
 >;
 
 /**
- * Subset of QCardActions props supported in UI design configuration.
+ * Subset of QIcon props supported in UI design configuration.
  */
 export type LinidQIconProps = Pick<QIconProps, (typeof Q_ICON_PROPS)[number]>;
+
+/**
+ * Subset of QToggle props supported in UI design configuration.
+ */
+export type LinidQToggleProps = Pick<
+  QToggleProps,
+  (typeof Q_TOGGLE_PROPS)[number]
+>;
 
 /**
  * Union type of all supported Quasar component props subsets.
@@ -359,7 +388,8 @@ export type LinidQComponentProps =
   | LinidQTableProps
   | LinidQCardProps
   | LinidQCardActionsProps
-  | LinidQIconProps;
+  | LinidQIconProps
+  | LinidQToggleProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -376,4 +406,5 @@ export type QComponentName =
   | 'q-table'
   | 'q-card'
   | 'q-card-actions'
-  | 'q-icon';
+  | 'q-icon'
+  | 'q-toggle';

@@ -104,6 +104,7 @@ export type {
   LinidQRouteTabProps,
   LinidQTableProps,
   LinidQTabsProps,
+  LinidQToggleProps,
   LinidQToolbarProps,
   LinidQToolbarTitleProps,
   UiDesign,

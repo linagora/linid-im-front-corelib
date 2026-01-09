@@ -62,35 +62,39 @@ components.
 ### Example: `MyComponent.vue`
 
 ```vue
+
 <template>
   <div>
     <!-- Quasar button using dynamic flat and color values from UiDesign -->
     <q-btn
-      v-bind="btnProps"
-      label="Click me"
+        v-bind="btnProps"
+        label="Click me"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useUiDesign } from '@linagora/linid-im-front-corelib';
-import { QBtnProps } from 'quasar';
+  import { useUiDesign } from '@linagora/linid-im-front-corelib';
+  import { QBtnProps } from 'quasar';
 
-// Retrieve the getComponentProps() function from the composable
-const { ui } = useUiDesign();
+  // Retrieve the getComponentProps() function from the composable
+  const { ui } = useUiDesign();
 
-// Get typed props for the 'q-btn' component from the 'custom' namespace
-const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
+  // Get typed props for the 'q-btn' component from the 'custom' namespace
+  const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
 </script>
 ```
 
 ### 3.1 How it Works
 
 - `useUiDesign` provides access to the `UiDesign` configuration.
-- `ui(namespace, component, overrideProps)` retrieves the configuration for a specific Quasar component (e.g., `q-btn`) from the overrideProps or from a specified namespace (e.g., `custom`) or the `default` namespace.
-- If the value is `undefined` in the overrideProps and the specified namespace, it falls back to the `default` namespace.
+- `ui(namespace, component, overrideProps)` retrieves the configuration for a specific Quasar component (e.g., `q-btn`)
+  from the overrideProps or from a specified namespace (e.g., `custom`) or the `default` namespace.
+- If the value is `undefined` in the overrideProps and the specified namespace, it falls back to the `default`
+  namespace.
 - `namespace` support **dot notation** for nested keys.
-- `component` must be a valid Quasar component name (e.g., `q-btn`, `q-tabs`) and supported by the `UiDesign` system ([voir Section 6](#6-supported-quasar-components-and-props)).
+- `component` must be a valid Quasar component name (e.g., `q-btn`, `q-tabs`) and supported by the `UiDesign`
+  system ([voir Section 6](#6-supported-quasar-components-and-props)).
 
 ---
 
@@ -234,13 +238,15 @@ export type LinidQComponentProps =
 
 For `NamedColor`, refer to the Quasar documentation on [Color Palette](https://quasar.dev/style/color-palette).
 
-For `VueStyleProp` and `VueClassProp`, refer to the Quasar [source code](https://github.com/quasarframework/quasar/blob/dev/ui/types/api/vue-prop-types.d.ts).
+For `VueStyleProp` and `VueClassProp`, refer to the
+Quasar [source code](https://github.com/quasarframework/quasar/blob/dev/ui/types/api/vue-prop-types.d.ts).
 
 ---
 
 ## 6. Supported Quasar Components and Props
 
-Inside `default` namespace, ensure that all keys for the components you plan to use are defined. Here the list of supported
+Inside `default` namespace, ensure that all keys for the components you plan to use are defined. Here the list of
+supported
 components and their props:
 
 ### q-btn:
@@ -478,7 +484,8 @@ type LinidQRouteTabProps = {
 };
 ```
 
-For more details, refer to the [Quasar QRouteTab API documentation](https://quasar.dev/vue-components/tabs#qroutetab-api).
+For more details, refer to
+the [Quasar QRouteTab API documentation](https://quasar.dev/vue-components/tabs#qroutetab-api).
 
 ### q-header
 
@@ -504,7 +511,8 @@ type LinidQHeaderProps = {
 };
 ```
 
-For more details, refer to the [Quasar QHeader API documentation](https://quasar.dev/layout/header-and-footer#qheader-api).
+For more details, refer to
+the [Quasar QHeader API documentation](https://quasar.dev/layout/header-and-footer#qheader-api).
 
 ### q-toolbar
 
@@ -517,7 +525,8 @@ type LinidQToolbarProps = {
 };
 ```
 
-For more details, refer to the [Quasar QToolbar API documentation](https://quasar.dev/vue-components/toolbar#qtoolbar-api).
+For more details, refer to
+the [Quasar QToolbar API documentation](https://quasar.dev/vue-components/toolbar#qtoolbar-api).
 
 ### q-toolbar-title
 
@@ -530,7 +539,8 @@ type LinidQToolbarTitleProps = {
 };
 ```
 
-For more details, refer to the [Quasar QToolbarTitle API documentation](https://quasar.dev/vue-components/toolbar#qtoolbartitle-api).
+For more details, refer to
+the [Quasar QToolbarTitle API documentation](https://quasar.dev/vue-components/toolbar#qtoolbartitle-api).
 
 ### q-avatar
 
@@ -794,7 +804,38 @@ type LinidQCardActionsProps = {
 };
 ```
 
-For more details, refer to the [Quasar QCardActions API documentation](https://quasar.dev/vue-components/card#qcardactions-api).
+For more details, refer to
+the [Quasar QCardActions API documentation](https://quasar.dev/vue-components/card#qcardactions-api).
+
+### q-icon
+
+```ts
+type LinidQIconProps = {
+  /**
+   * Useful if icon is on the left side of something: applies a standard margin on the right side of Icon
+   */
+  left?: boolean | undefined;
+  /**
+   * Useful if icon is on the right side of something: applies a standard margin on the left side of Icon
+   */
+  right?: boolean | undefined;
+  /**
+   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
+   */
+  name?: string | undefined;
+  /**
+   * Size in CSS units, including unit name or standard size name (xs|sm|md|lg|xl)
+   */
+  size?: string | undefined;
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  color?: string | undefined;
+};
+```
+
+For more details, refer to
+the [Quasar QIcon API documentation](https://quasar.dev/vue-components/icon#qicon-api).
 
 More components can be added as needed.
 

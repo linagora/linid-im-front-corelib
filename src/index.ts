@@ -100,6 +100,7 @@ export type {
   LinidQCardActionsProps,
   LinidQCardProps,
   LinidQHeaderProps,
+  LinidQIconProps,
   LinidQRouteTabProps,
   LinidQTableProps,
   LinidQTabsProps,

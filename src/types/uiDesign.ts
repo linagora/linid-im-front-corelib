@@ -33,6 +33,7 @@ import type {
   QCardProps,
   QHeaderProps,
   QIconProps,
+  QInputProps,
   QRouteTabProps,
   QTableProps,
   QTabsProps,
@@ -263,6 +264,37 @@ const Q_TOGGLE_PROPS = [
 ] as const;
 
 /**
+ * List of QInputProps keys for type-safe UI design retrieval.
+ */
+const Q_INPUT_PROPS = [
+  'autofocus',
+  'stackLabel',
+  'hideHint',
+  'clearable',
+  'clearIcon',
+  'counter',
+  'autogrow',
+  'fillMask',
+  'reverseFillMask',
+  'unmaskedValue',
+  'debounce',
+  'labelColor',
+  'color',
+  'bgColor',
+  'dark',
+  'filled',
+  'outlined',
+  'borderless',
+  'standout',
+  'hideBottomSpace',
+  'rounded',
+  'square',
+  'dense',
+  'itemAligned',
+  'noErrorIcon',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -279,6 +311,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-card-actions': Q_CARD_ACTIONS_PROPS,
   'q-icon': Q_ICON_PROPS,
   'q-toggle': Q_TOGGLE_PROPS,
+  'q-input': Q_INPUT_PROPS,
 } as const;
 
 /**
@@ -374,6 +407,14 @@ export type LinidQToggleProps = Pick<
 >;
 
 /**
+ * Subset of QInput props supported in UI design configuration.
+ */
+export type LinidQInputProps = Pick<
+  QInputProps,
+  (typeof Q_INPUT_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -389,7 +430,8 @@ export type LinidQComponentProps =
   | LinidQCardProps
   | LinidQCardActionsProps
   | LinidQIconProps
-  | LinidQToggleProps;
+  | LinidQToggleProps
+  | LinidQInputProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -407,4 +449,5 @@ export type QComponentName =
   | 'q-card'
   | 'q-card-actions'
   | 'q-icon'
-  | 'q-toggle';
+  | 'q-toggle'
+  | 'q-input';

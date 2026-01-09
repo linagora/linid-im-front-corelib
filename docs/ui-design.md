@@ -901,6 +901,118 @@ type LinidQToggleProps = {
 For more details, refer to
 the [Quasar QToggle API documentation](https://quasar.dev/vue-components/toggle#qtoggle-api).
 
+### q-input
+
+```ts
+type LinidQInputProps = {
+  /**
+   * Focus field on initial component render
+   */
+  autofocus?: boolean | undefined,
+  /**
+   * Label will be always shown above the field regardless of field content (if any)
+   */
+  stackLabel?: boolean | undefined,
+  /**
+   * Hide the helper (hint) text when field doesn't have focus
+   */
+  hideHint?: boolean | undefined,
+  /**
+   * Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null
+   */
+  clearable?: boolean | undefined,
+  /**
+   * Custom icon to use for the clear button when using along with 'clearable' prop
+   */
+  clearIcon?: string | undefined,
+  /**
+   * Show an automatic counter on bottom right
+   */
+  counter?: boolean | undefined,
+  /**
+   * Make field autogrow along with its content (uses a textarea)
+   */
+  autogrow?: boolean | undefined,
+  /**
+   * Fills string with specified characters (or underscore if value is not string) to fill mask's length
+   */
+  fillMask?: boolean | string | undefined,
+  /**
+   * Fills string from the right side of the mask
+   */
+  reverseFillMask?: boolean | undefined,
+  /**
+   * Model will be unmasked (won't contain tokens/separation characters)
+   */
+  unmaskedValue?: boolean | undefined,
+  /**
+   * Debounce amount (in milliseconds) when updating model
+   */
+  debounce?: string | number | undefined,
+  /**
+   * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop;
+   * The difference from 'color' prop is that the label will always have this color, even when field is not focused
+   */
+  labelColor?: string | undefined,
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  color?: string | undefined,
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  bgColor?: string | undefined,
+  /**
+   * Notify the component that the background is a dark color
+   */
+  dark?: boolean | null | undefined;
+  /**
+   * Use 'filled' design for the field
+   */
+  filled?: boolean | undefined,
+  /**
+   * Use 'outlined' design for the field
+   */
+  outlined?: boolean | undefined,
+  /**
+   * Use 'borderless' design for the field
+   */
+  borderless?: boolean | undefined,
+  /**
+   * Use 'standout' design for the field; Specifies classes to be applied when focused (overriding default ones)
+   */
+  standout?: boolean | string | undefined,
+  /**
+   * Do not reserve space for hint/error/counter anymore when these are not used; As a result, it also disables the animation for those;
+   * It also allows the hint/error area to stretch vertically based on its content
+   */
+  hideBottomSpace?: boolean | undefined,
+  /**
+   * Applies a small standard border-radius for a squared shape of the component
+   */
+  rounded?: boolean | undefined,
+  /**
+   * Remove border-radius so borders are squared; Overrides 'rounded' prop
+   */
+  square?: boolean | undefined,
+  /**
+   * Dense mode; occupies less space
+   */
+  dense?: boolean | undefined,
+  /**
+   * Match inner content alignment to that of QItem
+   */
+  itemAligned?: boolean | undefined,
+  /**
+   * Hide error icon when there is an error
+   */
+  noErrorIcon?: boolean | undefined,
+};
+```
+
+For more details, refer to
+the [Quasar QInput API documentation](https://quasar.dev/vue-components/input#qinput-api).
+
 More components can be added as needed.
 
 ---

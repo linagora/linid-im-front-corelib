@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.21](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.20...v0.0.21) (2026-01-12)
+
+
+### Features
+
+* add QInput type ([c6127e4](https://github.com/linagora/linid-im-front-corelib/commit/c6127e4ee8eceeb7fa083da05bb10168411405f1))
+* add QToggle type ([997bd78](https://github.com/linagora/linid-im-front-corelib/commit/997bd7879f38ec8e86a2dfa257c4cffbbef6e744))
+
 ### [0.0.20](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.19...v0.0.20) (2026-01-09)
 
 

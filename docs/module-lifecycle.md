@@ -76,14 +76,14 @@ async setup(): Promise<ModuleLifecycleResult> {
 **Hook signature:**
 
 ```typescript
-async configure(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
+async configure(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
 async configure(
-  config: ModuleHostConfig
+  config: ModuleHostConfig<MyModuleOptions>
 ): Promise<ModuleLifecycleResult> {
   // Example: check for required config fields
   if (!config.instanceId) {
@@ -122,13 +122,13 @@ async configure(
 **Hook signature:**
 
 ```typescript
-async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
+async initialize(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+async initialize(config: ModuleHostConfig<MyModuleOptions>): Promise<ModuleLifecycleResult> {
   // Initialize module resources
   await this.loadInitialData();
 
@@ -157,13 +157,13 @@ async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
 **Hook signature:**
 
 ```typescript
-async ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
+async ready(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+async ready(config: ModuleHostConfig<MyModuleOptions>): Promise<ModuleLifecycleResult> {
   console.log(`Module ${this.name} v${this.version} is ready!`);
 
   return {
@@ -192,13 +192,13 @@ async ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
 **Hook signature:**
 
 ```typescript
-async postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult>
+async postInit(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>
 ```
 
 **Implementation example:**
 
 ```typescript
-async postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+async postInit(config: ModuleHostConfig<MyModuleOptions>): Promise<ModuleLifecycleResult> {
   // Register module in main navigation items of Ui Store
   const store = useLinidUiStore();
   const { t } = useScopedI18n('user');
@@ -281,13 +281,15 @@ import { BasicRemoteModule } from '@linagora/linid-im-front-corelib';
 import type { ModuleLifecycleResult } from '@linagora/linid-im-front-corelib';
 import type { App } from 'vue';
 
-class MyModule extends BasicRemoteModule {
+class MyModule extends BasicRemoteModule<MyModuleOptions> {
   constructor() {
     super('my-module', 'My Business Module', '1.0.0', 'Description');
   }
 
   // Override only the hooks you need
-  async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+  async initialize(
+    config: ModuleHostConfig<MyModuleOptions>
+  ): Promise<ModuleLifecycleResult> {
     // do something
 
     return { success: true };
@@ -319,7 +321,7 @@ import type {
 } from '@linagora/linid-im-front-corelib';
 import type { App } from 'vue';
 
-class MyModule implements RemoteModule {
+class MyModule implements RemoteModule<MyModuleOptions> {
   id = 'my-module';
   name = 'My Business Module';
   version = '1.0.0';
@@ -330,7 +332,9 @@ class MyModule implements RemoteModule {
     return { success: true };
   }
 
-  async configure(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+  async configure(
+    config: ModuleHostConfig<MyModuleOptions>
+  ): Promise<ModuleLifecycleResult> {
     // Apply configuration
     if (!config.instanceId) {
       return { success: false, error: 'Missing module instanceId' };
@@ -341,7 +345,9 @@ class MyModule implements RemoteModule {
     return { success: true };
   }
 
-  async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+  async initialize(
+    config: ModuleHostConfig<MyModuleOptions>
+  ): Promise<ModuleLifecycleResult> {
     // do something
     return { success: true };
   }
@@ -351,7 +357,9 @@ class MyModule implements RemoteModule {
     return { success: true };
   }
 
-  async postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+  async postInit(
+    config: ModuleHostConfig<MyModuleOptions>
+  ): Promise<ModuleLifecycleResult> {
     // Cross-module integrations
 
     // Register module in main navigation items of Ui Store
@@ -413,7 +421,7 @@ Each phase should have a single, clear responsibility.
 ✅ **Good:**
 
 ```typescript
-async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+async initialize(config: ModuleHostConfig<MyModuleOptions>): Promise<ModuleLifecycleResult> {
   return { success: true };
 }
 ```
@@ -421,7 +429,7 @@ async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
 ❌ **Bad:**
 
 ```typescript
-async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+async initialize(config: ModuleHostConfig<MyModuleOptions>): Promise<ModuleLifecycleResult> {
   await fetchUserData(); // Should be in ready or postInit
   integrateWithOtherModule(); // Should be in postInit
   return { success: true };
@@ -522,12 +530,14 @@ if (!config.instanceId) {
 All lifecycle hooks are optional. Don't implement hooks your module doesn't need.
 
 ```typescript
-class SimpleModule extends BasicRemoteModule {
+class SimpleModule extends BasicRemoteModule<MyModuleOptions> {
   constructor() {
     super('simple-module', 'Simple Module', '1.0.0');
   }
 
-  async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
+  async initialize(
+    config: ModuleHostConfig<MyModuleOptions>
+  ): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
 
@@ -643,13 +653,7 @@ The following features are planned for future versions:
 
 ### Router Integration
 
-Add direct router access for route registration:
-
-```typescript
-async initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult> {
-  return { success: true };
-}
-```
+Add direct router access for route registration during lifecycle phases.
 
 ### Zone System
 
@@ -660,7 +664,7 @@ Allow modules to inject components into named zones in the UI.
 Declare and validate inter-module dependencies:
 
 ```typescript
-class MyModule extends BasicRemoteModule {
+class MyModule extends BasicRemoteModule<MyModuleOptions> {
   dependencies = ['core-module', 'auth-module'];
 
   // ...

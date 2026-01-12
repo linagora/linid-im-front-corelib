@@ -31,8 +31,9 @@ import type { ModuleLifecycleHooks } from './moduleLifecycle';
  *
  * All remote modules exposed via Module Federation should implement this interface.
  * This is the contract between the host application and remote modules.
+ * @template T Type of the module-specific options provided in the host configuration.
  */
-export interface RemoteModule extends ModuleLifecycleHooks {
+export interface RemoteModule<T> extends ModuleLifecycleHooks<T> {
   /**
    * Unique identifier for the module.
    *
@@ -65,8 +66,9 @@ export interface RemoteModule extends ModuleLifecycleHooks {
  *
  * This is what the host provides to each module during the configuration phase.
  * The host reads this from `module-<name>.json` files.
+ * @template T Type of the module-specific options.
  */
-export interface ModuleHostConfig {
+export interface ModuleHostConfig<T> {
   /**
    * Unique identifier for this instance of the module.
    * Typically used to differentiate multiple instances of the same module within the host.
@@ -97,6 +99,12 @@ export interface ModuleHostConfig {
    * Used to mount the module at a specific route.
    */
   basePath: string;
+
+  /**
+   * Module-specific options provided in the host configuration.
+   * These options are passed to the module during configuration.
+   */
+  options: T;
 }
 
 /**

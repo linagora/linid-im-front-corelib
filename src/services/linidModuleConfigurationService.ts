@@ -30,26 +30,29 @@ import type { ModuleHostConfig } from '../types/module';
  * Stores the configuration of all registered module hosts.
  * Keyed by `instanceId` of each module.
  */
-const moduleHostConfigurations = new Map<string, ModuleHostConfig>();
+const moduleHostConfigurations = new Map<string, ModuleHostConfig<unknown>>();
 
 /**
  * Registers a module host configuration in the global store.
  * If a configuration with the same `instanceId` already exists, it will be overwritten.
  * @param hostConfig - The configuration object of the module host to register.
  */
-export function registerModuleHostConfiguration(hostConfig: ModuleHostConfig) {
+export function registerModuleHostConfiguration(
+  hostConfig: ModuleHostConfig<unknown>
+) {
   moduleHostConfigurations.set(hostConfig.instanceId, hostConfig);
 }
 
 /**
  * Retrieves a module host configuration by its `instanceId`.
  * @param instanceId - The unique identifier of the module host.
+ * @template T Type of the module-specific options.
  * @throws {Error} If no module host configuration is found for the given instanceId.
  * @returns The `ModuleHostConfig` associated with the given `instanceId`.
  */
-export function getModuleHostConfiguration(
+export function getModuleHostConfiguration<T>(
   instanceId: string
-): ModuleHostConfig {
+): ModuleHostConfig<T> {
   const configuration = moduleHostConfigurations.get(instanceId);
 
   if (!configuration) {
@@ -58,5 +61,5 @@ export function getModuleHostConfiguration(
     );
   }
 
-  return configuration;
+  return configuration as ModuleHostConfig<T>;
 }

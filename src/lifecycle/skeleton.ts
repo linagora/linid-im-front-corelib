@@ -34,8 +34,9 @@ import type { ModuleLifecycleResult } from '../types/moduleLifecycle';
  * allowing business modules to extend it and override only the hooks they need.
  *
  * All lifecycle hooks are optional and return success by default.
+ * @template T Type of the module-specific options provided in the host configuration.
  */
-export class BasicRemoteModule implements RemoteModule {
+export class BasicRemoteModule<T> implements RemoteModule<T> {
   /**
    * Unique identifier for the module.
    *
@@ -95,10 +96,11 @@ export class BasicRemoteModule implements RemoteModule {
    * Default implementation returns success.
    * Override this method to add custom configuration logic.
    * @param config - Module-specific configuration from host.
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   async configure(
-    config: ModuleHostConfig /* eslint-disable-line @typescript-eslint/no-unused-vars */
+    config: ModuleHostConfig<T> /* eslint-disable-line @typescript-eslint/no-unused-vars */
   ): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
@@ -112,10 +114,11 @@ export class BasicRemoteModule implements RemoteModule {
    * Default implementation returns success.
    * Override this method to add custom initialization logic.
    * @param config - Module-specific configuration from host.
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   async initialize(
-    config: ModuleHostConfig /* eslint-disable-line @typescript-eslint/no-unused-vars */
+    config: ModuleHostConfig<T> /* eslint-disable-line @typescript-eslint/no-unused-vars */
   ): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
@@ -129,10 +132,11 @@ export class BasicRemoteModule implements RemoteModule {
    * Default implementation returns success.
    * Override this method to add custom ready logic.
    * @param config - Module-specific configuration from host.
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   async ready(
-    config: ModuleHostConfig /* eslint-disable-line @typescript-eslint/no-unused-vars */
+    config: ModuleHostConfig<T> /* eslint-disable-line @typescript-eslint/no-unused-vars */
   ): Promise<ModuleLifecycleResult> {
     return { success: true };
   }
@@ -146,10 +150,11 @@ export class BasicRemoteModule implements RemoteModule {
    * Default implementation returns success.
    * Override this method to add custom post-init logic.
    * @param config - Module-specific configuration from host.
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   async postInit(
-    config: ModuleHostConfig /* eslint-disable-line @typescript-eslint/no-unused-vars */
+    config: ModuleHostConfig<T> /* eslint-disable-line @typescript-eslint/no-unused-vars */
   ): Promise<ModuleLifecycleResult> {
     return { success: true };
   }

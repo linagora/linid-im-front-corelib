@@ -101,7 +101,14 @@ export default defineComponent({
 Defines the configuration provided to a remote module by the host application.
 
 ```ts
-export interface ModuleHostConfig {
+/**
+ * Module configuration in the host (module-<name>.json).
+ *
+ * This is what the host provides to each module during the configuration phase.
+ * The host reads this from `module-<name>.json` files.
+ * @template T Type of the module-specific options.
+ */
+export interface ModuleHostConfig<T> {
   /**
    * Unique identifier for this instance of the module.
    * Typically used to differentiate multiple instances of the same module within the host.
@@ -132,6 +139,12 @@ export interface ModuleHostConfig {
    * Used to mount the module at a specific route.
    */
   basePath: string;
+
+  /**
+   * Module-specific options provided in the host configuration.
+   * These options are passed to the module during configuration.
+   */
+  options: T;
 }
 ```
 
@@ -144,7 +157,14 @@ export interface ModuleHostConfig {
 Defines the structure of a remote module loaded via Module Federation.
 
 ```ts
-xport interface RemoteModule extends ModuleLifecycleHooks {
+/**
+ * Remote module interface.
+ *
+ * All remote modules exposed via Module Federation should implement this interface.
+ * This is the contract between the host application and remote modules.
+ * @template T Type of the module-specific options provided in the host configuration.
+ */
+export interface RemoteModule<T> extends ModuleLifecycleHooks<T> {
   /**
    * Unique identifier for the module.
    *
@@ -503,7 +523,14 @@ export interface ModuleLifecycleResult {
 Remote modules should implement these hooks to participate in the lifecycle. All hooks are optional - implement only what your module needs.
 
 ```ts
-export interface ModuleLifecycleHooks {
+/**
+ * Module lifecycle hooks interface.
+ *
+ * Remote modules should implement these hooks to participate in the lifecycle.
+ * All hooks are optional - implement only what your module needs.
+ * @template T Type of the module-specific options.
+ */
+export interface ModuleLifecycleHooks<T> {
   /**
    * Called when the module is first loaded.
    *
@@ -519,9 +546,10 @@ export interface ModuleLifecycleHooks {
    * Use this to receive and validate the host configuration for your module.
    * This is where you should check that all required configuration is present.
    * @param config - Module-specific configuration from host (from module-<name>.json).
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
-  configure(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
+  configure(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
 
   /**
    * Called to initialize the module's core functionality.
@@ -529,9 +557,10 @@ export interface ModuleLifecycleHooks {
    * Use this to initialize any resources
    * your module needs to function.
    * @param config - Module-specific configuration from host (from module-<name>.json).
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
-  initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
+  initialize(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
 
   /**
    * Called when the module is ready to be used.
@@ -539,9 +568,10 @@ export interface ModuleLifecycleHooks {
    * Use this to perform final checks and emit ready state.
    * At this point, all other modules have completed initialization.
    * @param config - Module-specific configuration from host (from module-<name>.json).
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
-  ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
+  ready(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
 
   /**
    * Called after all modules have been initialized.
@@ -549,9 +579,10 @@ export interface ModuleLifecycleHooks {
    * Use this for cross-module integrations and final setup that requires
    * all modules to be ready.
    * @param config - Module-specific configuration from host (from module-<name>.json).
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
-  postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
+  postInit(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
 }
 ```
 

@@ -104,8 +104,9 @@ export interface ModuleLifecycleResult {
  *
  * Remote modules should implement these hooks to participate in the lifecycle.
  * All hooks are optional - implement only what your module needs.
+ * @template T Type of the module-specific options.
  */
-export interface ModuleLifecycleHooks {
+export interface ModuleLifecycleHooks<T> {
   /**
    * Called when the module is first loaded.
    *
@@ -121,9 +122,10 @@ export interface ModuleLifecycleHooks {
    * Use this to receive and validate the host configuration for your module.
    * This is where you should check that all required configuration is present.
    * @param config - Module-specific configuration from host (from module-<name>.json).
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
-  configure(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
+  configure(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
 
   /**
    * Called to initialize the module's core functionality.
@@ -131,9 +133,10 @@ export interface ModuleLifecycleHooks {
    * Use this to initialize any resources
    * your module needs to function.
    * @param config - Module-specific configuration from host (from module-<name>.json).
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
-  initialize(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
+  initialize(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
 
   /**
    * Called when the module is ready to be used.
@@ -141,9 +144,10 @@ export interface ModuleLifecycleHooks {
    * Use this to perform final checks and emit ready state.
    * At this point, all other modules have completed initialization.
    * @param config - Module-specific configuration from host (from module-<name>.json).
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
-  ready(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
+  ready(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
 
   /**
    * Called after all modules have been initialized.
@@ -151,7 +155,8 @@ export interface ModuleLifecycleHooks {
    * Use this for cross-module integrations and final setup that requires
    * all modules to be ready.
    * @param config - Module-specific configuration from host (from module-<name>.json).
+   *                 Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
-  postInit(config: ModuleHostConfig): Promise<ModuleLifecycleResult>;
+  postInit(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
 }

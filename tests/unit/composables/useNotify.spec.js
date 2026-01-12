@@ -1,6 +1,6 @@
 import { useNotify } from 'src/composables/useNotify';
 import { uiEventSubject } from 'src/services/uiEventService';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 
 describe('Test composable: useNotify', () => {
   let subscription;

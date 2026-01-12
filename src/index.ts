@@ -31,6 +31,7 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 export { usePagination } from './composables/usePagination';
 export { useScopedI18n } from './composables/useScopedI18n';
 export { useUiDesign } from './composables/useUiDesign';
+export { useNotify } from './composables/useNotify';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
@@ -59,6 +60,7 @@ export {
 export { fromDot, isObject, merge, renameKeys } from './services/objectService';
 export { getPiniaStore, setPiniaStore } from './services/piniaStoreService';
 export { getUiDesign, setUiDesign } from './services/uiDesignService';
+export { uiEventSubject } from './services/uiEventService';
 
 // Types - Zones
 export type { LinidZoneEntry } from './types/linidZone';

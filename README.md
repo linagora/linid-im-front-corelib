@@ -31,7 +31,7 @@ structures for identity management features such as CRUD operations on persons, 
 ## **Tech Stack 🛠️**
 
 | Area            | Technology               |
-|-----------------|--------------------------|
+| --------------- | ------------------------ |
 | Language        | TypeScript               |
 | Framework       | Vue.js (Composition API) |
 | UI Toolkit      | Quasar Framework         |
@@ -80,30 +80,34 @@ This project is licensed under: GNU Affero General Public License version 3
 
 A full technical documentation is available in the `docs/` directory:
 
-- 🔄 **Module Lifecycle System**  
-  Learn how business modules initialize themselves with the standardized lifecycle system.  
+- 🔄 **Module Lifecycle System**
+  Learn how business modules initialize themselves with the standardized lifecycle system.
   → [`docs/module-lifecycle.md`](docs/module-lifecycle.md)
 
-- 🔌 **Plugin Zone Component**  
-  Learn how to use the component that dynamically renders remote Vue plugins.  
+- 🔌 **Plugin Zone Component**
+  Learn how to use the component that dynamically renders remote Vue plugins.
   → [`docs/components-plugin-zones.md`](docs/components-plugin-zones.md)
 
-- 🧰 **Services**  
-  Detailed description of all services provided by the library.  
+- 🧰 **Services**
+  Detailed description of all services provided by the library.
   → [`docs/services.md`](docs/services.md)
 
-- 🧩 **TypeScript Types & Interfaces**  
-  Detailed description of all types and interfaces used in the plugin system.  
+- 🧩 **TypeScript Types & Interfaces**
+  Detailed description of all types and interfaces used in the plugin system.
   → [`docs/types-and-interfaces.md`](docs/types-and-interfaces.md)
 
-- 🎨 **UI Design Configuration (`UiDesign`)**  
+- 🎨 **UI Design Configuration (`UiDesign`)**
   Learn how to initialize and use the `UiDesign` singleton and the `useUiDesign` composable for dynamic UI
-  personalization.  
+  personalization.
   → [`docs/ui-design.md`](docs/ui-design.md)
 
-- 🎨 **I18n Configuration (`i18n`)**  
-  Learn how to initialize and use the `i18n` singleton and the `useScopedI18n` composable for internationalization.  
+- 🎨 **I18n Configuration (`i18n`)**
+  Learn how to initialize and use the `i18n` singleton and the `useScopedI18n` composable for internationalization.
   → [`docs/i18n.md`](docs/ui-design.md)
+
+- 🔔 **Notification System (`useNotify`)**
+  Learn how to use the `useNotify` composable to display notifications within your application.
+  → [`docs/notify.md`](docs/notify.md)
 
 More documents will be added as the library evolves.
 

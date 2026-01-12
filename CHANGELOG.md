@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.22](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.21...v0.0.22) (2026-01-12)
+
+
+### Features
+
+* add typed options field to ModuleHostConfig for module-specific configuration ([5cc7635](https://github.com/linagora/linid-im-front-corelib/commit/5cc7635d280f18eea78b84dd68238d1242185e5f))
+
 ### [0.0.21](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.20...v0.0.21) (2026-01-12)
 
 

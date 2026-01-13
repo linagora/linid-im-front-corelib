@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.24](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.23...v0.0.24) (2026-01-13)
+
+
+### Features
+
+* add notify event ([3789911](https://github.com/linagora/linid-im-front-corelib/commit/378991105a756519e42dab45d387c62d510b94d5))
+
 ### [0.0.23](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.22...v0.0.23) (2026-01-12)
 
 

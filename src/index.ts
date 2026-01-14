@@ -122,3 +122,6 @@ export { ModuleLifecyclePhase } from './types/moduleLifecycle';
 
 // Lifecycle Base Class
 export { BasicRemoteModule } from './lifecycle/skeleton';
+
+// Types - UIEvent
+export type { UiEvent } from './types/uiEvent';

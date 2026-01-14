@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.25](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.24...v0.0.25) (2026-01-14)
+
+
+### Bug Fixes
+
+* export uiEvent to use it in front and plugins ([31d5809](https://github.com/linagora/linid-im-front-corelib/commit/31d58091039849f0dbea043ddafcb0df797d4cfd))
+
 ### [0.0.24](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.23...v0.0.24) (2026-01-13)
 
 

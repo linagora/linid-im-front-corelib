@@ -35,6 +35,7 @@ import type {
   QHeaderProps,
   QIconProps,
   QInputProps,
+  QImgProps,
   QRouteTabProps,
   QTableProps,
   QTabsProps,
@@ -43,6 +44,7 @@ import type {
   QToolbarTitleProps,
   VueClassProp,
   VueStyleProp,
+  VueStyleObjectProp,
 } from 'quasar';
 
 /**
@@ -54,7 +56,8 @@ export type UiDesignValue =
   | boolean
   | NamedColor
   | VueStyleProp
-  | VueClassProp;
+  | VueClassProp
+  | VueStyleObjectProp;
 
 /**
  * Represents a namespace containing key-value pairs of UI configuration values.
@@ -313,6 +316,33 @@ const Q_DATE_PROPS = [
 ] as const;
 
 /**
+ * List of QImgProps keys for type-safe UI design retrieval.
+ */
+const Q_IMG_PROPS = [
+  'loading',
+  'loadingShowDelay',
+  'noSpinner',
+  'noNativeMenu',
+  'noTransition',
+  'draggable',
+  'src',
+  'srcset',
+  'sizes',
+  'placeholderSrc',
+  'errorSrc',
+  'ratio',
+  'initialRatio',
+  'width',
+  'height',
+  'fit',
+  'position',
+  'imgClass',
+  'imgStyle',
+  'spinnerColor',
+  'spinnerSize',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -331,6 +361,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-toggle': Q_TOGGLE_PROPS,
   'q-input': Q_INPUT_PROPS,
   'q-date': Q_DATE_PROPS,
+  'q-img': Q_IMG_PROPS,
 } as const;
 
 /**
@@ -439,6 +470,11 @@ export type LinidQInputProps = Pick<
 export type LinidQDateProps = Pick<QDateProps, (typeof Q_DATE_PROPS)[number]>;
 
 /**
+ * Subset of QImg props supported in UI design configuration.
+ */
+export type LinidQImgProps = Pick<QImgProps, (typeof Q_IMG_PROPS)[number]>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -456,7 +492,8 @@ export type LinidQComponentProps =
   | LinidQIconProps
   | LinidQToggleProps
   | LinidQInputProps
-  | LinidQDateProps;
+  | LinidQDateProps
+  | LinidQImgProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -476,4 +513,5 @@ export type QComponentName =
   | 'q-icon'
   | 'q-toggle'
   | 'q-input'
-  | 'q-date';
+  | 'q-date'
+  | 'q-img';

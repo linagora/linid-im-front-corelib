@@ -748,6 +748,10 @@ See description in [Ui design documentation](./ui-design.md#q-input).
 
 See description in [Ui design documentation](./ui-design.md#q-date).
 
+### LinidQImgProps
+
+See description in [Ui design documentation](./ui-design.md#q-img).
+
 ---
 
 ## 🖼️ Linid Ui Store types
@@ -824,6 +828,7 @@ export interface NavigationMenuItem {
 | `LinidQToggleProps`             | QToggle component properties supported by Ui Design       |
 | `LinidQInputProps`              | QInput component properties supported by Ui Design        |
 | `LinidQDateProps`               | QDate component properties supported by Ui Design         |
+| `LinidQImgProps`                | QImg component properties supported by Ui Design          |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
 | `NavigationMenuItem`            | Describes a main navigation menu item                     |
 

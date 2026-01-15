@@ -179,7 +179,8 @@ export type UiDesignValue =
   | boolean
   | NamedColor
   | VueStyleProp
-  | VueClassProp;
+  | VueClassProp
+  | VueStyleObjectProp;
 
 /**
  * Represents a namespace containing key-value pairs of UI configuration values.
@@ -224,7 +225,8 @@ export type QComponentName =
   | 'q-icon'
   | 'q-toggle'
   | 'q-input'
-  | 'q-date';
+  | 'q-date'
+  | 'q-img';
 
 /**
  * Union type of all supported Quasar component props subsets.
@@ -244,13 +246,13 @@ export type LinidQComponentProps =
   | LinidQIconProps
   | LinidQToggleProps
   | LinidQInputProps
-  | LinidQDateProps;
+  | LinidQDateProps
+  | LinidQImgProps;
 ```
 
 For `NamedColor`, refer to the Quasar documentation on [Color Palette](https://quasar.dev/style/color-palette).
 
-For `VueStyleProp` and `VueClassProp`, refer to the
-Quasar [source code](https://github.com/quasarframework/quasar/blob/dev/ui/types/api/vue-prop-types.d.ts).
+For `VueStyleProp`, `VueClassProp` and `VueStyleObjectProp`, refer to the Quasar [source code](https://github.com/quasarframework/quasar/blob/dev/ui/types/api/vue-prop-types.d.ts).
 
 ---
 
@@ -1077,6 +1079,104 @@ type LinidQDateProps = {
 
 For more details, refer to
 the [Quasar QDate API documentation](https://quasar.dev/vue-components/date#qdate-api).
+
+### q-img
+
+```ts
+type LinidQImgProps = {
+  /**
+   * Lazy or immediate load; Same syntax as <img> loading attribute
+   * Default value: 'lazy'
+   */
+  loading?: 'lazy' | 'eager' | undefined;
+  /**
+   * Delay showing the spinner when image changes; Gives time for the browser to load the image from cache to prevent flashing the spinner unnecessarily; Value should represent milliseconds
+   * Default value: 0
+   */
+  loadingShowDelay?: number | string | undefined;
+  /**
+   * Do not display the default spinner while waiting for the image to be loaded; It is overriden by the 'loading' slot when one is present
+   */
+  noSpinner?: boolean | undefined;
+  /**
+   * Disables the native context menu for the image
+   */
+  noNativeMenu?: boolean | undefined;
+  /**
+   * Disable default transition when switching between old and new image
+   */
+  noTransition?: boolean | undefined;
+  /**
+   * Adds the native 'draggable' attribute
+   */
+  draggable?: boolean | undefined;
+  /**
+   * Path to image
+   */
+  src?: string | undefined;
+  /**
+   * Same syntax as <img> srcset attribute
+   */
+  srcset?: string | undefined;
+  /**
+   * Same syntax as <img> sizes attribute
+   */
+  sizes?: string | undefined;
+  /**
+   * While waiting for your image to load, you can use a placeholder image
+   */
+  placeholderSrc?: string | undefined;
+  /**
+   * In case your image fails to load, you can use an error image
+   */
+  errorSrc?: string | undefined;
+  /**
+   * Force the component to maintain an aspect ratio
+   */
+  ratio?: string | number | undefined;
+  /**
+   * Use it when not specifying 'ratio' but still wanting an initial aspect ratio
+   * Default value: 1.7778
+   */
+  initialRatio?: string | number | undefined;
+  /**
+   * Forces image width; Must also include the unit (px or %)
+   */
+  width?: string | undefined;
+  /**
+   * Forces image height; Must also include the unit (px or %)
+   */
+  height?: string | undefined;
+  /**
+   * How the image will fit into the container; Equivalent of the object-fit prop; Can be coordinated with 'position' prop
+   * Default value: 'cover'
+   */
+  fit?: 'cover' | 'fill' | 'contain' | 'none' | 'scale-down' | undefined;
+  /**
+   * The alignment of the image into the container; Equivalent of the object-position CSS prop
+   * Default value: '50% 50%'
+   */
+  position?: string | undefined;
+  /**
+   * CSS classes to be attributed to the native img element
+   */
+  imgClass?: string | undefined;
+  /**
+   * Apply CSS to the native img element
+   */
+  imgStyle?: VueStyleObjectProp | undefined;
+  /**
+   * Color name for default Spinner (unless using a 'loading' slot)
+   */
+  spinnerColor?: NamedColor | undefined;
+  /**
+   * Size in CSS units, including unit name, for default Spinner (unless using a 'loading' slot)
+   */
+  spinnerSize?: string | undefined;
+};
+```
+
+For more details, refer to the [Quasar QImg API documentation](https://quasar.dev/vue-components/img#qimg-api).
 
 More components can be added as needed.
 

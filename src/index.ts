@@ -115,6 +115,7 @@ export type {
   UiDesign,
   UiDesignNamespace,
   UiDesignValue,
+  LinidQImgProps,
 } from './types/uiDesign';
 
 // Types - UI

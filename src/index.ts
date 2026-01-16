@@ -77,9 +77,22 @@ export type {
 
 // Types - Configuration
 export type {
+  AttributeInputSettingsMap,
+  AttributeInputType,
+  BooleanInputSettings,
   LinidApiEndpointConfiguration,
   LinidAttributeConfiguration,
+  LinidBooleanAttributeConfiguration,
   LinidEntityConfiguration,
+  LinidNumberAttributeConfiguration,
+  LinidTextAttributeConfiguration,
+  NumberInputSettings,
+  TextInputSettings,
+} from './types/linidConfiguration';
+export {
+  isBooleanAttribute,
+  isNumberAttribute,
+  isTextAttribute,
 } from './types/linidConfiguration';
 
 export type {

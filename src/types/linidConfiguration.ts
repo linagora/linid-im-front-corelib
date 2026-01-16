@@ -25,10 +25,68 @@
  */
 
 /**
- * Describes a single attribute of an entity.
- * Corresponds to `AttributeDescription` from the backend API.
+ * Supported UI input types for attribute rendering.
+ * Each type corresponds to a specific form component.
  */
-export interface LinidAttributeConfiguration {
+export type AttributeInputType = 'Text' | 'Number' | 'Boolean';
+
+/**
+ * Input settings for Text input type.
+ * Used with text-based form inputs (QInput type="text").
+ */
+export interface TextInputSettings {
+  /** Placeholder text displayed when input is empty. */
+  placeholder?: string;
+  /** Maximum character length allowed. */
+  maxLength?: number;
+  /** Minimum character length required. */
+  minLength?: number;
+  /** Regular expression pattern for validation. */
+  pattern?: string;
+}
+
+/**
+ * Input settings for Number input type.
+ * Used with numeric form inputs (QInput type="number").
+ */
+export interface NumberInputSettings {
+  /** Minimum allowed value. */
+  min?: number;
+  /** Maximum allowed value. */
+  max?: number;
+  /** Step increment for the input. */
+  step?: number;
+  /** Placeholder text displayed when input is empty. */
+  placeholder?: string;
+}
+
+/**
+ * Input settings for Boolean input type.
+ * Used with toggle/checkbox form inputs (QToggle).
+ */
+export interface BooleanInputSettings {
+  /** Label displayed when value is true. */
+  trueLabel?: string;
+  /** Label displayed when value is false. */
+  falseLabel?: string;
+}
+
+/**
+ * Maps input types to their corresponding settings interfaces.
+ */
+export interface AttributeInputSettingsMap {
+  /** Settings interface for Text input type. */
+  Text: TextInputSettings;
+  /** Settings interface for Number input type. */
+  Number: NumberInputSettings;
+  /** Settings interface for Boolean input type. */
+  Boolean: BooleanInputSettings;
+}
+
+/**
+ * Base properties shared by all attribute configurations.
+ */
+interface LinidAttributeConfigurationBase {
   /** The name of the attribute (e.g., "email"). */
   name: string;
   /** The backend type of the attribute (e.g., "string", "integer"). */
@@ -37,10 +95,110 @@ export interface LinidAttributeConfiguration {
   required: boolean;
   /** Whether the attribute has validation rules. */
   hasValidations: boolean;
-  /** The UI input type to be used on the front-end (e.g., "text", "select"). */
-  input: string;
-  /** Settings for the input (e.g., options, placeholder). */
-  inputSettings: Record<string, unknown>;
+}
+
+/**
+ * Attribute configuration for Text input type.
+ */
+export interface LinidTextAttributeConfiguration extends LinidAttributeConfigurationBase {
+  /** The UI input type. */
+  input: 'Text';
+  /** Settings specific to text inputs. */
+  inputSettings: TextInputSettings;
+}
+
+/**
+ * Attribute configuration for Number input type.
+ */
+export interface LinidNumberAttributeConfiguration extends LinidAttributeConfigurationBase {
+  /** The UI input type. */
+  input: 'Number';
+  /** Settings specific to number inputs. */
+  inputSettings: NumberInputSettings;
+}
+
+/**
+ * Attribute configuration for Boolean input type.
+ */
+export interface LinidBooleanAttributeConfiguration extends LinidAttributeConfigurationBase {
+  /** The UI input type. */
+  input: 'Boolean';
+  /** Settings specific to boolean inputs. */
+  inputSettings: BooleanInputSettings;
+}
+
+/**
+ * Describes a single attribute of an entity.
+ * Corresponds to `AttributeDescription` from the backend API.
+ * This is a discriminated union type where the `input` property
+ * determines the shape of `inputSettings`.
+ * @example
+ * // Text attribute
+ * const textAttr: LinidAttributeConfiguration = {
+ *   name: 'email',
+ *   type: 'String',
+ *   required: true,
+ *   hasValidations: true,
+ *   input: 'Text',
+ *   inputSettings: { placeholder: 'Enter email', maxLength: 255 },
+ * };
+ * @example
+ * // Number attribute
+ * const numberAttr: LinidAttributeConfiguration = {
+ *   name: 'age',
+ *   type: 'Integer',
+ *   required: false,
+ *   hasValidations: false,
+ *   input: 'Number',
+ *   inputSettings: { min: 0, max: 150 },
+ * };
+ * @example
+ * // Boolean attribute
+ * const boolAttr: LinidAttributeConfiguration = {
+ *   name: 'active',
+ *   type: 'Boolean',
+ *   required: true,
+ *   hasValidations: false,
+ *   input: 'Boolean',
+ *   inputSettings: { trueLabel: 'Yes', falseLabel: 'No' },
+ * };
+ */
+export type LinidAttributeConfiguration =
+  | LinidTextAttributeConfiguration
+  | LinidNumberAttributeConfiguration
+  | LinidBooleanAttributeConfiguration;
+
+/**
+ * Type guard to check if an attribute configuration is a Text input.
+ * @param config - The attribute configuration to check.
+ * @returns True if the configuration is for a Text input.
+ */
+export function isTextAttribute(
+  config: LinidAttributeConfiguration
+): config is LinidTextAttributeConfiguration {
+  return config.input === 'Text';
+}
+
+/**
+ * Type guard to check if an attribute configuration is a Number input.
+ * @param config - The attribute configuration to check.
+ * @returns True if the configuration is for a Number input.
+ */
+export function isNumberAttribute(
+  config: LinidAttributeConfiguration
+): config is LinidNumberAttributeConfiguration {
+  return config.input === 'Number';
+}
+
+/**
+ * Type guard to check if an attribute configuration is a Boolean input.
+ * @param config - The attribute configuration to check.
+ * @returns True if the configuration is for a Boolean input.
+ */
+export function isBooleanAttribute(
+  config: LinidAttributeConfiguration
+): config is LinidBooleanAttributeConfiguration {
+  return config.input === 'Boolean';
 }
 
 /**

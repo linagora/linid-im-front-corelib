@@ -104,6 +104,7 @@ export type {
   LinidQHeaderProps,
   LinidQIconProps,
   LinidQInputProps,
+  LinidQDateProps,
   LinidQRouteTabProps,
   LinidQTableProps,
   LinidQTabsProps,

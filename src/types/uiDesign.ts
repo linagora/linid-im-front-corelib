@@ -31,6 +31,7 @@ import type {
   QBtnProps,
   QCardActionsProps,
   QCardProps,
+  QDateProps,
   QHeaderProps,
   QIconProps,
   QInputProps,
@@ -295,6 +296,23 @@ const Q_INPUT_PROPS = [
 ] as const;
 
 /**
+ * List of QDateProps keys for type-safe UI design retrieval.
+ */
+const Q_DATE_PROPS = [
+  'landscape',
+  'yearsInMonthView',
+  'todayBtn',
+  'minimal',
+  'defaultView',
+  'color',
+  'textColor',
+  'dark',
+  'square',
+  'flat',
+  'bordered',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -312,6 +330,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-icon': Q_ICON_PROPS,
   'q-toggle': Q_TOGGLE_PROPS,
   'q-input': Q_INPUT_PROPS,
+  'q-date': Q_DATE_PROPS,
 } as const;
 
 /**
@@ -415,6 +434,11 @@ export type LinidQInputProps = Pick<
 >;
 
 /**
+ * Subset of QInput props supported in UI design configuration.
+ */
+export type LinidQDateProps = Pick<QDateProps, (typeof Q_DATE_PROPS)[number]>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -431,7 +455,8 @@ export type LinidQComponentProps =
   | LinidQCardActionsProps
   | LinidQIconProps
   | LinidQToggleProps
-  | LinidQInputProps;
+  | LinidQInputProps
+  | LinidQDateProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -450,4 +475,5 @@ export type QComponentName =
   | 'q-card-actions'
   | 'q-icon'
   | 'q-toggle'
-  | 'q-input';
+  | 'q-input'
+  | 'q-date';

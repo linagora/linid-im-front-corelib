@@ -205,7 +205,97 @@ Types for entity and route metadata returned by the backend API.
 
 ### LinidAttributeConfiguration
 
-Describes a single attribute of an entity (name, type, input settings, validations).
+Describes a single attribute of an entity. This is a **discriminated union type** where the `input` property determines the shape of `inputSettings`.
+
+#### Supported Input Types
+
+| Input Type | Settings Interface     | Description                    |
+| ---------- | ---------------------- | ------------------------------ |
+| `Text`     | `TextInputSettings`    | Text-based inputs (QInput)     |
+| `Number`   | `NumberInputSettings`  | Numeric inputs (QInput number) |
+| `Boolean`  | `BooleanInputSettings` | Toggle/checkbox (QToggle)      |
+
+#### Input Settings by Type
+
+**TextInputSettings:**
+
+```ts
+interface TextInputSettings {
+  placeholder?: string; // Placeholder text
+  maxLength?: number; // Maximum character length
+  minLength?: number; // Minimum character length
+  pattern?: string; // Regex validation pattern
+}
+```
+
+**NumberInputSettings:**
+
+```ts
+interface NumberInputSettings {
+  min?: number; // Minimum allowed value
+  max?: number; // Maximum allowed value
+  step?: number; // Step increment
+  placeholder?: string; // Placeholder text
+}
+```
+
+**BooleanInputSettings:**
+
+```ts
+interface BooleanInputSettings {
+  trueLabel?: string; // Label when value is true
+  falseLabel?: string; // Label when value is false
+}
+```
+
+#### Example Usage
+
+```ts
+import type { LinidAttributeConfiguration } from '@linagora/linid-im-front-corelib';
+import {
+  isTextAttribute,
+  isNumberAttribute,
+} from '@linagora/linid-im-front-corelib';
+
+// Text attribute
+const emailAttr: LinidAttributeConfiguration = {
+  name: 'email',
+  type: 'String',
+  required: true,
+  hasValidations: true,
+  input: 'Text',
+  inputSettings: { placeholder: 'Enter email', maxLength: 255 },
+};
+
+// Number attribute
+const ageAttr: LinidAttributeConfiguration = {
+  name: 'age',
+  type: 'Integer',
+  required: false,
+  hasValidations: false,
+  input: 'Number',
+  inputSettings: { min: 0, max: 150 },
+};
+
+// Type narrowing with type guards
+function processAttribute(config: LinidAttributeConfiguration) {
+  if (isTextAttribute(config)) {
+    // config.inputSettings is now TextInputSettings
+    console.log(config.inputSettings.maxLength);
+  } else if (isNumberAttribute(config)) {
+    // config.inputSettings is now NumberInputSettings
+    console.log(config.inputSettings.min, config.inputSettings.max);
+  }
+}
+```
+
+#### Type Guards
+
+The corelib provides type guards for runtime type narrowing:
+
+- `isTextAttribute(config)` - Returns `true` if `input === 'Text'`
+- `isNumberAttribute(config)` - Returns `true` if `input === 'Number'`
+- `isBooleanAttribute(config)` - Returns `true` if `input === 'Boolean'`
 
 ### LinidEntityConfiguration
 
@@ -557,7 +647,7 @@ export interface ModuleLifecycleHooks<T> {
    * Use this to initialize any resources
    * your module needs to function.
    * @param config - Module-specific configuration from host (from module-<name>.json).
-   *                 Contains module-specific options of type T.
+   * Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   initialize(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
@@ -568,7 +658,7 @@ export interface ModuleLifecycleHooks<T> {
    * Use this to perform final checks and emit ready state.
    * At this point, all other modules have completed initialization.
    * @param config - Module-specific configuration from host (from module-<name>.json).
-   *                 Contains module-specific options of type T.
+   * Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   ready(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
@@ -579,7 +669,7 @@ export interface ModuleLifecycleHooks<T> {
    * Use this for cross-module integrations and final setup that requires
    * all modules to be ready.
    * @param config - Module-specific configuration from host (from module-<name>.json).
-   *                 Contains module-specific options of type T.
+   * Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   postInit(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
@@ -684,43 +774,50 @@ export interface NavigationMenuItem {
 
 ## 🧰 Summary
 
-| Type / Interface                | Purpose                                                   |
-| ------------------------------- | --------------------------------------------------------- |
-| `LinidZoneEntry`                | Defines the contract for a plugin component               |
-| `LinidZoneState`                | Defines the structure of the zone store                   |
-| `FederatedModule`               | Defines the structure of a federated component module     |
-| `ModuleHostConfig`              | Configuration provided to remote modules                  |
-| `RemoteModule`                  | Defines the structure of a remote module                  |
-| `LinidAttributeConfiguration`   | Describes an entity attribute                             |
-| `LinidEntityConfiguration`      | Describes an entity and its attributes                    |
-| `LinidApiEndpointConfiguration` | Describes a REST route                                    |
-| `LinidConfigurationState`       | Defines the structure of the configuration store          |
-| `LinidRoute`                    | Defines the structure of a route (recursive children)     |
-| `LinidRoutes`                   | Array of LinidRoute for nested routes                     |
-| `Page<T>`                       | Paginated API response                                    |
-| `Pagination`                    | Backend pagination model                                  |
-| `QTableRequestEvent`            | Quasar table server-side request payload                  |
-| `QuasarPagination`              | Quasar-specific pagination structure                      |
-| `QueryFilter`                   | Flexible query parameter map                              |
-| `ModuleLifecyclePhase`          | Enum of module lifecycle phases                           |
-| `ModuleLifecycleResult`         | Result of a lifecycle phase execution                     |
-| `ModuleLifecycleHooks`          | Lifecycle hooks for remote modules                        |
-| `UiDesignValue`                 | Single primitive value in the UI configuration            |
-| `UiDesignNamespace`             | Namespace with key-value pairs of UI configuration values |
-| `UiDesign`                      | The full UI design configuration                          |
-| `QComponentName`                | Valid Quasar component names for type-safe UI design      |
-| `LinidQComponentProps`          | All supported Quasar component props subsets              |
-| `LinidQBtnProps`                | QBtn component properties supported by Ui Design          |
-| `LinidQTabsProps`               | QTabs component properties supported by Ui Design         |
-| `LinidQRouteTabProps`           | QRouteTab component properties supported by Ui Design     |
-| `LinidQHeaderProps`             | QHeader component properties supported by Ui Design       |
-| `LinidQToolbarProps`            | QToolbar component properties supported by Ui Design      |
-| `LinidQToolbarTitleProps`       | QToolbarTitle component properties supported by Ui Design |
-| `LinidQAvatarProps`             | QAvatar component properties supported by Ui Design       |
-| `LinidQBadgeProps`              | QBadge component properties supported by Ui Design        |
-| `LinidQTableProps`              | QTable component properties supported by Ui Design        |
-| `LinidUiState`                  | Defines the structure of the UI store                     |
-| `NavigationMenuItem`            | Describes a main navigation menu item                     |
+| Type / Interface                     | Purpose                                                   |
+| ------------------------------------ | --------------------------------------------------------- |
+| `LinidZoneEntry`                     | Defines the contract for a plugin component               |
+| `LinidZoneState`                     | Defines the structure of the zone store                   |
+| `FederatedModule`                    | Defines the structure of a federated component module     |
+| `ModuleHostConfig`                   | Configuration provided to remote modules                  |
+| `RemoteModule`                       | Defines the structure of a remote module                  |
+| `AttributeInputType`                 | Union type for input types: Text, Number, Boolean         |
+| `TextInputSettings`                  | Settings for Text input (placeholder, maxLength, etc.)    |
+| `NumberInputSettings`                | Settings for Number input (min, max, step, etc.)          |
+| `BooleanInputSettings`               | Settings for Boolean input (trueLabel, falseLabel)        |
+| `LinidAttributeConfiguration`        | Discriminated union describing an entity attribute        |
+| `LinidTextAttributeConfiguration`    | Text attribute configuration                              |
+| `LinidNumberAttributeConfiguration`  | Number attribute configuration                            |
+| `LinidBooleanAttributeConfiguration` | Boolean attribute configuration                           |
+| `LinidEntityConfiguration`           | Describes an entity and its attributes                    |
+| `LinidApiEndpointConfiguration`      | Describes a REST route                                    |
+| `LinidConfigurationState`            | Defines the structure of the configuration store          |
+| `LinidRoute`                         | Defines the structure of a route (recursive children)     |
+| `LinidRoutes`                        | Array of LinidRoute for nested routes                     |
+| `Page<T>`                            | Paginated API response                                    |
+| `Pagination`                         | Backend pagination model                                  |
+| `QTableRequestEvent`                 | Quasar table server-side request payload                  |
+| `QuasarPagination`                   | Quasar-specific pagination structure                      |
+| `QueryFilter`                        | Flexible query parameter map                              |
+| `ModuleLifecyclePhase`               | Enum of module lifecycle phases                           |
+| `ModuleLifecycleResult`              | Result of a lifecycle phase execution                     |
+| `ModuleLifecycleHooks`               | Lifecycle hooks for remote modules                        |
+| `UiDesignValue`                      | Single primitive value in the UI configuration            |
+| `UiDesignNamespace`                  | Namespace with key-value pairs of UI configuration values |
+| `UiDesign`                           | The full UI design configuration                          |
+| `QComponentName`                     | Valid Quasar component names for type-safe UI design      |
+| `LinidQComponentProps`               | All supported Quasar component props subsets              |
+| `LinidQBtnProps`                     | QBtn component properties supported by Ui Design          |
+| `LinidQTabsProps`                    | QTabs component properties supported by Ui Design         |
+| `LinidQRouteTabProps`                | QRouteTab component properties supported by Ui Design     |
+| `LinidQHeaderProps`                  | QHeader component properties supported by Ui Design       |
+| `LinidQToolbarProps`                 | QToolbar component properties supported by Ui Design      |
+| `LinidQToolbarTitleProps`            | QToolbarTitle component properties supported by Ui Design |
+| `LinidQAvatarProps`                  | QAvatar component properties supported by Ui Design       |
+| `LinidQBadgeProps`                   | QBadge component properties supported by Ui Design        |
+| `LinidQTableProps`                   | QTable component properties supported by Ui Design        |
+| `LinidUiState`                       | Defines the structure of the UI store                     |
+| `NavigationMenuItem`                 | Describes a main navigation menu item                     |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

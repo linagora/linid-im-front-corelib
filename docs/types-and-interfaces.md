@@ -69,7 +69,8 @@ export interface FederatedModule<T> {
 
 **Usage:**
 
-- Used internally by [`loadAsyncComponent`](./helpers.md#loadasynccomponent) to ensure type safety when loading federated components.
+- Used internally by [`loadAsyncComponent`](./helpers.md#loadasynccomponent) to ensure type safety when loading
+  federated components.
 
 **Remote modules must export a default component:**
 
@@ -209,7 +210,8 @@ Describes a single attribute of an entity (name, type, input settings, validatio
 
 ### LinidEntityConfiguration
 
-Represents an entity with its name and list of attributes. Returned by `/metadata/entities` and `/metadata/entities/:entity`.
+Represents an entity with its name and list of attributes. Returned by `/metadata/entities` and
+`/metadata/entities/:entity`.
 
 ### LinidApiEndpointConfiguration
 
@@ -264,7 +266,8 @@ export interface LinidRoute {
 
 ## 📄 Pagination & Page Types
 
-Utility types used to represent **paginated API responses**, **standard pagination**, and **Quasar QTable events**. Defined in `src/type/page.ts`.
+Utility types used to represent **paginated API responses**, **standard pagination**, and **Quasar QTable events**.
+Defined in `src/type/page.ts`.
 
 ---
 
@@ -439,7 +442,8 @@ Types related to module lifecycle management.
 
 ### ModuleLifecyclePhase
 
-Defines the sequence of initialization steps for remote modules. Each phase is executed in order for all modules before moving to the next phase.
+Defines the sequence of initialization steps for remote modules. Each phase is executed in order for all modules before
+moving to the next phase.
 
 ```ts
 export enum ModuleLifecyclePhase {
@@ -486,7 +490,8 @@ export enum ModuleLifecyclePhase {
 
 ### ModuleLifecycleResult
 
-Result of a lifecycle phase execution. Modules should return this from their lifecycle hooks to indicate success or failure of the phase.
+Result of a lifecycle phase execution. Modules should return this from their lifecycle hooks to indicate success or
+failure of the phase.
 
 ```ts
 export interface ModuleLifecycleResult {
@@ -520,7 +525,8 @@ export interface ModuleLifecycleResult {
 
 ### ModuleLifecycleHooks
 
-Remote modules should implement these hooks to participate in the lifecycle. All hooks are optional - implement only what your module needs.
+Remote modules should implement these hooks to participate in the lifecycle. All hooks are optional - implement only
+what your module needs.
 
 ```ts
 /**
@@ -650,6 +656,30 @@ See description in [Ui design documentation](./ui-design.md#q-badge).
 
 See description in [Ui design documentation](./ui-design.md#q-table).
 
+### LinidQCardProps
+
+See description in [Ui design documentation](./ui-design.md#q-card).
+
+### LinidQCardActionsProps
+
+See description in [Ui design documentation](./ui-design.md#q-card-actions).
+
+### LinidQIconProps
+
+See description in [Ui design documentation](./ui-design.md#q-icon).
+
+### LinidQToggleProps
+
+See description in [Ui design documentation](./ui-design.md#q-toggle).
+
+### LinidQInputProps
+
+See description in [Ui design documentation](./ui-design.md#q-input).
+
+### LinidQDateProps
+
+See description in [Ui design documentation](./ui-design.md#q-date).
+
 ---
 
 ## 🖼️ Linid Ui Store types
@@ -719,6 +749,12 @@ export interface NavigationMenuItem {
 | `LinidQAvatarProps`             | QAvatar component properties supported by Ui Design       |
 | `LinidQBadgeProps`              | QBadge component properties supported by Ui Design        |
 | `LinidQTableProps`              | QTable component properties supported by Ui Design        |
+| `LinidQCardProps`               | QCard component properties supported by Ui Design         |
+| `LinidQCardActionsProps`        | QCardActions component properties supported by Ui         |
+| `LinidQIconProps`               | QIcon component properties supported by Ui Design         |
+| `LinidQToggleProps`             | QToggle component properties supported by Ui Design       |
+| `LinidQInputProps`              | QInput component properties supported by Ui Design        |
+| `LinidQDateProps`               | QDate component properties supported by Ui Design         |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
 | `NavigationMenuItem`            | Describes a main navigation menu item                     |
 

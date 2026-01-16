@@ -62,26 +62,25 @@ components.
 ### Example: `MyComponent.vue`
 
 ```vue
-
 <template>
   <div>
     <!-- Quasar button using dynamic flat and color values from UiDesign -->
     <q-btn
-        v-bind="btnProps"
-        label="Click me"
+      v-bind="btnProps"
+      label="Click me"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { useUiDesign } from '@linagora/linid-im-front-corelib';
-  import { QBtnProps } from 'quasar';
+import { useUiDesign } from '@linagora/linid-im-front-corelib';
+import { QBtnProps } from 'quasar';
 
-  // Retrieve the getComponentProps() function from the composable
-  const { ui } = useUiDesign();
+// Retrieve the getComponentProps() function from the composable
+const { ui } = useUiDesign();
 
-  // Get typed props for the 'q-btn' component from the 'custom' namespace
-  const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
+// Get typed props for the 'q-btn' component from the 'custom' namespace
+const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
 </script>
 ```
 
@@ -219,7 +218,13 @@ export type QComponentName =
   | 'q-toolbar-title'
   | 'q-avatar'
   | 'q-badge'
-  | 'q-table';
+  | 'q-table'
+  | 'q-card'
+  | 'q-card-actions'
+  | 'q-icon'
+  | 'q-toggle'
+  | 'q-input'
+  | 'q-date';
 
 /**
  * Union type of all supported Quasar component props subsets.
@@ -233,7 +238,13 @@ export type LinidQComponentProps =
   | LinidQToolbarTitleProps
   | LinidQAvatarProps
   | LinidQBadgeProps
-  | LinidQTableProps;
+  | LinidQTableProps
+  | LinidQCardProps
+  | LinidQCardActionsProps
+  | LinidQIconProps
+  | LinidQToggleProps
+  | LinidQInputProps
+  | LinidQDateProps;
 ```
 
 For `NamedColor`, refer to the Quasar documentation on [Color Palette](https://quasar.dev/style/color-palette).
@@ -845,44 +856,44 @@ type LinidQToggleProps = {
    * Determines toggle order of the two states ('t' stands for state of true, 'f' for state of false); If 'toggle-indeterminate' is true, then the order
    * is: indet -> first state -> second state -> indet (and repeat), otherwise: indet -> first state -> second state -> first state -> second state -> ...
    */
-  toggleOrder?: string | undefined,
+  toggleOrder?: string | undefined;
   /**
    * When user clicks/taps on the component, should we toggle through the indeterminate state too?
    */
-  toggleIndeterminate?: boolean | undefined,
+  toggleIndeterminate?: boolean | undefined;
   /**
    * Should the color (if specified any) be kept when the component is unticked/ off?
    */
-  keepColor?: boolean | undefined,
+  keepColor?: boolean | undefined;
   /**
    * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix;
    * If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
    */
-  icon?: string | undefined,
+  icon?: string | undefined;
   /**
    * The icon to be used when the toggle is on
    */
-  checkedIcon?: string | undefined,
+  checkedIcon?: string | undefined;
   /**
    * The icon to be used when the toggle is off
    */
-  uncheckedIcon?: string | undefined,
+  uncheckedIcon?: string | undefined;
   /**
    * The icon to be used when the model is indeterminate
    */
-  indeterminateIcon?: string | undefined,
+  indeterminateIcon?: string | undefined;
   /**
    * Label (if any specified) should be displayed on the left side of the component
    */
-  leftLabel?: boolean | undefined,
+  leftLabel?: boolean | undefined;
   /**
    * Size in CSS units, including unit name or standard size name (xs|sm|md|lg|xl)
    */
-  size?: string | undefined,
+  size?: string | undefined;
   /**
    * Color name for component from the Quasar Color Palette
    */
-  color?: string | undefined,
+  color?: string | undefined;
   /**
    * Notify the component that the background is a dark color
    */
@@ -890,11 +901,11 @@ type LinidQToggleProps = {
   /**
    * Dense mode; occupies less space
    */
-  dense?: boolean | undefined,
+  dense?: boolean | undefined;
   /**
    * Override default icon color (for truthy state only); Color name for component from the Quasar Color Palette
    */
-  iconColor?: string | undefined,
+  iconColor?: string | undefined;
 };
 ```
 
@@ -908,60 +919,60 @@ type LinidQInputProps = {
   /**
    * Focus field on initial component render
    */
-  autofocus?: boolean | undefined,
+  autofocus?: boolean | undefined;
   /**
    * Label will be always shown above the field regardless of field content (if any)
    */
-  stackLabel?: boolean | undefined,
+  stackLabel?: boolean | undefined;
   /**
    * Hide the helper (hint) text when field doesn't have focus
    */
-  hideHint?: boolean | undefined,
+  hideHint?: boolean | undefined;
   /**
    * Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null
    */
-  clearable?: boolean | undefined,
+  clearable?: boolean | undefined;
   /**
    * Custom icon to use for the clear button when using along with 'clearable' prop
    */
-  clearIcon?: string | undefined,
+  clearIcon?: string | undefined;
   /**
    * Show an automatic counter on bottom right
    */
-  counter?: boolean | undefined,
+  counter?: boolean | undefined;
   /**
    * Make field autogrow along with its content (uses a textarea)
    */
-  autogrow?: boolean | undefined,
+  autogrow?: boolean | undefined;
   /**
    * Fills string with specified characters (or underscore if value is not string) to fill mask's length
    */
-  fillMask?: boolean | string | undefined,
+  fillMask?: boolean | string | undefined;
   /**
    * Fills string from the right side of the mask
    */
-  reverseFillMask?: boolean | undefined,
+  reverseFillMask?: boolean | undefined;
   /**
    * Model will be unmasked (won't contain tokens/separation characters)
    */
-  unmaskedValue?: boolean | undefined,
+  unmaskedValue?: boolean | undefined;
   /**
    * Debounce amount (in milliseconds) when updating model
    */
-  debounce?: string | number | undefined,
+  debounce?: string | number | undefined;
   /**
    * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop;
    * The difference from 'color' prop is that the label will always have this color, even when field is not focused
    */
-  labelColor?: string | undefined,
+  labelColor?: string | undefined;
   /**
    * Color name for component from the Quasar Color Palette
    */
-  color?: string | undefined,
+  color?: string | undefined;
   /**
    * Color name for component from the Quasar Color Palette
    */
-  bgColor?: string | undefined,
+  bgColor?: string | undefined;
   /**
    * Notify the component that the background is a dark color
    */
@@ -969,49 +980,103 @@ type LinidQInputProps = {
   /**
    * Use 'filled' design for the field
    */
-  filled?: boolean | undefined,
+  filled?: boolean | undefined;
   /**
    * Use 'outlined' design for the field
    */
-  outlined?: boolean | undefined,
+  outlined?: boolean | undefined;
   /**
    * Use 'borderless' design for the field
    */
-  borderless?: boolean | undefined,
+  borderless?: boolean | undefined;
   /**
    * Use 'standout' design for the field; Specifies classes to be applied when focused (overriding default ones)
    */
-  standout?: boolean | string | undefined,
+  standout?: boolean | string | undefined;
   /**
    * Do not reserve space for hint/error/counter anymore when these are not used; As a result, it also disables the animation for those;
    * It also allows the hint/error area to stretch vertically based on its content
    */
-  hideBottomSpace?: boolean | undefined,
+  hideBottomSpace?: boolean | undefined;
   /**
    * Applies a small standard border-radius for a squared shape of the component
    */
-  rounded?: boolean | undefined,
+  rounded?: boolean | undefined;
   /**
    * Remove border-radius so borders are squared; Overrides 'rounded' prop
    */
-  square?: boolean | undefined,
+  square?: boolean | undefined;
   /**
    * Dense mode; occupies less space
    */
-  dense?: boolean | undefined,
+  dense?: boolean | undefined;
   /**
    * Match inner content alignment to that of QItem
    */
-  itemAligned?: boolean | undefined,
+  itemAligned?: boolean | undefined;
   /**
    * Hide error icon when there is an error
    */
-  noErrorIcon?: boolean | undefined,
+  noErrorIcon?: boolean | undefined;
 };
 ```
 
 For more details, refer to
 the [Quasar QInput API documentation](https://quasar.dev/vue-components/input#qinput-api).
+
+### q-date
+
+```ts
+type LinidQDateProps = {
+  /**
+   * Display the component in landscape mode
+   */
+  landscape?: boolean | undefined;
+  /**
+   * Show the years selector in months view
+   */
+  yearsInMonthView?: boolean | undefined;
+  /**
+   * Display a button that selects the current day
+   */
+  todayBtn?: boolean | undefined;
+  /**
+   * Don’t display the header
+   */
+  minimal?: boolean | undefined;
+  /**
+   * The view which will be displayed by default. Accepted values are 'Calendar', 'Months' or 'Years'.
+   */
+  defaultView?: string | undefined;
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  color?: string | undefined;
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  textColor?: string | undefined;
+  /**
+   * Notify the component that the background is a dark color
+   */
+  dark?: boolean | null | undefined;
+  /**
+   * Removes border-radius so borders are squared
+   */
+  square?: boolean | undefined;
+  /**
+   * Dense mode; occupies less space
+   */
+  flat?: boolean | undefined;
+  /**
+   * Applies a default border to the component
+   */
+  bordered?: boolean | undefined;
+};
+```
+
+For more details, refer to
+the [Quasar QDate API documentation](https://quasar.dev/vue-components/date#qdate-api).
 
 More components can be added as needed.
 

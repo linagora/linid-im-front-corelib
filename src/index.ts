@@ -77,6 +77,7 @@ export type {
 
 // Types - Configuration
 export type {
+  AttributeInputType,
   LinidApiEndpointConfiguration,
   LinidAttributeConfiguration,
   LinidEntityConfiguration,

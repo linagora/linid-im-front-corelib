@@ -25,10 +25,19 @@
  */
 
 /**
+ * Supported UI input types for attribute rendering.
+ * Each type corresponds to a specific form component.
+ */
+export type AttributeInputType = 'Text' | 'Number' | 'Boolean' | 'Date';
+
+/**
  * Describes a single attribute of an entity.
  * Corresponds to `AttributeDescription` from the backend API.
+ * The generic parameter `T` allows consumers to define their own
+ * inputSettings structure for maximum flexibility.
+ * @template T - The type of inputSettings, defaults to Record<string, unknown>.
  */
-export interface LinidAttributeConfiguration {
+export interface LinidAttributeConfiguration<T = Record<string, unknown>> {
   /** The name of the attribute (e.g., "email"). */
   name: string;
   /** The backend type of the attribute (e.g., "string", "integer"). */
@@ -37,10 +46,10 @@ export interface LinidAttributeConfiguration {
   required: boolean;
   /** Whether the attribute has validation rules. */
   hasValidations: boolean;
-  /** The UI input type to be used on the front-end (e.g., "text", "select"). */
-  input: string;
-  /** Settings for the input (e.g., options, placeholder). */
-  inputSettings: Record<string, unknown>;
+  /** The UI input type to be used on the front-end. */
+  input: AttributeInputType;
+  /** Settings for the input, defined by the consumer. */
+  inputSettings: T;
 }
 
 /**

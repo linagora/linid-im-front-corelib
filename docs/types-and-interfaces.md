@@ -206,7 +206,75 @@ Types for entity and route metadata returned by the backend API.
 
 ### LinidAttributeConfiguration
 
-Describes a single attribute of an entity (name, type, input settings, validations).
+Describes a single attribute of an entity. This is a **generic interface** where the `inputSettings` type can be customized by consumers.
+
+#### Supported Input Types
+
+| Input Type | Description                    |
+| ---------- | ------------------------------ |
+| `Text`     | Text-based inputs (QInput)     |
+| `Number`   | Numeric inputs (QInput number) |
+| `Boolean`  | Toggle/checkbox (QToggle)      |
+| `Date`     | Date picker (QDate)            |
+
+> **Note:** The available input types depend on the inputs defined in `linid-im-front-community-plugins`. Custom plugins can extend these types.
+
+#### Generic Parameter
+
+The interface accepts a generic parameter `T` for `inputSettings`, defaulting to `Record<string, unknown>`. This allows consumers to define their own settings structure without requiring corelib updates.
+
+```ts
+interface LinidAttributeConfiguration<T = Record<string, unknown>> {
+  name: string;
+  type: string;
+  required: boolean;
+  hasValidations: boolean;
+  input: 'Text' | 'Number' | 'Boolean' | 'Date';
+  inputSettings: T;
+}
+```
+
+#### Example Usage
+
+```ts
+import type { LinidAttributeConfiguration } from '@linagora/linid-im-front-corelib';
+
+// Basic usage with default inputSettings
+const attr: LinidAttributeConfiguration = {
+  name: 'age',
+  type: 'Integer',
+  required: true,
+  hasValidations: true,
+  input: 'Number',
+  inputSettings: { min: 0, max: 150 },
+};
+
+// Usage with custom inputSettings type
+interface MyNumberSettings {
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
+const typedAttr: LinidAttributeConfiguration<MyNumberSettings> = {
+  name: 'salary',
+  type: 'Integer',
+  required: false,
+  hasValidations: true,
+  input: 'Number',
+  inputSettings: { min: 0, step: 1000 },
+};
+
+// Date input example
+const dateAttr: LinidAttributeConfiguration = {
+  name: 'birthDate',
+  type: 'Date',
+  required: true,
+  hasValidations: false,
+  input: 'Date',
+  inputSettings: { format: 'YYYY-MM-DD' },
+};
+```
 
 ### LinidEntityConfiguration
 
@@ -563,7 +631,7 @@ export interface ModuleLifecycleHooks<T> {
    * Use this to initialize any resources
    * your module needs to function.
    * @param config - Module-specific configuration from host (from module-<name>.json).
-   *                 Contains module-specific options of type T.
+   * Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   initialize(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
@@ -574,7 +642,7 @@ export interface ModuleLifecycleHooks<T> {
    * Use this to perform final checks and emit ready state.
    * At this point, all other modules have completed initialization.
    * @param config - Module-specific configuration from host (from module-<name>.json).
-   *                 Contains module-specific options of type T.
+   * Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   ready(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
@@ -585,7 +653,7 @@ export interface ModuleLifecycleHooks<T> {
    * Use this for cross-module integrations and final setup that requires
    * all modules to be ready.
    * @param config - Module-specific configuration from host (from module-<name>.json).
-   *                 Contains module-specific options of type T.
+   * Contains module-specific options of type T.
    * @returns Promise resolving to the lifecycle result.
    */
   postInit(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>;
@@ -721,7 +789,8 @@ export interface NavigationMenuItem {
 | `FederatedModule`               | Defines the structure of a federated component module     |
 | `ModuleHostConfig`              | Configuration provided to remote modules                  |
 | `RemoteModule`                  | Defines the structure of a remote module                  |
-| `LinidAttributeConfiguration`   | Describes an entity attribute                             |
+| `AttributeInputType`            | Union type for input types: Text, Number, Boolean, Date   |
+| `LinidAttributeConfiguration`   | Generic interface describing an entity attribute          |
 | `LinidEntityConfiguration`      | Describes an entity and its attributes                    |
 | `LinidApiEndpointConfiguration` | Describes a REST route                                    |
 | `LinidConfigurationState`       | Defines the structure of the configuration store          |

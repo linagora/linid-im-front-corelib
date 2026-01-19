@@ -24,7 +24,7 @@ import { uiEventSubject } from '@linagora/linid-im-front-corelib';
 // Subscribe to all notification events
 uiEventSubject.subscribe((event) => {
   if (event.key === 'notify') {
-    console.log('Notification:', event.type, event.data);
+    console.log('Notification:', event.data);
   }
 });
 ```
@@ -39,7 +39,6 @@ Each notification event follows the `UiEvent` interface:
 ```ts
 interface UiEvent {
   key: string;
-  type: string;
   data: QNotifyCreateOptions;
 }
 ```

@@ -40,7 +40,6 @@ export function useNotify() {
   function Notify(data: QNotifyCreateOptions): void {
     uiEventSubject.next({
       key: 'notify',
-      type: 'open',
       data,
     });
   }

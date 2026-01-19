@@ -843,7 +843,7 @@ type LinidQIconProps = {
   /**
    * Color name for component from the Quasar Color Palette
    */
-  color?: string | undefined;
+  color?: NamedColor | undefined;
 };
 ```
 
@@ -855,10 +855,9 @@ the [Quasar QIcon API documentation](https://quasar.dev/vue-components/icon#qico
 ```ts
 type LinidQToggleProps = {
   /**
-   * Determines toggle order of the two states ('t' stands for state of true, 'f' for state of false); If 'toggle-indeterminate' is true, then the order
-   * is: indet -> first state -> second state -> indet (and repeat), otherwise: indet -> first state -> second state -> first state -> second state -> ...
+   * Determines toggle order of the two states ('t' stands for state of true, 'f' for state of false); If 'toggle-indeterminate' is true, then the order is: indet -> first state -> second state -> indet (and repeat), otherwise: indet -> first state -> second state -> first state -> second state -> ...
    */
-  toggleOrder?: string | undefined;
+  toggleOrder?: 'tf' | 'ft' | undefined;
   /**
    * When user clicks/taps on the component, should we toggle through the indeterminate state too?
    */
@@ -868,8 +867,7 @@ type LinidQToggleProps = {
    */
   keepColor?: boolean | undefined;
   /**
-   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix;
-   * If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
+   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
    */
   icon?: string | undefined;
   /**
@@ -895,9 +893,10 @@ type LinidQToggleProps = {
   /**
    * Color name for component from the Quasar Color Palette
    */
-  color?: string | undefined;
+  color?: NamedColor | undefined;
   /**
    * Notify the component that the background is a dark color
+   * Default value: null
    */
   dark?: boolean | null | undefined;
   /**
@@ -907,7 +906,7 @@ type LinidQToggleProps = {
   /**
    * Override default icon color (for truthy state only); Color name for component from the Quasar Color Palette
    */
-  iconColor?: string | undefined;
+  iconColor?: NamedColor | undefined;
 };
 ```
 
@@ -963,20 +962,20 @@ type LinidQInputProps = {
    */
   debounce?: string | number | undefined;
   /**
-   * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop;
-   * The difference from 'color' prop is that the label will always have this color, even when field is not focused
+   * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop; The difference from 'color' prop is that the label will always have this color, even when field is not focused
    */
-  labelColor?: string | undefined;
+  labelColor?: NamedColor | undefined;
   /**
    * Color name for component from the Quasar Color Palette
    */
-  color?: string | undefined;
+  color?: NamedColor | undefined;
   /**
    * Color name for component from the Quasar Color Palette
    */
-  bgColor?: string | undefined;
+  bgColor?: NamedColor | undefined;
   /**
    * Notify the component that the background is a dark color
+   * Default value: null
    */
   dark?: boolean | null | undefined;
   /**
@@ -996,8 +995,7 @@ type LinidQInputProps = {
    */
   standout?: boolean | string | undefined;
   /**
-   * Do not reserve space for hint/error/counter anymore when these are not used; As a result, it also disables the animation for those;
-   * It also allows the hint/error area to stretch vertically based on its content
+   * Do not reserve space for hint/error/counter anymore when these are not used; As a result, it also disables the animation for those; It also allows the hint/error area to stretch vertically based on its content
    */
   hideBottomSpace?: boolean | undefined;
   /**
@@ -1047,19 +1045,21 @@ type LinidQDateProps = {
    */
   minimal?: boolean | undefined;
   /**
-   * The view which will be displayed by default. Accepted values are 'Calendar', 'Months' or 'Years'.
+   * The view which will be displayed by default
+   * Default value: 'Calendar'
    */
-  defaultView?: string | undefined;
+  defaultView?: 'Calendar' | 'Months' | 'Years' | undefined;
   /**
    * Color name for component from the Quasar Color Palette
    */
-  color?: string | undefined;
+  color?: NamedColor | undefined;
   /**
-   * Color name for component from the Quasar Color Palette
+   * Overrides text color (if needed); Color name from the Quasar Color Palette
    */
-  textColor?: string | undefined;
+  textColor?: NamedColor | undefined;
   /**
    * Notify the component that the background is a dark color
+   * Default value: null
    */
   dark?: boolean | null | undefined;
   /**
@@ -1067,7 +1067,7 @@ type LinidQDateProps = {
    */
   square?: boolean | undefined;
   /**
-   * Dense mode; occupies less space
+   * Applies a 'flat' design (no default shadow)
    */
   flat?: boolean | undefined;
   /**

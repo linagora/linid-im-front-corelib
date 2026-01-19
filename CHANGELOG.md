@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.27](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.26...v0.0.27) (2026-01-19)
+
+
+### Features
+
+* add type safety to attribute configuration with typed input settings ([62766de](https://github.com/linagora/linid-im-front-corelib/commit/62766de2665ee9ad96cdd5fc6e6a98fd5f70f991))
+
 ### [0.0.26](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.25...v0.0.26) (2026-01-19)
 
 

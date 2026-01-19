@@ -33,10 +33,6 @@ export interface UiEvent {
    */
   key: string;
   /**
-   * Event type.
-   */
-  type: string;
-  /**
    * Event data.
    */
   data: unknown;

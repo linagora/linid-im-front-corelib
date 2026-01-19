@@ -29,7 +29,6 @@ describe('Test composable: useNotify', () => {
     expect(events.length).toBe(1);
     expect(events[0]).toEqual({
       key: 'notify',
-      type: 'open',
       data: payload,
     });
   });

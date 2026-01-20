@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.29](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.28...v0.0.29) (2026-01-20)
+
+
+### Features
+
+* add q-img design ([d64c773](https://github.com/linagora/linid-im-front-corelib/commit/d64c7733ba48a3d6be7b074178ffd31b329c2cd6))
+
 ### [0.0.28](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.27...v0.0.28) (2026-01-20)
 
 

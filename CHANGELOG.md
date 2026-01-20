@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.28](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.27...v0.0.28) (2026-01-20)
+
+
+### Bug Fixes
+
+* remove type from uiEvent ([ac90622](https://github.com/linagora/linid-im-front-corelib/commit/ac90622727ce2ad9e856687cfeea15bbb37a0a52)), closes [/github.com/linagora/linid-im-front/pull/45#discussion_r2698396004](https://github.com/linagora//github.com/linagora/linid-im-front/pull/45/issues/discussion_r2698396004)
+
 ### [0.0.27](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.26...v0.0.27) (2026-01-19)
 
 

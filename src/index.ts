@@ -28,10 +28,11 @@
 export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
 
 // Composables
+export { useFieldValidation } from './composables/useFieldValidation';
+export { useNotify } from './composables/useNotify';
 export { usePagination } from './composables/usePagination';
 export { useScopedI18n } from './composables/useScopedI18n';
 export { useUiDesign } from './composables/useUiDesign';
-export { useNotify } from './composables/useNotify';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
@@ -102,10 +103,11 @@ export type {
   LinidQBtnProps,
   LinidQCardActionsProps,
   LinidQCardProps,
+  LinidQDateProps,
   LinidQHeaderProps,
   LinidQIconProps,
+  LinidQImgProps,
   LinidQInputProps,
-  LinidQDateProps,
   LinidQRouteTabProps,
   LinidQTableProps,
   LinidQTabsProps,
@@ -115,7 +117,6 @@ export type {
   UiDesign,
   UiDesignNamespace,
   UiDesignValue,
-  LinidQImgProps,
 } from './types/uiDesign';
 
 // Types - UI

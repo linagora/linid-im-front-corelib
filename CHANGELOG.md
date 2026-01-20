@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.30](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.29...v0.0.30) (2026-01-20)
+
+
+### Features
+
+* add field validation service and useFieldValidation composable ([3ab568c](https://github.com/linagora/linid-im-front-corelib/commit/3ab568c1587a57e24a96428e233a3bc0dcc547aa)), closes [#40](https://github.com/linagora/linid-im-front-corelib/issues/40)
+
 ### [0.0.29](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.28...v0.0.29) (2026-01-20)
 
 

@@ -122,3 +122,23 @@ export async function deleteEntityById(
 
   return getHttpClient().delete(`/${configuration.apiEndpoint}/${entityId}`);
 }
+
+/**
+ * Validates a specific field of an entity.
+ * @param instanceId - The unique identifier of the module instance.
+ * @param fieldName - The name of the field to validate.
+ * @param fieldValue - The value of the field to validate.
+ * @returns An empty promise if the field is valid; otherwise, it throws an error.
+ */
+export async function validate(
+  instanceId: string,
+  fieldName: string,
+  fieldValue: unknown
+): Promise<void> {
+  const configuration = getModuleHostConfiguration(instanceId);
+
+  await getHttpClient().post<void>(
+    `/${configuration.apiEndpoint}/validate/${fieldName}`,
+    fieldValue
+  );
+}

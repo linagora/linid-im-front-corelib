@@ -458,6 +458,7 @@ This service builds on top of the HTTP Client Service and the Module Host Config
 | [`getEntities`](#getentities)           | Retrieves a paginated list of entities |
 | [`getEntityById`](#getentitybyid)       | Retrieves a single entity by ID        |
 | [`deleteEntityById`](#deleteentitybyid) | Deletes a single entity by ID          |
+| [`validate`](#validate)                 | Validates a field value via backend    |
 
 ---
 
@@ -571,6 +572,28 @@ Deletes a single entity by ID.
 1. Resolves endpoint from module configuration
 2. Performs a `DELETE` HTTP request
 3. Returns an empty Promise
+
+### `validate`
+
+Validates a field value against backend business rules.
+
+#### Parameters
+
+| Parameter    | Type     | Description                       |
+| ------------ | -------- | --------------------------------- |
+| `instanceId` | `string` | Identifier of the module instance |
+| `fieldName`  | `string` | Name of the field to validate     |
+| `fieldValue` | `string` | Value of the field to validate    |
+
+#### Returns
+
+`void`
+
+#### Behavior
+
+1. Resolves validation endpoint from module configuration
+2. Issues a `POST` request with the field value
+3. Returns an empty Promise if valid; throws an error if invalid
 
 ---
 
@@ -786,26 +809,30 @@ It is designed for **JSON-like structures**, configuration objects, and data tra
 This service focuses on **immutability**, **deep operations**, and **safe object introspection**.
 
 | Function                    | Description                                                         |
-|-----------------------------|---------------------------------------------------------------------|
+| --------------------------- | ------------------------------------------------------------------- |
 | [`merge`](#merge)           | Performs an immutable deep merge of two plain objects               |
 | [`fromDot`](#fromdot)       | Expands dot-notation keys into a nested object structure            |
 | [`isObject`](#isobject)     | Determines whether a value is a non-null plain object               |
 | [`renameKeys`](#renamekeys) | Recursively renames keys of an object using a provided key modifier |
 
-
 ```js
-import { merge, fromDot, isObject, renameKeys } from '@linagora/linid-im-front-corelib';
+import {
+  merge,
+  fromDot,
+  isObject,
+  renameKeys,
+} from '@linagora/linid-im-front-corelib';
 ```
 
 ---
 
 ### 🧠 Design Principles
 
-* **Immutable by default** — input objects are never mutated
-* **Deep-safe** — recursive handling of nested objects
-* **JSON-oriented** — optimized for plain objects, not class instances
-* **Type-safe** — relies on `unknown` and explicit narrowing
-* **Framework-agnostic** — no external dependencies
+- **Immutable by default** — input objects are never mutated
+- **Deep-safe** — recursive handling of nested objects
+- **JSON-oriented** — optimized for plain objects, not class instances
+- **Type-safe** — relies on `unknown` and explicit narrowing
+- **Framework-agnostic** — no external dependencies
 
 ---
 
@@ -851,18 +878,18 @@ const target = {
   a: {
     b: {
       c: 'x',
-      d: 'y'
-    }
-  }
+      d: 'y',
+    },
+  },
 };
 
 const source = {
   a: {
     d: 'z',
     b: {
-      e: 'w'
-    }
-  }
+      e: 'w',
+    },
+  },
 };
 
 const result = merge(target, source);
@@ -920,7 +947,7 @@ fromDot(obj: PlainObject): PlainObject;
 fromDot({
   'a.b.c': 'value',
   'a.b.d': 'other',
-  'a.e': 'test'
+  'a.e': 'test',
 });
 
 /*
@@ -965,10 +992,10 @@ isObject(value: unknown): value is PlainObject;
 #### Example
 
 ```ts
-isObject({});        // true
-isObject([]);        // false
-isObject(null);      // false
-isObject('text');   // false
+isObject({}); // true
+isObject([]); // false
+isObject(null); // false
+isObject('text'); // false
 ```
 
 ---
@@ -1007,9 +1034,8 @@ renameKeys(obj: unknown, keyModifier: (key: string) => string): unknown;
 #### Example
 
 ```ts
-renameKeys(
-  { first_name: 'Alice', address: { city_name: 'Paris' } },
-  key => key.toUpperCase()
+renameKeys({ first_name: 'Alice', address: { city_name: 'Paris' } }, (key) =>
+  key.toUpperCase()
 );
 // { FIRST_NAME: 'Alice', ADDRESS: { CITY_NAME: 'Paris' } }
 ```
@@ -1018,10 +1044,10 @@ renameKeys(
 
 ### 🧾 Summary
 
-* `merge` enables safe, immutable deep merging of configuration objects
-* `fromDot` simplifies transformation from flat, dot-based keys to nested objects
-* `isObject` provides a reliable runtime guard for plain object detection
-* `renameKeys` — recursive key renaming
+- `merge` enables safe, immutable deep merging of configuration objects
+- `fromDot` simplifies transformation from flat, dot-based keys to nested objects
+- `isObject` provides a reliable runtime guard for plain object detection
+- `renameKeys` — recursive key renaming
 
 This service is intended as a **foundational utility layer** for configuration handling, data normalization, and object manipulation across the application.
 

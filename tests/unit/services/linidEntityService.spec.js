@@ -5,6 +5,7 @@ import {
   getEntityById,
   saveEntity,
   updateEntity,
+  validate,
 } from 'src/services/linidEntityService.ts';
 import { registerModuleHostConfiguration } from 'src/services/linidModuleConfigurationService.ts';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -84,6 +85,20 @@ describe('Test service: linidEntityService', () => {
 
       expect(result).toEqual(undefined);
       expect(mockHttpClient.delete).toHaveBeenCalledWith('/test-endpoint/1');
+    });
+  });
+
+  describe('Test function: validate', () => {
+    it('should call valid endpoint and retrieve expected data', async () => {
+      vi.mocked(httpClientService.getHttpClient().post).mockResolvedValue();
+
+      const result = await validate('id', 'name', 'value');
+
+      expect(result).toEqual(undefined);
+      expect(mockHttpClient.post).toHaveBeenCalledWith(
+        '/test-endpoint/validate/name',
+        'value'
+      );
     });
   });
 });

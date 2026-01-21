@@ -31,6 +31,8 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 export { useFieldValidation } from './composables/useFieldValidation';
 export { useNotify } from './composables/useNotify';
 export { usePagination } from './composables/usePagination';
+export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
+export { useQuasarRules } from './composables/useQuasarRules';
 export { useScopedI18n } from './composables/useScopedI18n';
 export { useUiDesign } from './composables/useUiDesign';
 
@@ -129,3 +131,6 @@ export { BasicRemoteModule } from './lifecycle/skeleton';
 
 // Types - UIEvent
 export type { UiEvent } from './types/uiEvent';
+
+// Types - Field Validation
+export type { ValidatorName } from './types/fieldValidation';

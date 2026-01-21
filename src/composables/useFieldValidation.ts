@@ -48,28 +48,23 @@ function hasTranslatedError(error: unknown): error is AxiosError {
 }
 
 /**
- * Composable providing field validation functionality.
- * It exposes a method to validate fields by calling the backend API
- * and handling error messages with internationalization support.
- * @returns An object containing the `validateFromApi` function.
+ * Composable for field validation. It exposes various validation methods
+ * that can be used to validate form fields.
+ * @param instanceId The unique identifier of the module instance.
+ * @param fieldName The name of the field to validate.
+ * @returns An object containing validation methods.
  */
-export function useFieldValidation() {
-  /**
-   * Validates a field by calling the backend API.
-   * @param instanceId - The unique identifier of the module instance.
-   * @param fieldName - The name of the field to validate.
-   * @param fieldValue - The value of the field to validate.
-   * @returns A promise that resolves to `true` if the field is valid, or an error message string if invalid.
-   */
-  async function validateFromApi(
-    instanceId: string,
-    fieldName: string,
-    fieldValue: unknown
-  ): Promise<boolean | string> {
-    const { t } = useScopedI18n(`${instanceId}.fields.${fieldName}`);
+export function useFieldValidation(instanceId: string, fieldName: string) {
+  const { t } = useScopedI18n(`${instanceId}.fields.${fieldName}`);
 
+  /**
+   * Validates a field value using the backend API.
+   * @param value - The value to validate.
+   * @returns `true` if the value is valid, or an error message string if invalid.
+   */
+  async function validateFromApi(value: unknown): Promise<true | string> {
     try {
-      await validate(instanceId, fieldName, fieldValue);
+      await validate(instanceId, fieldName, value);
       return true;
     } catch (error) {
       return hasTranslatedError(error)
@@ -77,5 +72,89 @@ export function useFieldValidation() {
         : t('validation.unknownError');
     }
   }
-  return { validateFromApi };
+
+  /**
+   * Validates that a field value is present (not null, undefined, or empty).
+   * @param value - The value to validate.
+   * @returns `true` if the value is present, or an error message string if not.
+   */
+  function required(value: unknown): true | string {
+    if (value === null || value === undefined || value === '') {
+      return t('validation.required');
+    }
+    return true;
+  }
+
+  /**
+   * Validates that a string field value meets the minimum length requirement.
+   * @param value - The value to validate.
+   * @param minValue - The minimum required length.
+   * @returns `true` if the value meets the minimum length, or an error message string if not.
+   */
+  function minLength(
+    value: string | null | undefined,
+    minValue: number
+  ): true | string {
+    if (value != null && value.length < minValue) {
+      return t('validation.minLength', { min: minValue });
+    }
+    return true;
+  }
+
+  /**
+   * Validates that a string field value does not exceed the maximum length requirement.
+   * @param value - The value to validate.
+   * @param maxValue - The maximum allowed length.
+   * @returns `true` if the value does not exceed the maximum length, or an error message string if it does.
+   */
+  function maxLength(
+    value: string | null | undefined,
+    maxValue: number
+  ): true | string {
+    if (value != null && value.length > maxValue) {
+      return t('validation.maxLength', { max: maxValue });
+    }
+    return true;
+  }
+
+  /**
+   * Validates that a numeric field value meets the minimum value requirement.
+   * @param value - The value to validate.
+   * @param minValue - The minimum required value.
+   * @returns `true` if the value meets the minimum value, or an error message string if not.
+   */
+  function min(value: number, minValue: number): true | string {
+    if (minValue > value) {
+      return t('validation.min', { min: minValue });
+    }
+    return true;
+  }
+
+  /**
+   * Validates that a numeric field value does not exceed the maximum value requirement.
+   * @param value - The value to validate.
+   * @param maxValue - The maximum allowed value.
+   * @returns `true` if the value does not exceed the maximum value, or an error message string if it does.
+   */
+  function max(value: number, maxValue: number): true | string {
+    if (value > maxValue) {
+      return t('validation.max', { max: maxValue });
+    }
+    return true;
+  }
+
+  /**
+   * Validates that a string field value matches a specified pattern.
+   * @param value - The value to validate.
+   * @param pattern - The regex pattern the value must match.
+   * @returns `true` if the value matches the pattern, or an error message string if not.
+   */
+  function pattern(value: string, pattern: string): true | string {
+    if (!new RegExp(pattern).test(value)) {
+      return t('validation.pattern', { pattern: pattern.toString() });
+    }
+    return true;
+  }
+
+  return { validateFromApi, required, minLength, maxLength, min, max, pattern };
 }

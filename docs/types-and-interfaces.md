@@ -276,6 +276,36 @@ const dateAttr: LinidAttributeConfiguration = {
 };
 ```
 
+### ValidatorName
+
+Represents the available validator names that can be used with `useQuasarRules`.
+
+These validators require configuration parameters from the `inputSettings` property of `LinidAttributeConfiguration`.
+
+```ts
+export type ValidatorName =
+  | 'min'
+  | 'max'
+  | 'minLength'
+  | 'maxLength'
+  | 'pattern';
+```
+
+**Usage:**
+
+- Used with [`useQuasarRules`](./field-validation.md#usequasarrules) to specify which validators to apply
+- Each validator reads its parameter from the corresponding property in `inputSettings`
+
+**Example:**
+
+```ts
+const rules = useQuasarRules('myInstance', attributeConfig, [
+  'min',
+  'maxLength',
+]);
+// Applies min and maxLength validators if configured in inputSettings
+```
+
 ### LinidEntityConfiguration
 
 Represents an entity with its name and list of attributes. Returned by `/metadata/entities` and
@@ -795,6 +825,7 @@ export interface NavigationMenuItem {
 | `RemoteModule`                  | Defines the structure of a remote module                  |
 | `AttributeInputType`            | Union type for input types: Text, Number, Boolean, Date   |
 | `LinidAttributeConfiguration`   | Generic interface describing an entity attribute          |
+| `ValidatorName`                 | Available validator names for field validation            |
 | `LinidEntityConfiguration`      | Describes an entity and its attributes                    |
 | `LinidApiEndpointConfiguration` | Describes a REST route                                    |
 | `LinidConfigurationState`       | Defines the structure of the configuration store          |

@@ -103,11 +103,19 @@ A full technical documentation is available in the `docs/` directory:
 
 - 🎨 **I18n Configuration (`i18n`)**
   Learn how to initialize and use the `i18n` singleton and the `useScopedI18n` composable for internationalization.
-  → [`docs/i18n.md`](docs/ui-design.md)
+  → [`docs/i18n.md`](docs/i18n.md)
 
 - 🔔 **Notification System (`useNotify`)**
   Learn how to use the `useNotify` composable to display notifications within your application.
   → [`docs/notify.md`](docs/notify.md)
+
+- 📄 **Pagination (`usePagination`)**
+  Learn how to convert between backend pagination models and Quasar QTable pagination formats.
+  → [`docs/pagination.md`](docs/pagination.md)
+
+- ⚙️ **Field Validation (`useFieldValidation`, `useQuasarFieldValidation` & `useQuasarRules`)**
+  Learn how to implement field validation compatible with Quasar framework.
+  → [`docs/field-validation.md`](docs/field-validation.md)
 
 More documents will be added as the library evolves.
 

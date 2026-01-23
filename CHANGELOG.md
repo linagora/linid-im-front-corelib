@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.32](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.31...v0.0.32) (2026-01-23)
+
+
+### Features
+
+* add built-in field validators following Quasar rules contract ([7de9bcc](https://github.com/linagora/linid-im-front-corelib/commit/7de9bcc65d447b3142eaf42c3887999c1cb54cd5))
+
 ### [0.0.31](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.30...v0.0.31) (2026-01-20)
 
 ### [0.0.30](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.29...v0.0.30) (2026-01-20)

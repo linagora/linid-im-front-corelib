@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.34](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.33...v0.0.34) (2026-01-29)
+
+
+### Features
+
+* deepEqual method for object, arrays and primitive values comparison ([aaa0869](https://github.com/linagora/linid-im-front-corelib/commit/aaa08698b17375f50f8a1020130d70015fac56d8))
+
 ### [0.0.33](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.32...v0.0.33) (2026-01-23)
 
 ### [0.0.32](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.31...v0.0.32) (2026-01-23)

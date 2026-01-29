@@ -814,6 +814,7 @@ This service focuses on **immutability**, **deep operations**, and **safe object
 | [`fromDot`](#fromdot)       | Expands dot-notation keys into a nested object structure            |
 | [`isObject`](#isobject)     | Determines whether a value is a non-null plain object               |
 | [`renameKeys`](#renamekeys) | Recursively renames keys of an object using a provided key modifier |
+| [`deepEqual`](#deepequal)   | Performs a deep equality check between two values                   |
 
 ```js
 import {
@@ -821,6 +822,7 @@ import {
   fromDot,
   isObject,
   renameKeys,
+  deepEqual,
 } from '@linagora/linid-im-front-corelib';
 ```
 
@@ -1042,12 +1044,51 @@ renameKeys({ first_name: 'Alice', address: { city_name: 'Paris' } }, (key) =>
 
 ---
 
+### `deepEqual`
+
+Performs a deep equality check between two values.
+
+#### Signature
+
+```ts
+deepEqual(a: unknown, b: unknown): boolean;
+```
+
+#### Parameters
+
+| Parameter | Type      | Description           |
+| --------- | --------- | --------------------- |
+| `a`       | `unknown` | First value to check  |
+| `b`       | `unknown` | Second value to check |
+
+#### Returns
+
+| Type      | Description                       |
+| --------- | --------------------------------- |
+| `boolean` | `true` if values are deeply equal |
+
+#### Behavior
+
+1. Compares primitive values directly
+2. Recursively compares plain objects and arrays
+3. Returns `false` if types differ or structures mismatch
+
+#### Example
+
+```ts
+deepEqual({ a: 1, b: { c: 2 } }, { a: 1, b: { c: 2 } }); // true
+deepEqual([1, 2, 3], [1, 2, 4]); // false
+```
+
+---
+
 ### 🧾 Summary
 
 - `merge` enables safe, immutable deep merging of configuration objects
 - `fromDot` simplifies transformation from flat, dot-based keys to nested objects
 - `isObject` provides a reliable runtime guard for plain object detection
 - `renameKeys` — recursive key renaming
+- `deepEqual` — deep equality checks
 
 This service is intended as a **foundational utility layer** for configuration handling, data normalization, and object manipulation across the application.
 

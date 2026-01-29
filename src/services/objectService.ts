@@ -129,3 +129,66 @@ export function renameKeys(
     })
   );
 }
+
+/**
+ * Performs a deep equality check between two plain objects or arrays.
+ *
+ * This function is designed to compare plain JavaScript objects (key/value pairs)
+ * and arrays. It does NOT handle special object types like Date, RegExp, Map, Set,
+ * or class instances, which will be compared by reference only.
+ *
+ * - Compares primitive values directly.
+ * - Recursively compares plain objects and their properties.
+ * - Recursively compares arrays and their elements.
+ * - Returns `true` if both values are deeply equal, otherwise `false`.
+ *
+ * **Limitations:**
+ * - Special object types (Date, RegExp, Map, Set, etc.) are compared by reference.
+ * - Class instances are compared by reference, not by their properties.
+ * - For comparing these types, use specialized comparison functions.
+ * @param a The first value to compare.
+ * @param b The second value to compare.
+ * @returns `true` if the values are deeply equal, otherwise `false`.
+ */
+export function deepEqual(a: unknown, b: unknown): boolean {
+  if (a === b) {
+    return true;
+  }
+
+  if (
+    typeof a === 'number' &&
+    typeof b === 'number' &&
+    Number.isNaN(a) &&
+    Number.isNaN(b)
+  ) {
+    return true;
+  }
+
+  if (a == null || b == null) {
+    return false;
+  }
+
+  if (typeof a !== 'object' || typeof b !== 'object') {
+    return false;
+  }
+
+  if (Array.isArray(a) !== Array.isArray(b)) {
+    return false;
+  }
+
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  const recordA = a as Record<string, unknown>;
+  const recordB = b as Record<string, unknown>;
+
+  return keysA.every(
+    (key) =>
+      Object.prototype.hasOwnProperty.call(recordB, key) &&
+      deepEqual(recordA[key], recordB[key])
+  );
+}

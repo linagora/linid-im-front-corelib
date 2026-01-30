@@ -50,6 +50,11 @@ export {
 export { getHttpClient, setHttpClient } from './services/httpClientService';
 export { getI18nInstance, setI18nInstance } from './services/i18nService';
 export {
+  getApiEndpointsConfiguration,
+  getEntitiesConfiguration,
+  getEntityConfiguration,
+} from './services/linidConfigurationService';
+export {
   deleteEntityById,
   getEntities,
   getEntityById,

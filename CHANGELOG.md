@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.35](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.34...v0.0.35) (2026-01-30)
+
+
+### Features
+
+* export methods from entity configuration service ([e2dac8c](https://github.com/linagora/linid-im-front-corelib/commit/e2dac8c4b86f4d2271f5902cd4b0c8370621bfe7))
+
 ### [0.0.34](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.33...v0.0.34) (2026-01-29)
 
 

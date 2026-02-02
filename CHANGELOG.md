@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.36](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.35...v0.0.36) (2026-02-02)
+
+
+### Features
+
+* add LinidApiErrorResponseBody interface for standardized error responses ([5daa31d](https://github.com/linagora/linid-im-front-corelib/commit/5daa31db5995770743d60477034249b6e72bedb3))
+
 ### [0.0.35](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.34...v0.0.35) (2026-01-30)
 
 

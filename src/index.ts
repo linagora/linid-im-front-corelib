@@ -145,3 +145,6 @@ export type { UiEvent } from './types/uiEvent';
 
 // Types - Field Validation
 export type { ValidatorName } from './types/fieldValidation';
+
+// Types - Linid API
+export type { LinidApiErrorResponseBody } from './types/linidApi';

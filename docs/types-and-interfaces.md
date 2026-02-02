@@ -317,6 +317,73 @@ Represents a REST route (method, path, entity, variables). Returned by `/metadat
 
 ---
 
+## 🌐 LinID API Response Types
+
+Types representing standard response structures returned by LinID backend APIs.
+
+### LinidApiErrorResponseBody
+
+Represents the structure of an error response body returned by LinID APIs.
+
+This structure is used across all LinID API error responses to provide consistent error handling with internationalized messages.
+
+```ts
+export interface LinidApiErrorResponseBody {
+  /**
+   * The internationalized error message.
+   */
+  error: string;
+
+  /**
+   * The key of this internationalized message.
+   */
+  errorKey: string;
+
+  /**
+   * The context map associated with this message. The map contains parameters or additional
+   * information for the message.
+   */
+  errorContext: Record<string, unknown>;
+
+  /**
+   * The HTTP status code associated with the error.
+   */
+  status: number;
+
+  /**
+   * The timestamp indicating when the error occurred.
+   */
+  timestamp: number;
+}
+```
+
+**Usage:**
+
+- Used by [`useFieldValidation`](./field-validation.md#validatefromapivalue) to extract error messages from backend validation responses
+- Returned by all LinID API endpoints for HTTP errors
+- The `error` field contains the already-internationalized error message ready for display
+- The `errorKey` and `errorContext` can be used for custom error handling if needed
+
+**Example:**
+
+```ts
+import type { LinidApiErrorResponseBody } from '@linagora/linid-im-front-corelib';
+import axios from 'axios';
+
+try {
+  await someApiCall();
+} catch (error) {
+  if (axios.isAxiosError(error) && error.response?.status === 400) {
+    const errorBody = error.response.data as LinidApiErrorResponseBody;
+    console.error(errorBody.error); // Display internationalized error message
+    console.log(errorBody.errorKey); // e.g., "validation.email.invalid"
+    console.log(errorBody.errorContext); // e.g., { email: "test@" }
+  }
+}
+```
+
+---
+
 ## 🗃️ LinidConfigurationState
 
 Represents the state of the Pinia store that manages entity and route configurations.
@@ -827,6 +894,7 @@ export interface NavigationMenuItem {
 | `LinidAttributeConfiguration`   | Generic interface describing an entity attribute          |
 | `ValidatorName`                 | Available validator names for field validation            |
 | `LinidEntityConfiguration`      | Describes an entity and its attributes                    |
+| `LinidApiErrorResponseBody`     | Standard error response structure from LinID APIs         |
 | `LinidApiEndpointConfiguration` | Describes a REST route                                    |
 | `LinidConfigurationState`       | Defines the structure of the configuration store          |
 | `LinidRoute`                    | Defines the structure of a route (recursive children)     |

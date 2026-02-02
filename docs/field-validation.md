@@ -83,8 +83,8 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 - **Scoped i18n**: All validators use the field's i18n scope (`${instanceId}.fields.${fieldName}`) for error messages
 - **Backend validation** (`validateFromApi`):
   - Calls the backend API with the provided value
-  - Returns backend error message for 400/404 status codes
-  - Returns generic error message for other errors (network, 500, etc.)
+  - Returns the internationalized `error` field from `LinidApiErrorResponseBody` for HTTP 400 (Bad Request) and 404 (Not Found) status codes
+  - Returns the generic i18n message `validation.unknownError` for all other errors (network errors, 500, etc.)
   - Executes asynchronously (returns a Promise)
 - **Quasar Compatibility**:
   - All validators follow [Quasar validation rules](https://quasar.dev/vue-components/input#validation-rules) contract
@@ -394,8 +394,14 @@ function useFieldValidation(
 ): {
   validateFromApi: (value: unknown) => Promise<true | string>;
   required: (value: unknown) => true | string;
-  minLength: (value: string, minValue: number) => true | string;
-  maxLength: (value: string, maxValue: number) => true | string;
+  minLength: (
+    value: string | null | undefined,
+    minValue: number
+  ) => true | string;
+  maxLength: (
+    value: string | null | undefined,
+    maxValue: number
+  ) => true | string;
   min: (value: number, minValue: number) => true | string;
   max: (value: number, maxValue: number) => true | string;
   pattern: (value: string, pattern: string) => true | string;
@@ -411,8 +417,12 @@ function useQuasarFieldValidation(
 ): {
   validateFromApi: (value: unknown) => Promise<true | string>;
   required: (value: unknown) => true | string;
-  minLength: (minValue: number) => (value: string) => true | string;
-  maxLength: (maxValue: number) => (value: string) => true | string;
+  minLength: (
+    minValue: number
+  ) => (value: string | null | undefined) => true | string;
+  maxLength: (
+    maxValue: number
+  ) => (value: string | null | undefined) => true | string;
   min: (minValue: number) => (value: number) => true | string;
   max: (maxValue: number) => (value: number) => true | string;
   pattern: (pattern: string) => (value: string) => true | string;
@@ -453,6 +463,9 @@ interface LinidAttributeConfiguration<T> {
 - **value**: `unknown` - The value to validate against the backend
 - **Returns**: `Promise<true | string>` - Promise resolving to `true` or error message
 - **Use case**: Server-side business validation
+- **Error handling**:
+  - For HTTP 400/404 responses: Returns the `error` field from `LinidApiErrorResponseBody` (already internationalized by backend)
+  - For all other errors: Returns the i18n message `validation.unknownError`
 
 #### required(value)
 
@@ -463,14 +476,16 @@ interface LinidAttributeConfiguration<T> {
 #### minLength(minValue)
 
 - **minValue**: `number` - Minimum string length
-- **Returns**: `(value: string) => true | string` - Validator function
+- **Returns**: `(value: string | null | undefined) => true | string` - Validator function
 - **Use case**: Text input minimum length
+- **Note**: Returns `true` if value is `null` or `undefined` (allows optional fields)
 
 #### maxLength(maxValue)
 
 - **maxValue**: `number` - Maximum string length
-- **Returns**: `(value: string) => true | string` - Validator function
+- **Returns**: `(value: string | null | undefined) => true | string` - Validator function
 - **Use case**: Text input maximum length
+- **Note**: Returns `true` if value is `null` or `undefined` (allows optional fields)
 
 #### min(minValue)
 

@@ -27,6 +27,7 @@
 import type { AxiosError } from 'axios';
 import axios, { HttpStatusCode } from 'axios';
 import { validate } from '../services/linidEntityService';
+import type { LinidApiErrorResponseBody } from '../types/linidApi';
 import { useScopedI18n } from './useScopedI18n';
 
 const TRANSLATED_ERROR_STATUSES = new Set([
@@ -68,7 +69,7 @@ export function useFieldValidation(instanceId: string, fieldName: string) {
       return true;
     } catch (error) {
       return hasTranslatedError(error)
-        ? error.message
+        ? (error.response!.data as LinidApiErrorResponseBody).error
         : t('validation.unknownError');
     }
   }

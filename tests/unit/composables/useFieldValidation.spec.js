@@ -46,8 +46,10 @@ describe('Test composable: useFieldValidation', () => {
         isAxiosError: true,
         response: {
           status: 400,
+          data: {
+            error: backendMessage,
+          },
         },
-        message: backendMessage,
       };
       vi.mocked(validate).mockRejectedValue(mockAxiosError);
 

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.37](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.36...v0.0.37) (2026-02-05)
+
+
+### Bug Fixes
+
+* set content-type to application/json for field validation request ([428c0d7](https://github.com/linagora/linid-im-front-corelib/commit/428c0d7eca0e5ca091e9fdc5ecfc3d4f6f686cd3))
+
 ### [0.0.36](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.35...v0.0.36) (2026-02-02)
 
 

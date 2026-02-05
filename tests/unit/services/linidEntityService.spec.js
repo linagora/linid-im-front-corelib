@@ -97,7 +97,8 @@ describe('Test service: linidEntityService', () => {
       expect(result).toEqual(undefined);
       expect(mockHttpClient.post).toHaveBeenCalledWith(
         '/test-endpoint/validate/name',
-        'value'
+        'value',
+        { headers: { 'Content-Type': 'application/json' } }
       );
     });
   });

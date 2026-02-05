@@ -139,6 +139,7 @@ export async function validate(
 
   await getHttpClient().post<void>(
     `/${configuration.apiEndpoint}/validate/${fieldName}`,
-    fieldValue
+    fieldValue,
+    { headers: { 'Content-Type': 'application/json' } }
   );
 }

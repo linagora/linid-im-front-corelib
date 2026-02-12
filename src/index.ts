@@ -150,3 +150,6 @@ export type { ValidatorName } from './types/fieldValidation';
 
 // Types - Linid API
 export type { LinidApiErrorResponseBody } from './types/linidApi';
+
+// Types - DialogEvent
+export type { DialogEvent } from './types/dialogType';

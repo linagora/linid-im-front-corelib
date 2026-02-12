@@ -30,6 +30,7 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 // Composables
 export { useFieldValidation } from './composables/useFieldValidation';
 export { useNotify } from './composables/useNotify';
+export { useDialog } from './composables/useDialog';
 export { usePagination } from './composables/usePagination';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
 export { useQuasarRules } from './composables/useQuasarRules';
@@ -117,6 +118,7 @@ export type {
   LinidQCardActionsProps,
   LinidQCardProps,
   LinidQDateProps,
+  LinidQDialogProps,
   LinidQFileProps,
   LinidQHeaderProps,
   LinidQIconProps,

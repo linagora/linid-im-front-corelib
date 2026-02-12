@@ -212,7 +212,7 @@ customized by consumers.
 #### Supported Input Types
 
 | Input Type | Description                    |
-|------------|--------------------------------|
+| ---------- | ------------------------------ |
 | `Text`     | Text-based inputs (QInput)     |
 | `Number`   | Numeric inputs (QInput number) |
 | `Boolean`  | Toggle/checkbox (QToggle)      |
@@ -858,6 +858,10 @@ See description in [Ui design documentation](./ui-design.md#q-img).
 
 See description in [Ui design documentation](./ui-design.md#q-file).
 
+### LinidQSelectProps
+
+See description in [Ui design documentation](./ui-design.md#q-select).
+
 ---
 
 ## 🖼️ Linid Ui Store types
@@ -893,7 +897,7 @@ export interface NavigationMenuItem {
 ## 🧰 Summary
 
 | Type / Interface                | Purpose                                                   |
-|---------------------------------|-----------------------------------------------------------|
+| ------------------------------- | --------------------------------------------------------- |
 | `LinidZoneEntry`                | Defines the contract for a plugin component               |
 | `LinidZoneState`                | Defines the structure of the zone store                   |
 | `FederatedModule`               | Defines the structure of a federated component module     |
@@ -938,6 +942,7 @@ export interface NavigationMenuItem {
 | `LinidQDateProps`               | QDate component properties supported by Ui Design         |
 | `LinidQImgProps`                | QImg component properties supported by Ui Design          |
 | `LinidQFileProps`               | QFile component properties supported by Ui Design         |
+| `LinidQSelectProps`             | QSelect component properties supported by Ui Design       |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
 | `NavigationMenuItem`            | Describes a main navigation menu item                     |
 

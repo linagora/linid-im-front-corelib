@@ -38,6 +38,7 @@ import type {
   QImgProps,
   QInputProps,
   QRouteTabProps,
+  QSelectProps,
   QTableProps,
   QTabsProps,
   QToggleProps,
@@ -372,6 +373,65 @@ const Q_FILE_PROPS = [
 ] as const;
 
 /**
+ * List of QSelectProps keys for type-safe UI design retrieval.
+ */
+const Q_SELECT_PROPS = [
+  'virtualScrollHorizontal',
+  'clearable',
+  'autofocus',
+  'hideDropdownIcon',
+  'popupNoRouteDismiss',
+  'fillInput',
+  'transitionShow',
+  'transitionHide',
+  'transitionDuration',
+  'behavior',
+  'stackLabel',
+  'hideHint',
+  'clearIcon',
+  'counter',
+  'dropdownIcon',
+  'useInput',
+  'inputDebounce',
+  'optionsDense',
+  'optionsDark',
+  'optionsSelectedClass',
+  'optionsCover',
+  'menuShrink',
+  'disableTabSelection',
+  'menuAnchor',
+  'menuSelf',
+  'menuOffset',
+  'displayValueHtml',
+  'hideSelected',
+  'useChips',
+  'labelColor',
+  'color',
+  'bgColor',
+  'dark',
+  'filled',
+  'outlined',
+  'borderless',
+  'standout',
+  'hideBottomSpace',
+  'rounded',
+  'square',
+  'dense',
+  'itemAligned',
+  'popupContentClass',
+  'popupContentStyle',
+  'inputClass',
+  'inputStyle',
+  'noErrorIcon',
+  'virtualScrollSliceSize',
+  'virtualScrollSliceRatioBefore',
+  'virtualScrollSliceRatioAfter',
+  'virtualScrollItemSize',
+  'virtualScrollStickySizeStart',
+  'virtualScrollStickySizeEnd',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -392,6 +452,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-date': Q_DATE_PROPS,
   'q-img': Q_IMG_PROPS,
   'q-file': Q_FILE_PROPS,
+  'q-select': Q_SELECT_PROPS,
 } as const;
 
 /**
@@ -510,6 +571,14 @@ export type LinidQImgProps = Pick<QImgProps, (typeof Q_IMG_PROPS)[number]>;
 export type LinidQFileProps = Pick<QFileProps, (typeof Q_FILE_PROPS)[number]>;
 
 /**
+ * Subset of QSelect props supported in UI design configuration.
+ */
+export type LinidQSelectProps = Pick<
+  QSelectProps,
+  (typeof Q_SELECT_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -529,7 +598,8 @@ export type LinidQComponentProps =
   | LinidQInputProps
   | LinidQDateProps
   | LinidQImgProps
-  | LinidQFileProps;
+  | LinidQFileProps
+  | LinidQSelectProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -551,4 +621,5 @@ export type QComponentName =
   | 'q-input'
   | 'q-date'
   | 'q-img'
-  | 'q-file';
+  | 'q-file'
+  | 'q-select';

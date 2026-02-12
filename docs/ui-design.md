@@ -62,26 +62,25 @@ components.
 ### Example: `MyComponent.vue`
 
 ```vue
-
 <template>
   <div>
     <!-- Quasar button using dynamic flat and color values from UiDesign -->
     <q-btn
-        v-bind="btnProps"
-        label="Click me"
+      v-bind="btnProps"
+      label="Click me"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { useUiDesign } from '@linagora/linid-im-front-corelib';
-  import { QBtnProps } from 'quasar';
+import { useUiDesign } from '@linagora/linid-im-front-corelib';
+import { QBtnProps } from 'quasar';
 
-  // Retrieve the getComponentProps() function from the composable
-  const { ui } = useUiDesign();
+// Retrieve the getComponentProps() function from the composable
+const { ui } = useUiDesign();
 
-  // Get typed props for the 'q-btn' component from the 'custom' namespace
-  const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
+// Get typed props for the 'q-btn' component from the 'custom' namespace
+const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
 </script>
 ```
 
@@ -228,7 +227,8 @@ export type QComponentName =
   | 'q-input'
   | 'q-date'
   | 'q-img'
-  | 'q-file';
+  | 'q-file'
+  | 'q-select';
 
 /**
  * Union type of all supported Quasar component props subsets.
@@ -250,7 +250,8 @@ export type LinidQComponentProps =
   | LinidQInputProps
   | LinidQDateProps
   | LinidQImgProps
-  | LinidQFileProps;
+  | LinidQFileProps
+  | LinidQSelectProps;
 ```
 
 For `NamedColor`, refer to the Quasar documentation on [Color Palette](https://quasar.dev/style/color-palette).
@@ -1209,7 +1210,7 @@ type LinidQFileProps = {
   /**
    * Use QChip to show picked files
    */
-  useChips?: boolean | undefined,
+  useChips?: boolean | undefined;
   /**
    * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop; The difference from 'color' prop is that the label will always have this color, even when field is not focused
    */
@@ -1279,6 +1280,272 @@ type LinidQFileProps = {
 ```
 
 For more details, refer to the [Quasar QFile API documentation](https://quasar.dev/vue-components/file#qfile-api).
+
+### q-select
+
+```ts
+type LinidQSelectProps = {
+  /**
+   * Make virtual list work in horizontal mode
+   */
+  virtualScrollHorizontal?: boolean | undefined;
+  /**
+   * Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null
+   */
+  clearable?: boolean | undefined;
+  /**
+   * Focus field on initial component render
+   */
+  autofocus?: boolean | undefined;
+  /**
+   * Hides dropdown icon
+   */
+  hideDropdownIcon?: boolean | undefined;
+  /**
+   * Changing route app won't dismiss the popup (menu or dialog)
+   */
+  popupNoRouteDismiss?: boolean | undefined;
+  /**
+   * Fills the input with current value; Useful along with 'hide-selected'; Does NOT work along with 'multiple' selection
+   */
+  fillInput?: boolean | undefined;
+  /**
+   * Transition when showing the menu/dialog; One of Quasar's embedded transitions
+   * Default value: 'fade'
+   */
+  transitionShow?: string | undefined;
+  /**
+   * Transition when hiding the menu/dialog; One of Quasar's embedded transitions
+   * Default value: 'fade'
+   */
+  transitionHide?: string | undefined;
+  /**
+   * Transition duration when hiding the menu/dialog (in milliseconds, without unit)
+   * Default value: 300
+   */
+  transitionDuration?: string | number | undefined;
+  /**
+   * Overrides the default dynamic mode of showing as menu on desktop and dialog on mobiles
+   * Default value: 'default'
+   */
+  behavior?: 'default' | 'menu' | 'dialog' | undefined;
+  /**
+   * Label will be always shown above the field regardless of field content (if any)
+   */
+  stackLabel?: boolean | undefined;
+  /**
+   * Hide the helper (hint) text when field doesn't have focus
+   */
+  hideHint?: boolean | undefined;
+  /**
+   * Custom icon to use for the clear button when using along with 'clearable' prop
+   */
+  clearIcon?: string | undefined;
+  /**
+   * Show an automatic counter on bottom right
+   */
+  counter?: boolean | undefined;
+  /**
+   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
+   */
+  dropdownIcon?: string | undefined;
+  /**
+   * Use an input tag where users can type
+   */
+  useInput?: boolean | undefined;
+  /**
+   * Debounce the input model update with an amount of milliseconds (also affects the 'filter' event, if used)
+   * Default value: 500
+   */
+  inputDebounce?: number | string | undefined;
+  /**
+   * Dense mode for options list; occupies less space
+   */
+  optionsDense?: boolean | undefined;
+  /**
+   * Options menu will be colored with a dark color
+   * Default value: null
+   */
+  optionsDark?: boolean | null | undefined;
+  /**
+   * CSS class name for options that are active/selected; Set it to an empty string to stop applying the default (which is text-* where * is the 'color' prop value)
+   */
+  optionsSelectedClass?: string | undefined;
+  /**
+   * Expanded menu will cover the component (will not work along with 'use-input' prop for obvious reasons)
+   */
+  optionsCover?: boolean | undefined;
+  /**
+   * Allow the options list to be narrower than the field (only in menu mode)
+   */
+  menuShrink?: boolean | undefined;
+  /**
+   * Prevents the tab key from confirming the currently hovered option
+   */
+  disableTabSelection?: boolean | undefined;
+  /**
+   * Two values setting the starting position or anchor point of the options list relative to the field (only in menu mode)
+   */
+  menuAnchor?:
+    | 'top left'
+    | 'top middle'
+    | 'top right'
+    | 'top start'
+    | 'top end'
+    | 'center left'
+    | 'center middle'
+    | 'center right'
+    | 'center start'
+    | 'center end'
+    | 'bottom left'
+    | 'bottom middle'
+    | 'bottom right'
+    | 'bottom start'
+    | 'bottom end'
+    | undefined;
+  /**
+   * Two values setting the options list's own position relative to its target (only in menu mode)
+   */
+  menuSelf?:
+    | 'top left'
+    | 'top middle'
+    | 'top right'
+    | 'top start'
+    | 'top end'
+    | 'center left'
+    | 'center middle'
+    | 'center right'
+    | 'center start'
+    | 'center end'
+    | 'bottom left'
+    | 'bottom middle'
+    | 'bottom right'
+    | 'bottom start'
+    | 'bottom end'
+    | undefined;
+  /**
+   * An array of two numbers to offset the options list horizontally and vertically in pixels (only in menu mode)
+   */
+  menuOffset?: readonly any[] | undefined;
+  /**
+   * Force render the selected option(s) as HTML; This can lead to XSS attacks so make sure that you sanitize the content; Does NOT apply when using 'selected' or 'selected-item' slots!
+   */
+  displayValueHtml?: boolean | undefined;
+  /**
+   * Hides selection; Use the underlying input tag to hold the label (instead of showing it to the right of the input) of the selected option; Only works for non 'multiple' Selects
+   */
+  hideSelected?: boolean | undefined;
+  /**
+   * Use QChip to show what is currently selected
+   */
+  useChips?: boolean | undefined;
+  /**
+   * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop; The difference from 'color' prop is that the label will always have this color, even when field is not focused
+   */
+  labelColor?: NamedColor | undefined;
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  color?: NamedColor | undefined;
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  bgColor?: NamedColor | undefined;
+  /**
+   * Notify the component that the background is a dark color
+   * Default value: null
+   */
+  dark?: boolean | null | undefined;
+  /**
+   * Use 'filled' design for the field
+   */
+  filled?: boolean | undefined;
+  /**
+   * Use 'outlined' design for the field
+   */
+  outlined?: boolean | undefined;
+  /**
+   * Use 'borderless' design for the field
+   */
+  borderless?: boolean | undefined;
+  /**
+   * Use 'standout' design for the field; Specifies classes to be applied when focused (overriding default ones)
+   */
+  standout?: boolean | string | undefined;
+  /**
+   * Do not reserve space for hint/error/counter anymore when these are not used; As a result, it also disables the animation for those; It also allows the hint/error area to stretch vertically based on its content
+   */
+  hideBottomSpace?: boolean | undefined;
+  /**
+   * Applies a small standard border-radius for a squared shape of the component
+   */
+  rounded?: boolean | undefined;
+  /**
+   * Remove border-radius so borders are squared; Overrides 'rounded' prop
+   */
+  square?: boolean | undefined;
+  /**
+   * Dense mode; occupies less space
+   */
+  dense?: boolean | undefined;
+  /**
+   * Match inner content alignment to that of QItem
+   */
+  itemAligned?: boolean | undefined;
+  /**
+   * Class definitions to be attributed to the popup content
+   */
+  popupContentClass?: string | undefined;
+  /**
+   * Style definitions to be attributed to the popup content
+   */
+  popupContentStyle?: VueStyleProp | undefined;
+  /**
+   * Class definitions to be attributed to the underlying input tag
+   */
+  inputClass?: VueClassProp | undefined;
+  /**
+   * Style definitions to be attributed to the underlying input tag
+   */
+  inputStyle?: VueStyleProp | undefined;
+  /**
+   * Hide error icon when there is an error
+   */
+  noErrorIcon?: boolean | undefined;
+  /**
+   * Minimum number of items to render in the virtual list
+   * Default value: 10
+   */
+  virtualScrollSliceSize?: number | string | null | undefined;
+  /**
+   * Ratio of number of items in visible zone to render before it
+   * Default value: 1
+   */
+  virtualScrollSliceRatioBefore?: number | string | undefined;
+  /**
+   * Ratio of number of items in visible zone to render after it
+   * Default value: 1
+   */
+  virtualScrollSliceRatioAfter?: number | string | undefined;
+  /**
+   * Default size in pixels (height if vertical, width if horizontal) of an item; This value is used for rendering the initial list; Try to use a value close to the minimum size of an item
+   * Default value: 24
+   */
+  virtualScrollItemSize?: number | string | undefined;
+  /**
+   * Size in pixels (height if vertical, width if horizontal) of the sticky part (if using one) at the start of the list; A correct value will improve scroll precision
+   * Default value: 0
+   */
+  virtualScrollStickySizeStart?: number | string | undefined;
+  /**
+   * Size in pixels (height if vertical, width if horizontal) of the sticky part (if using one) at the end of the list; A correct value will improve scroll precision
+   * Default value: 0
+   */
+  virtualScrollStickySizeEnd?: number | string | undefined;
+};
+```
+
+For more details, refer to the [Quasar QSelect API documentation](https://quasar.dev/vue-components/select#qselect-api).
 
 More components can be added as needed.
 

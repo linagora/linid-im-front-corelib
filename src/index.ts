@@ -117,6 +117,7 @@ export type {
   LinidQCardActionsProps,
   LinidQCardProps,
   LinidQDateProps,
+  LinidQFileProps,
   LinidQHeaderProps,
   LinidQIconProps,
   LinidQImgProps,

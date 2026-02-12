@@ -62,25 +62,26 @@ components.
 ### Example: `MyComponent.vue`
 
 ```vue
+
 <template>
   <div>
     <!-- Quasar button using dynamic flat and color values from UiDesign -->
     <q-btn
-      v-bind="btnProps"
-      label="Click me"
+        v-bind="btnProps"
+        label="Click me"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useUiDesign } from '@linagora/linid-im-front-corelib';
-import { QBtnProps } from 'quasar';
+  import { useUiDesign } from '@linagora/linid-im-front-corelib';
+  import { QBtnProps } from 'quasar';
 
-// Retrieve the getComponentProps() function from the composable
-const { ui } = useUiDesign();
+  // Retrieve the getComponentProps() function from the composable
+  const { ui } = useUiDesign();
 
-// Get typed props for the 'q-btn' component from the 'custom' namespace
-const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
+  // Get typed props for the 'q-btn' component from the 'custom' namespace
+  const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
 </script>
 ```
 
@@ -226,7 +227,8 @@ export type QComponentName =
   | 'q-toggle'
   | 'q-input'
   | 'q-date'
-  | 'q-img';
+  | 'q-img'
+  | 'q-file';
 
 /**
  * Union type of all supported Quasar component props subsets.
@@ -247,12 +249,14 @@ export type LinidQComponentProps =
   | LinidQToggleProps
   | LinidQInputProps
   | LinidQDateProps
-  | LinidQImgProps;
+  | LinidQImgProps
+  | LinidQFileProps;
 ```
 
 For `NamedColor`, refer to the Quasar documentation on [Color Palette](https://quasar.dev/style/color-palette).
 
-For `VueStyleProp`, `VueClassProp` and `VueStyleObjectProp`, refer to the Quasar [source code](https://github.com/quasarframework/quasar/blob/dev/ui/types/api/vue-prop-types.d.ts).
+For `VueStyleProp`, `VueClassProp` and `VueStyleObjectProp`, refer to the
+Quasar [source code](https://github.com/quasarframework/quasar/blob/dev/ui/types/api/vue-prop-types.d.ts).
 
 ---
 
@@ -1177,6 +1181,104 @@ type LinidQImgProps = {
 ```
 
 For more details, refer to the [Quasar QImg API documentation](https://quasar.dev/vue-components/img#qimg-api).
+
+### q-file
+
+```ts
+type LinidQFileProps = {
+  /**
+   * Focus field on initial component render
+   */
+  autofocus?: boolean | undefined;
+  /**
+   * Label will be always shown above the field regardless of field content (if any)
+   */
+  stackLabel?: boolean | undefined;
+  /**
+   * Hide the helper (hint) text when field doesn't have focus
+   */
+  hideHint?: boolean | undefined;
+  /**
+   * Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null
+   */
+  clearable?: boolean | undefined;
+  /**
+   * Custom icon to use for the clear button when using along with 'clearable' prop
+   */
+  clearIcon?: string | undefined;
+  /**
+   * Use QChip to show picked files
+   */
+  useChips?: boolean | undefined,
+  /**
+   * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop; The difference from 'color' prop is that the label will always have this color, even when field is not focused
+   */
+  labelColor?: string | undefined;
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  color?: NamedColor | undefined;
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  bgColor?: NamedColor | undefined;
+  /**
+   * Notify the component that the background is a dark color
+   * Default value: null
+   */
+  dark?: boolean | null | undefined;
+  /**
+   * Use 'filled' design for the field
+   */
+  filled?: boolean | undefined;
+  /**
+   * Use 'outlined' design for the field
+   */
+  outlined?: boolean | undefined;
+  /**
+   * Use 'borderless' design for the field
+   */
+  borderless?: boolean | undefined;
+  /**
+   * Use 'standout' design for the field; Specifies classes to be applied when focused (overriding default ones)
+   */
+  standout?: boolean | string | undefined;
+  /**
+   * Do not reserve space for hint/error/counter anymore when these are not used; As a result, it also disables the animation for those; It also allows the hint/error area to stretch vertically based on its content
+   */
+  hideBottomSpace?: boolean | undefined;
+  /**
+   * Applies a small standard border-radius for a squared shape of the component
+   */
+  rounded?: boolean | undefined;
+  /**
+   * Remove border-radius so borders are squared; Overrides 'rounded' prop
+   */
+  square?: boolean | undefined;
+  /**
+   * Dense mode; occupies less space
+   */
+  dense?: boolean | undefined;
+  /**
+   * Match inner content alignment to that of QItem
+   */
+  itemAligned?: boolean | undefined;
+  /**
+   * Class definitions to be attributed to the underlying selection container
+   */
+  inputClass?: VueClassProp | undefined;
+  /**
+   * Style definitions to be attributed to the underlying selection container
+   */
+  inputStyle?: VueStyleProp | undefined;
+  /**
+   * Hide error icon when there is an error
+   */
+  noErrorIcon?: boolean | undefined;
+};
+```
+
+For more details, refer to the [Quasar QFile API documentation](https://quasar.dev/vue-components/file#qfile-api).
 
 More components can be added as needed.
 

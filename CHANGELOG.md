@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.40](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.39...v0.0.40) (2026-02-12)
+
+
+### Features
+
+* add dialog composable ([f72346d](https://github.com/linagora/linid-im-front-corelib/commit/f72346dc9530e405533339121925f7b86d4ff7ca))
+* add LinidDialogProps ([c5f90de](https://github.com/linagora/linid-im-front-corelib/commit/c5f90ded877cdec44a36097c95bab20179567145))
+
 ### [0.0.39](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.38...v0.0.39) (2026-02-12)
 
 

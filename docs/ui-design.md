@@ -211,47 +211,49 @@ export interface UiDesign {
  * Add other component names as needed.
  */
 export type QComponentName =
-  | 'q-btn'
-  | 'q-tabs'
-  | 'q-route-tab'
-  | 'q-header'
-  | 'q-toolbar'
-  | 'q-toolbar-title'
   | 'q-avatar'
   | 'q-badge'
-  | 'q-table'
+  | 'q-btn'
   | 'q-card'
   | 'q-card-actions'
-  | 'q-icon'
-  | 'q-toggle'
-  | 'q-input'
   | 'q-date'
-  | 'q-img'
+  | 'q-dialog'
   | 'q-file'
-  | 'q-select';
+  | 'q-header'
+  | 'q-icon'
+  | 'q-img'
+  | 'q-input'
+  | 'q-route-tab'
+  | 'q-select'
+  | 'q-table'
+  | 'q-tabs'
+  | 'q-toggle'
+  | 'q-toolbar'
+  | 'q-toolbar-title';
 
 /**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
-  | LinidQBtnProps
-  | LinidQTabsProps
-  | LinidQRouteTabProps
-  | LinidQHeaderProps
-  | LinidQToolbarProps
-  | LinidQToolbarTitleProps
   | LinidQAvatarProps
   | LinidQBadgeProps
-  | LinidQTableProps
+  | LinidQBtnProps
   | LinidQCardProps
   | LinidQCardActionsProps
-  | LinidQIconProps
-  | LinidQToggleProps
-  | LinidQInputProps
   | LinidQDateProps
-  | LinidQImgProps
+  | LinidQDialogProps
   | LinidQFileProps
-  | LinidQSelectProps;
+  | LinidQHeaderProps
+  | LinidQIconProps
+  | LinidQImgProps
+  | LinidQInputProps
+  | LinidQRouteTabProps
+  | LinidQSelectProps
+  | LinidQTableProps
+  | LinidQTabsProps
+  | LinidQToggleProps
+  | LinidQToolbarProps
+  | LinidQToolbarTitleProps;
 ```
 
 For `NamedColor`, refer to the Quasar documentation on [Color Palette](https://quasar.dev/style/color-palette).
@@ -1182,6 +1184,95 @@ type LinidQImgProps = {
 ```
 
 For more details, refer to the [Quasar QImg API documentation](https://quasar.dev/vue-components/img#qimg-api).
+
+### q-dialog
+
+```ts
+type LinidQDialogProps = {
+  /**
+   * User cannot dismiss Dialog if clicking outside of it or hitting ESC key; Also, an app route change won't dismiss it
+   */
+  persistent?: boolean | undefined;
+  /**
+   * User cannot dismiss Dialog by hitting ESC key; No need to set it if 'persistent' prop is also set
+   */
+  noEscDismiss?: boolean | undefined;
+  /**
+   * User cannot dismiss Dialog by clicking outside of it; No need to set it if 'persistent' prop is also set
+   */
+  noBackdropDismiss?: boolean | undefined;
+  /**
+   * Changing route app won't dismiss Dialog; No need to set it if 'persistent' prop is also set
+   */
+  noRouteDismiss?: boolean | undefined;
+  /**
+   * Any click/tap inside of the dialog will close it
+   */
+  autoClose?: boolean | undefined;
+  /**
+   * (Accessibility) When Dialog gets hidden, do not refocus on the DOM element that previously had focus
+   */
+  noRefocus?: boolean | undefined;
+  /**
+   * (Accessibility) When Dialog gets shown, do not switch focus on it
+   */
+  noFocus?: boolean | undefined;
+  /**
+   * Do not shake up the Dialog to catch user's attention
+   */
+  noShake?: boolean | undefined;
+  /**
+   * Allow elements outside of the Dialog to be focusable; By default, for accessibility reasons, QDialog does not allow outer focus
+   */
+  allowFocusOutside?: boolean | undefined;
+  /**
+   * Put Dialog into seamless mode; Does not use a backdrop so user is able to interact with the rest of the page too
+   */
+  seamless?: boolean | undefined;
+  /**
+   * Put Dialog into maximized mode
+   */
+  maximized?: boolean | undefined;
+  /**
+   * Dialog will try to render with same width as the window
+   */
+  fullWidth?: boolean | undefined;
+  /**
+   * Dialog will try to render with same height as the window
+   */
+  fullHeight?: boolean | undefined;
+  /**
+   * Stick dialog to one of the sides (top, right, bottom or left)
+   * Default value: 'standard'
+   */
+  position?: 'standard' | 'top' | 'right' | 'bottom' | 'left' | undefined;
+  /**
+   * Apply a backdrop filter; The value needs to be the same as in the CSS specs for backdrop-filter; The examples are not an exhaustive list
+   */
+  backdropFilter?: string | undefined;
+  /**
+   * Forces content to have squared borders
+   */
+  square?: boolean | undefined;
+  /**
+   * One of Quasar's embedded transitions
+   * Default value: 'fade'
+   */
+  transitionShow?: string | undefined;
+  /**
+   * One of Quasar's embedded transitions
+   * Default value: 'fade'
+   */
+  transitionHide?: string | undefined;
+  /**
+   * Transition duration (in milliseconds, without unit)
+   * Default value: 300
+   */
+  transitionDuration?: string | number | undefined;
+};
+```
+
+For more details, refer to the [Quasar QDialog API documentation](https://quasar.dev/vue-components/dialog#dialog-api).
 
 ### q-file
 

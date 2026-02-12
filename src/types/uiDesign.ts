@@ -32,6 +32,7 @@ import type {
   QCardActionsProps,
   QCardProps,
   QDateProps,
+  QDialogProps,
   QFileProps,
   QHeaderProps,
   QIconProps,
@@ -432,6 +433,31 @@ const Q_SELECT_PROPS = [
 ] as const;
 
 /**
+ * List of QDialogProps keys for type-safe UI design retrieval.
+ */
+const Q_DIALOG_PROPS = [
+  'persistent',
+  'noEscDismiss',
+  'noBackdropDismiss',
+  'noRouteDismiss',
+  'autoClose',
+  'noRefocus',
+  'noFocus',
+  'noShake',
+  'allowFocusOutside',
+  'seamless',
+  'maximized',
+  'fullWidth',
+  'fullHeight',
+  'position',
+  'backdropFilter',
+  'square',
+  'transitionShow',
+  'transitionHide',
+  'transitionDuration',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -453,6 +479,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-img': Q_IMG_PROPS,
   'q-file': Q_FILE_PROPS,
   'q-select': Q_SELECT_PROPS,
+  'q-dialog': Q_DIALOG_PROPS,
 } as const;
 
 /**
@@ -579,6 +606,14 @@ export type LinidQSelectProps = Pick<
 >;
 
 /**
+ * Subset of QDialog props supported in UI design configuration.
+ */
+export type LinidQDialogProps = Pick<
+  QDialogProps,
+  (typeof Q_DIALOG_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -599,7 +634,8 @@ export type LinidQComponentProps =
   | LinidQDateProps
   | LinidQImgProps
   | LinidQFileProps
-  | LinidQSelectProps;
+  | LinidQSelectProps
+  | LinidQDialogProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -622,4 +658,5 @@ export type QComponentName =
   | 'q-date'
   | 'q-img'
   | 'q-file'
-  | 'q-select';
+  | 'q-select'
+  | 'q-dialog';

@@ -81,7 +81,7 @@ export interface FederatedModule<T> {
 </template>
 
 <script setup lang="ts">
-// Default export is automatic
+  // Default export is automatic
 </script>
 ```
 
@@ -206,22 +206,25 @@ Types for entity and route metadata returned by the backend API.
 
 ### LinidAttributeConfiguration
 
-Describes a single attribute of an entity. This is a **generic interface** where the `inputSettings` type can be customized by consumers.
+Describes a single attribute of an entity. This is a **generic interface** where the `inputSettings` type can be
+customized by consumers.
 
 #### Supported Input Types
 
 | Input Type | Description                    |
-| ---------- | ------------------------------ |
+|------------|--------------------------------|
 | `Text`     | Text-based inputs (QInput)     |
 | `Number`   | Numeric inputs (QInput number) |
 | `Boolean`  | Toggle/checkbox (QToggle)      |
 | `Date`     | Date picker (QDate)            |
 
-> **Note:** The available input types depend on the inputs defined in `linid-im-front-community-plugins`. Custom plugins can extend these types.
+> **Note:** The available input types depend on the inputs defined in `linid-im-front-community-plugins`. Custom plugins
+> can extend these types.
 
 #### Generic Parameter
 
-The interface accepts a generic parameter `T` for `inputSettings`, defaulting to `Record<string, unknown>`. This allows consumers to define their own settings structure without requiring corelib updates.
+The interface accepts a generic parameter `T` for `inputSettings`, defaulting to `Record<string, unknown>`. This allows
+consumers to define their own settings structure without requiring corelib updates.
 
 ```ts
 interface LinidAttributeConfiguration<T = Record<string, unknown>> {
@@ -325,7 +328,8 @@ Types representing standard response structures returned by LinID backend APIs.
 
 Represents the structure of an error response body returned by LinID APIs.
 
-This structure is used across all LinID API error responses to provide consistent error handling with internationalized messages.
+This structure is used across all LinID API error responses to provide consistent error handling with internationalized
+messages.
 
 ```ts
 export interface LinidApiErrorResponseBody {
@@ -359,7 +363,8 @@ export interface LinidApiErrorResponseBody {
 
 **Usage:**
 
-- Used by [`useFieldValidation`](./field-validation.md#validatefromapivalue) to extract error messages from backend validation responses
+- Used by [`useFieldValidation`](./field-validation.md#validatefromapivalue) to extract error messages from backend
+  validation responses
 - Returned by all LinID API endpoints for HTTP errors
 - The `error` field contains the already-internationalized error message ready for display
 - The `errorKey` and `errorContext` can be used for custom error handling if needed
@@ -849,6 +854,10 @@ See description in [Ui design documentation](./ui-design.md#q-date).
 
 See description in [Ui design documentation](./ui-design.md#q-img).
 
+### LinidQFileProps
+
+See description in [Ui design documentation](./ui-design.md#q-file).
+
 ---
 
 ## 🖼️ Linid Ui Store types
@@ -884,7 +893,7 @@ export interface NavigationMenuItem {
 ## 🧰 Summary
 
 | Type / Interface                | Purpose                                                   |
-| ------------------------------- | --------------------------------------------------------- |
+|---------------------------------|-----------------------------------------------------------|
 | `LinidZoneEntry`                | Defines the contract for a plugin component               |
 | `LinidZoneState`                | Defines the structure of the zone store                   |
 | `FederatedModule`               | Defines the structure of a federated component module     |
@@ -928,6 +937,7 @@ export interface NavigationMenuItem {
 | `LinidQInputProps`              | QInput component properties supported by Ui Design        |
 | `LinidQDateProps`               | QDate component properties supported by Ui Design         |
 | `LinidQImgProps`                | QImg component properties supported by Ui Design          |
+| `LinidQFileProps`               | QFile component properties supported by Ui Design         |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
 | `NavigationMenuItem`            | Describes a main navigation menu item                     |
 

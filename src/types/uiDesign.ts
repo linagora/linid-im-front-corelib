@@ -32,10 +32,11 @@ import type {
   QCardActionsProps,
   QCardProps,
   QDateProps,
+  QFileProps,
   QHeaderProps,
   QIconProps,
-  QInputProps,
   QImgProps,
+  QInputProps,
   QRouteTabProps,
   QTableProps,
   QTabsProps,
@@ -43,8 +44,8 @@ import type {
   QToolbarProps,
   QToolbarTitleProps,
   VueClassProp,
-  VueStyleProp,
   VueStyleObjectProp,
+  VueStyleProp,
 } from 'quasar';
 
 /**
@@ -343,6 +344,34 @@ const Q_IMG_PROPS = [
 ] as const;
 
 /**
+ * List of QFileProps keys for type-safe UI design retrieval.
+ */
+const Q_FILE_PROPS = [
+  'autofocus',
+  'stackLabel',
+  'hideHint',
+  'clearable',
+  'clearIcon',
+  'useChips',
+  'labelColor',
+  'color',
+  'bgColor',
+  'dark',
+  'filled',
+  'outlined',
+  'borderless',
+  'standout',
+  'hideBottomSpace',
+  'rounded',
+  'square',
+  'dense',
+  'itemAligned',
+  'inputClass',
+  'inputStyle',
+  'noErrorIcon',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -362,6 +391,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-input': Q_INPUT_PROPS,
   'q-date': Q_DATE_PROPS,
   'q-img': Q_IMG_PROPS,
+  'q-file': Q_FILE_PROPS,
 } as const;
 
 /**
@@ -475,6 +505,11 @@ export type LinidQDateProps = Pick<QDateProps, (typeof Q_DATE_PROPS)[number]>;
 export type LinidQImgProps = Pick<QImgProps, (typeof Q_IMG_PROPS)[number]>;
 
 /**
+ * Subset of QFile props supported in UI design configuration.
+ */
+export type LinidQFileProps = Pick<QFileProps, (typeof Q_FILE_PROPS)[number]>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -493,7 +528,8 @@ export type LinidQComponentProps =
   | LinidQToggleProps
   | LinidQInputProps
   | LinidQDateProps
-  | LinidQImgProps;
+  | LinidQImgProps
+  | LinidQFileProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -514,4 +550,5 @@ export type QComponentName =
   | 'q-toggle'
   | 'q-input'
   | 'q-date'
-  | 'q-img';
+  | 'q-img'
+  | 'q-file';

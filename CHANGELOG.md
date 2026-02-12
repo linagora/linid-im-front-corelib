@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.39](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.38...v0.0.39) (2026-02-12)
+
+
+### Features
+
+* add q-select design ([aabd3c2](https://github.com/linagora/linid-im-front-corelib/commit/aabd3c2b91a60f650f40292243cc06a0a55926c0))
+
 ### [0.0.38](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.37...v0.0.38) (2026-02-12)
 
 

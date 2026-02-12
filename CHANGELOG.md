@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.38](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.37...v0.0.38) (2026-02-12)
+
+
+### Features
+
+* add q-file design ([cce0f0f](https://github.com/linagora/linid-im-front-corelib/commit/cce0f0fea24f4fabb3f7fbdb33fb9aab120420a9))
+
 ### [0.0.37](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.36...v0.0.37) (2026-02-05)
 
 

@@ -45,6 +45,7 @@ import type {
   VueClassProp,
   VueStyleProp,
   VueStyleObjectProp,
+  QDialogProps,
 } from 'quasar';
 
 /**
@@ -343,6 +344,30 @@ const Q_IMG_PROPS = [
 ] as const;
 
 /**
+ * List of QImgProps keys for type-safe UI design retrieval.
+ */
+const Q_DIALOG_PROPS = [
+  'persistent',
+  'noEscDismiss',
+  'noBackdropDismiss',
+  'autoClose',
+  'noRefocus',
+  'noFocus',
+  'noShake',
+  'allowFocusOutside',
+  'seamless',
+  'maximized',
+  'fullWidth',
+  'fullHeight',
+  'position',
+  'backdropFilter',
+  'square',
+  'transitionShow',
+  'transitionHide',
+  'transitionDuration',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -362,6 +387,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-input': Q_INPUT_PROPS,
   'q-date': Q_DATE_PROPS,
   'q-img': Q_IMG_PROPS,
+  'q-dialog': Q_DIALOG_PROPS,
 } as const;
 
 /**
@@ -475,6 +501,14 @@ export type LinidQDateProps = Pick<QDateProps, (typeof Q_DATE_PROPS)[number]>;
 export type LinidQImgProps = Pick<QImgProps, (typeof Q_IMG_PROPS)[number]>;
 
 /**
+ * Subset of QDialog props supported in UI design configuration.
+ */
+export type LinidQDialogProps = Pick<
+  QDialogProps,
+  (typeof Q_DIALOG_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -493,7 +527,8 @@ export type LinidQComponentProps =
   | LinidQToggleProps
   | LinidQInputProps
   | LinidQDateProps
-  | LinidQImgProps;
+  | LinidQImgProps
+  | LinidQDialogProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -514,4 +549,5 @@ export type QComponentName =
   | 'q-toggle'
   | 'q-input'
   | 'q-date'
-  | 'q-img';
+  | 'q-img'
+  | 'q-dialog';

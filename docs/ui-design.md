@@ -247,7 +247,8 @@ export type LinidQComponentProps =
   | LinidQToggleProps
   | LinidQInputProps
   | LinidQDateProps
-  | LinidQImgProps;
+  | LinidQImgProps
+  | LinidQDialogProps;
 ```
 
 For `NamedColor`, refer to the Quasar documentation on [Color Palette](https://quasar.dev/style/color-palette).
@@ -1173,6 +1174,113 @@ type LinidQImgProps = {
    * Size in CSS units, including unit name, for default Spinner (unless using a 'loading' slot)
    */
   spinnerSize?: string | undefined;
+};
+```
+
+For more details, refer to the [Quasar QImg API documentation](https://quasar.dev/vue-components/img#qimg-api).
+
+More components can be added as needed.
+
+---
+
+### q-dialog
+
+```ts
+type LinidQDialogProps = {
+  /**
+   * User cannot dismiss Dialog if clicking outside of it or hitting ESC key; Also, an app route change won't dismiss it
+   */
+  persistent?: boolean | undefined;
+
+  /**
+   * User cannot dismiss Dialog by hitting ESC key; No need to set it if 'persistent' prop is also set
+   */
+  noEscDismiss?: boolean | undefined;
+
+  /**
+   * User cannot dismiss Dialog by clicking outside of it; No need to set it if 'persistent' prop is also set
+   */
+  noBackdropDismiss?: boolean | undefined;
+
+  /**
+   * Changing route app won't dismiss Dialog; No need to set it if 'persistent' prop is also set
+   */
+  noRouteDismiss?: boolean | undefined;
+  /**
+   * Any click/tap inside of the dialog will close it
+   */
+  autoClose?: boolean | undefined;
+
+  /**
+   * (Accessibility) When Dialog gets hidden, do not refocus on the DOM element that previously had focus
+   */
+  noRefocus?: boolean | undefined;
+
+  /**
+   * (Accessibility) When Dialog gets shown, do not switch focus on it
+   */
+  noFocus?: boolean | undefined;
+
+  /**
+   * Do not shake up the Dialog to catch user's attention
+   */
+  noShake?: boolean | undefined;
+
+  /**
+   * Allow elements outside of the Dialog to be focusable; By default, for accessibility reasons, QDialog does not allow outer focus
+   */
+  allowFocusOutside?: boolean | undefined;
+
+  /**
+   * Put Dialog into seamless mode; Does not use a backdrop so user is able to interact with the rest of the page too
+
+   */
+  seamless?: boolean | undefined;
+
+  /**
+   * Put Dialog into maximized mode
+   */
+  maximized?: boolean | undefined;
+
+  /**
+   * Dialog will try to render with same width as the window
+   */
+  fullWidth?: boolean | undefined;
+
+  /**
+   * Dialog will try to render with same height as the window
+   */
+  fullHeight?: boolean | undefined;
+
+  /**
+   * Stick dialog to one of the sides (top, right, bottom or left)
+   */
+  position?: string | undefined;
+
+  /**
+   * Apply a backdrop filter; The value needs to be the same as in the CSS specs for backdrop-filter; The examples are not an exhaustive list
+   */
+  backdropFilter?: string | undefined;
+
+  /**
+   * Forces content to have squared borders
+   */
+  square?: boolean | undefined;
+
+  /**
+   * One of Quasar's embedded transitions
+   */
+  transitionShow?: string | undefined;
+
+  /**
+   * One of Quasar's embedded transitions
+   */
+  transitionHide?: string | undefined;
+
+  /**
+   * Transition duration (in milliseconds, without unit)
+   */
+  transitionDuration?: string | number | undefined;
 };
 ```
 

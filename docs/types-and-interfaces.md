@@ -849,6 +849,10 @@ See description in [Ui design documentation](./ui-design.md#q-date).
 
 See description in [Ui design documentation](./ui-design.md#q-img).
 
+### LinidQDialogProps
+
+See description in [Ui design documentation](./ui-design.md#q-dialog).
+
 ---
 
 ## 🖼️ Linid Ui Store types
@@ -928,6 +932,7 @@ export interface NavigationMenuItem {
 | `LinidQInputProps`              | QInput component properties supported by Ui Design        |
 | `LinidQDateProps`               | QDate component properties supported by Ui Design         |
 | `LinidQImgProps`                | QImg component properties supported by Ui Design          |
+| `LinidQDialogProps`             | QDialog component properties supported by Ui Design       |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
 | `NavigationMenuItem`            | Describes a main navigation menu item                     |
 

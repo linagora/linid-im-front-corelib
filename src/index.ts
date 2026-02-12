@@ -30,6 +30,7 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 // Composables
 export { useFieldValidation } from './composables/useFieldValidation';
 export { useNotify } from './composables/useNotify';
+export { useDialog } from './composables/useDialog';
 export { usePagination } from './composables/usePagination';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
 export { useQuasarRules } from './composables/useQuasarRules';
@@ -127,6 +128,7 @@ export type {
   LinidQToggleProps,
   LinidQToolbarProps,
   LinidQToolbarTitleProps,
+  LinidQDialogProps,
   UiDesign,
   UiDesignNamespace,
   UiDesignValue,
@@ -148,3 +150,6 @@ export type { ValidatorName } from './types/fieldValidation';
 
 // Types - Linid API
 export type { LinidApiErrorResponseBody } from './types/linidApi';
+
+// Types - Linid API
+export type { ConfirmationDialogEvent } from './types/dialogType';

@@ -65,5 +65,17 @@ const _useLinidZoneStore = defineStore('linidZoneStore', {
       }
       this.zones[zone].push(entry);
     },
+
+    /**
+     * Register a new entry only if the plugin
+     * is not already registered in the zone.
+     * @param zone - The name of the zone.
+     * @param entry - The entry to register.
+     */
+    registerOnce(zone: string, entry: LinidZoneEntry): void {
+      if (!this.zones[zone]?.some(({ plugin }) => plugin === entry.plugin)) {
+        this.register(zone, entry);
+      }
+    },
   },
 });

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.41](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.40...v0.0.41) (2026-02-13)
+
+
+### Features
+
+* register plugin once inside a zone ([d7a897e](https://github.com/linagora/linid-im-front-corelib/commit/d7a897ee6b5e9c07a570ad3ce8fda9b19eb824ac))
+
 ### [0.0.40](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.39...v0.0.40) (2026-02-12)
 
 

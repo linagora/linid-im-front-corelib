@@ -100,4 +100,80 @@ describe('Test store: linidZoneStore', () => {
       expect(store.zones['list-page.body'][0].props).toEqual(entry.props);
     });
   });
+
+  describe('Test function: registerOnce', () => {
+    it('should register an entry if plugin is not already present', () => {
+      const store = useLinidZoneStore();
+      const entry = {
+        plugin: 'unique-plugin/Component',
+        props: {},
+      };
+
+      store.registerOnce('list-page.sidebar', entry);
+
+      expect(store.zones['list-page.sidebar']).toHaveLength(1);
+      expect(store.zones['list-page.sidebar'][0]).toEqual(entry);
+    });
+
+    it('should not register the same plugin twice in the same zone', () => {
+      const store = useLinidZoneStore();
+      const entry = {
+        plugin: 'unique-plugin/Component',
+        props: { value: 1 },
+      };
+
+      store.registerOnce('list-page.sidebar', entry);
+      store.registerOnce('list-page.sidebar', entry);
+
+      expect(store.zones['list-page.sidebar']).toHaveLength(1);
+    });
+
+    it('should allow different plugins in the same zone', () => {
+      const store = useLinidZoneStore();
+
+      const entry1 = {
+        plugin: 'plugin-1/Component',
+        props: {},
+      };
+
+      const entry2 = {
+        plugin: 'plugin-2/Component',
+        props: {},
+      };
+
+      store.registerOnce('list-page.sidebar', entry1);
+      store.registerOnce('list-page.sidebar', entry2);
+
+      expect(store.zones['list-page.sidebar']).toHaveLength(2);
+    });
+
+    it('should isolate plugin uniqueness per zone', () => {
+      const store = useLinidZoneStore();
+
+      const entry = {
+        plugin: 'shared-plugin/Component',
+        props: {},
+      };
+
+      store.registerOnce('zone-a', entry);
+      store.registerOnce('zone-b', entry);
+
+      expect(store.zones['zone-a']).toHaveLength(1);
+      expect(store.zones['zone-b']).toHaveLength(1);
+    });
+
+    it('should create zone automatically if it does not exist', () => {
+      const store = useLinidZoneStore();
+
+      const entry = {
+        plugin: 'auto-zone-plugin/Component',
+        props: {},
+      };
+
+      store.registerOnce('new-zone', entry);
+
+      expect(store.zones['new-zone']).toBeDefined();
+      expect(store.zones['new-zone']).toHaveLength(1);
+    });
+  });
 });

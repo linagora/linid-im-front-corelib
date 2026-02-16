@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.42](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.41...v0.0.42) (2026-02-16)
+
+
+### Features
+
+* add q-spinner design ([1e8c14c](https://github.com/linagora/linid-im-front-corelib/commit/1e8c14c141fbfc3115dac6a27004e081b36a0fc9))
+
 ### [0.0.41](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.40...v0.0.41) (2026-02-13)
 
 

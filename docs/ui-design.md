@@ -66,21 +66,21 @@ components.
   <div>
     <!-- Quasar button using dynamic flat and color values from UiDesign -->
     <q-btn
-      v-bind="btnProps"
-      label="Click me"
+        v-bind="btnProps"
+        label="Click me"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useUiDesign } from '@linagora/linid-im-front-corelib';
-import { QBtnProps } from 'quasar';
+  import { useUiDesign } from '@linagora/linid-im-front-corelib';
+  import { QBtnProps } from 'quasar';
 
-// Retrieve the getComponentProps() function from the composable
-const { ui } = useUiDesign();
+  // Retrieve the getComponentProps() function from the composable
+  const { ui } = useUiDesign();
 
-// Get typed props for the 'q-btn' component from the 'custom' namespace
-const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
+  // Get typed props for the 'q-btn' component from the 'custom' namespace
+  const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
 </script>
 ```
 
@@ -225,6 +225,7 @@ export type QComponentName =
   | 'q-input'
   | 'q-route-tab'
   | 'q-select'
+  | 'q-spinner'
   | 'q-table'
   | 'q-tabs'
   | 'q-toggle'
@@ -249,6 +250,7 @@ export type LinidQComponentProps =
   | LinidQInputProps
   | LinidQRouteTabProps
   | LinidQSelectProps
+  | LinidQSpinnerProps
   | LinidQTableProps
   | LinidQTabsProps
   | LinidQToggleProps
@@ -1637,6 +1639,30 @@ type LinidQSelectProps = {
 ```
 
 For more details, refer to the [Quasar QSelect API documentation](https://quasar.dev/vue-components/select#qselect-api).
+
+### q-spinner
+
+```ts
+type LinidQSpinnerProps = {
+  /**
+   * Size in CSS units, including unit name or standard size name (xs|sm|md|lg|xl)
+   * Default value: '1em'
+   */
+  size?: string | undefined;
+  /**
+   * Color name for component from the Quasar Color Palette
+   */
+  color?: NamedColor | undefined;
+  /**
+   * Override value to use for stroke-width
+   * Default value: 5
+   */
+  thickness?: number | undefined;
+};
+```
+
+For more details, refer to
+the [Quasar QSpinner API documentation](https://quasar.dev/vue-components/spinners#qspinner-api).
 
 More components can be added as needed.
 

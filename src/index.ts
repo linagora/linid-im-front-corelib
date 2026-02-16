@@ -126,6 +126,7 @@ export type {
   LinidQInputProps,
   LinidQRouteTabProps,
   LinidQSelectProps,
+  LinidQSpinnerProps,
   LinidQTableProps,
   LinidQTabsProps,
   LinidQToggleProps,

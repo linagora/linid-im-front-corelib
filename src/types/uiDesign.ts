@@ -40,6 +40,7 @@ import type {
   QInputProps,
   QRouteTabProps,
   QSelectProps,
+  QSpinnerProps,
   QTableProps,
   QTabsProps,
   QToggleProps,
@@ -458,6 +459,11 @@ const Q_DIALOG_PROPS = [
 ] as const;
 
 /**
+ * List of QSpinnerProps keys for type-safe UI design retrieval.
+ */
+const Q_SPINNER_PROPS = ['size', 'color', 'thickness'] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -480,6 +486,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-file': Q_FILE_PROPS,
   'q-select': Q_SELECT_PROPS,
   'q-dialog': Q_DIALOG_PROPS,
+  'q-spinner': Q_SPINNER_PROPS,
 } as const;
 
 /**
@@ -614,6 +621,14 @@ export type LinidQDialogProps = Pick<
 >;
 
 /**
+ * Subset of QSpinner props supported in UI design configuration.
+ */
+export type LinidQSpinnerProps = Pick<
+  QSpinnerProps,
+  (typeof Q_SPINNER_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -635,7 +650,8 @@ export type LinidQComponentProps =
   | LinidQImgProps
   | LinidQFileProps
   | LinidQSelectProps
-  | LinidQDialogProps;
+  | LinidQDialogProps
+  | LinidQSpinnerProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -659,4 +675,5 @@ export type QComponentName =
   | 'q-img'
   | 'q-file'
   | 'q-select'
-  | 'q-dialog';
+  | 'q-dialog'
+  | 'q-spinner';

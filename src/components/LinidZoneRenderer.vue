@@ -31,9 +31,7 @@
     :key="entry.plugin + index"
     v-bind="entry.props"
   />
-  <slot v-if="isLoadingComplete && components.length === 0">
-    <div>No components to render in this zone.</div>
-  </slot>
+  <slot v-if="isLoadingComplete && components.length === 0" />
 </template>
 
 <script setup lang="ts">

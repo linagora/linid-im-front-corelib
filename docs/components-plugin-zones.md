@@ -78,13 +78,6 @@ If you don't provide a custom slot, the component displays a default message:
 </template>
 ```
 
-**Rendered when zone is empty:**
-
-```html
-
-<div>No components to render in this zone.</div>
-```
-
 ---
 
 ##### Custom Fallback Component

@@ -214,6 +214,7 @@ export type QComponentName =
   | 'q-avatar'
   | 'q-badge'
   | 'q-btn'
+  | 'q-btn-dropdown'
   | 'q-card'
   | 'q-card-actions'
   | 'q-date'
@@ -238,7 +239,8 @@ export type QComponentName =
 export type LinidQComponentProps =
   | LinidQAvatarProps
   | LinidQBadgeProps
-  | LinidQBtnProps
+  | LinidQBtnProps 
+  | LinidQBtnDropdownProps
   | LinidQCardProps
   | LinidQCardActionsProps
   | LinidQDateProps
@@ -736,6 +738,57 @@ thickness
 ```
 
 For details, refer to the [Quasar QSpinner API documentation](https://quasar.dev/vue-components/spinners#qspinner-api).
+
+### q-btn-dropdown
+
+The following props are officially supported and design-validated in our system:
+
+```
+split
+disableMainBtn
+disableDropdown
+persistent
+noEscDismiss
+noRouteDismiss
+autoClose
+noRefocus
+noFocus
+icon
+iconRight
+noCaps
+noWrap
+align
+stack
+stretch
+dropdownIcon
+cover
+menuAnchor
+menuSelf
+menuOffset
+size
+outline
+flat
+unelevated
+rounded
+push
+square
+glossy
+fab
+fabMini
+padding
+color
+textColor
+dense
+ripple
+noIconAnimation
+contentStyle
+contentClass
+transitionShow
+transitionHide
+transitionDuration
+```
+
+For details, refer to the [Quasar QBtnDropdown API documentation](https://quasar.dev/vue-components/button-dropdown#qbtndropdown-api).
 
 More components can be added as needed.
 

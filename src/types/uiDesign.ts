@@ -29,6 +29,7 @@ import type {
   QAvatarProps,
   QBadgeProps,
   QBtnProps,
+  QBtnDropdownProps,
   QCardActionsProps,
   QCardProps,
   QDateProps,
@@ -464,6 +465,54 @@ const Q_DIALOG_PROPS = [
 const Q_SPINNER_PROPS = ['size', 'color', 'thickness'] as const;
 
 /**
+ * List of QBtnDropdownProps keys for type-safe UI design retrieval.
+ */
+const Q_BTN_DROPDOWN_PROPS = [
+  'split',
+  'disableMainBtn',
+  'disableDropdown',
+  'persistent',
+  'noEscDismiss',
+  'noRouteDismiss',
+  'autoClose',
+  'noRefocus',
+  'noFocus',
+  'icon',
+  'iconRight',
+  'noCaps',
+  'noWrap',
+  'align',
+  'stack',
+  'stretch',
+  'dropdownIcon',
+  'cover',
+  'menuAnchor',
+  'menuSelf',
+  'menuOffset',
+  'size',
+  'outline',
+  'flat',
+  'unelevated',
+  'rounded',
+  'push',
+  'square',
+  'glossy',
+  'fab',
+  'fabMini',
+  'padding',
+  'color',
+  'textColor',
+  'dense',
+  'ripple',
+  'noIconAnimation',
+  'contentStyle',
+  'contentClass',
+  'transitionShow',
+  'transitionHide',
+  'transitionDuration',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -487,6 +536,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-select': Q_SELECT_PROPS,
   'q-dialog': Q_DIALOG_PROPS,
   'q-spinner': Q_SPINNER_PROPS,
+  'q-btn-dropdown': Q_BTN_DROPDOWN_PROPS,
 } as const;
 
 /**
@@ -629,6 +679,14 @@ export type LinidQSpinnerProps = Pick<
 >;
 
 /**
+ * Subset of QBtnDropdown props supported in UI design configuration.
+ */
+export type LinidQBtnDropdownProps = Pick<
+  QBtnDropdownProps,
+  (typeof Q_BTN_DROPDOWN_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -651,7 +709,8 @@ export type LinidQComponentProps =
   | LinidQFileProps
   | LinidQSelectProps
   | LinidQDialogProps
-  | LinidQSpinnerProps;
+  | LinidQSpinnerProps
+  | LinidQBtnDropdownProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -676,4 +735,5 @@ export type QComponentName =
   | 'q-file'
   | 'q-select'
   | 'q-dialog'
-  | 'q-spinner';
+  | 'q-spinner'
+  | 'q-btn-dropdown';

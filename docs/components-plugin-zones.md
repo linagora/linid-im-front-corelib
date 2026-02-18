@@ -14,7 +14,7 @@ updates.
 LinidZoneRenderer provides:
 
 - **Dynamic rendering:** Components are loaded asynchronously only when needed.
-- **Reactive updates:** New plugins registered to a zone appear automatically.
+- **Plugin-based architecture:** Plugins registered during initialization are rendered automatically.
 - **Extensibility:** New features can be added via plugins without modifying the host app.
 - **Standardization:** All plugins follow the `LinidZoneEntry` interface.
 
@@ -25,20 +25,19 @@ LinidZoneRenderer provides:
 ### Basic Usage
 
 ```vue
-
 <template>
-  <LinidZoneRenderer zone="user-details"/>
+  <LinidZoneRenderer zone="user-details" />
 </template>
 ```
 
-* `zone` (string): Identifier of the zone where components should be rendered.
-* The component automatically fetches all registered plugins for this zone from the store and renders them
+- `zone` (string): Identifier of the zone where components should be rendered.
+- The component fetches all registered plugins for this zone from the store **at initialization time** and renders them
   asynchronously.
 
 ### Props
 
 | Prop   | Type   | Description                    |
-|--------|--------|--------------------------------|
+| ------ | ------ | ------------------------------ |
 | `zone` | string | The name of the zone to render |
 
 ### Default Slot - Fallback Component
@@ -72,9 +71,8 @@ The slot is rendered **only when**:
 If you don't provide a custom slot, the component displays a default message:
 
 ```vue
-
 <template>
-  <LinidZoneRenderer zone="sidebar"/>
+  <LinidZoneRenderer zone="sidebar" />
 </template>
 ```
 
@@ -85,7 +83,6 @@ If you don't provide a custom slot, the component displays a default message:
 You can provide your own fallback content using the default slot:
 
 ```vue
-
 <template>
   <LinidZoneRenderer zone="user-actions">
     <template #default>
@@ -108,16 +105,16 @@ import { useLinidZoneStore } from '@linagora/linid-im-front-corelib';
 
 const linidZoneStore = useLinidZoneStore();
 
-linidZoneStore.register("user-details", {
-  plugin: "@/remote/UserCard",
+linidZoneStore.register('user-details', {
+  plugin: '@/remote/UserCard',
   props: { userId: 42 },
 });
 ```
 
-* `plugin`: Path or identifier of the remote component to load.
-* `props`: Optional props passed to the plugin component.
+- `plugin`: Path or identifier of the remote component to load.
+- `props`: Optional props passed to the plugin component.
 
-> Once registered, the `LinidZoneRenderer` component will automatically render this plugin in the specified zone.
+> Once registered **before the component mounts**, the `LinidZoneRenderer` component will render this plugin in the specified zone.
 
 ---
 
@@ -132,9 +129,9 @@ The **Linid Zone Store** provides a `registerOnce` method for this purpose.
 
 `registerOnce` ensures that:
 
-* A plugin is not duplicated in the same zone.
-* Repeated initialization logic does not lead to multiple identical entries.
-* Idempotent registration is guaranteed.
+- A plugin is not duplicated in the same zone.
+- Repeated initialization logic does not lead to multiple identical entries.
+- Idempotent registration is guaranteed.
 
 ---
 
@@ -145,19 +142,19 @@ import { useLinidZoneStore } from '@linagora/linid-im-front-corelib';
 
 const linidZoneStore = useLinidZoneStore();
 
-linidZoneStore.registerOnce("user-details", {
-  plugin: "@/remote/UserCard"
+linidZoneStore.registerOnce('user-details', {
+  plugin: '@/remote/UserCard',
 });
 ```
 
 ### 🔎 Behavior
 
-* Uniqueness is evaluated **based on the `plugin` identifier (its name/path)**.
-* If a plugin with the same `plugin` value is **not yet registered** in the specified zone → it is added.
-* If a plugin with the same `plugin` value is **already registered** in the zone → the call is ignored.
-* The comparison does **not** take `props` into account.
-* No duplicate entries are created.
-* Rendering remains reactive and unchanged.
+- Uniqueness is evaluated **based on the `plugin` identifier (its name/path)**.
+- If a plugin with the same `plugin` value is **not yet registered** in the specified zone → it is added.
+- If a plugin with the same `plugin` value is **already registered** in the zone → the call is ignored.
+- The comparison does **not** take `props` into account.
+- No duplicate entries are created.
+- Rendering remains reactive and unchanged.
 
 ---
 
@@ -167,9 +164,9 @@ Although `registerOnce` technically allows passing `props`, this is strongly dis
 
 Because uniqueness is determined **only by the `plugin` field**:
 
-* Two registrations with the same `plugin` but different `props` will be treated as identical.
-* The first registration wins.
-* Subsequent calls will be ignored, even if their configuration differs.
+- Two registrations with the same `plugin` but different `props` will be treated as identical.
+- The first registration wins.
+- Subsequent calls will be ignored, even if their configuration differs.
 
 For this reason:
 
@@ -180,12 +177,26 @@ instead.
 
 ---
 
+### ⚠️ Lifecycle Constraint
+
+Plugin registration must occur during the **module initialization phase** (i.e., within the module lifecycle bootstrap logic).
+
+The `register` and `registerOnce` methods are designed to be invoked only at initialization time.
+
+Any plugin registered **after the module has completed its initialization** will **not be rendered or taken into account** by `LinidZoneRenderer`.
+
+This constraint ensures architectural consistency and prevents unpredictable runtime mutations of the zone configuration.
+
+> In short: zone registration is a bootstrap-time operation, not a runtime dynamic mutation mechanism.
+
+---
+
 ### ⚖️ `register` vs `registerOnce`
 
 | Method         | Allows duplicates | Typical Use Case                             |
-|----------------|-------------------|----------------------------------------------|
-| `register`     | ✅ Yes             | When multiple identical plugins are expected |
-| `registerOnce` | ❌ No              | When idempotent registration is required     |
+| -------------- | ----------------- | -------------------------------------------- |
+| `register`     | ✅ Yes            | When multiple identical plugins are expected |
+| `registerOnce` | ❌ No             | When idempotent registration is required     |
 
 ---
 
@@ -193,31 +204,30 @@ instead.
 
 Use `registerOnce` when:
 
-* A plugin represents a singleton UI contribution (e.g., a header badge, a global action button).
-* Registration may run multiple times due to re-mounting or hot reload.
-* You want to guarantee architectural safety against duplication.
+- A plugin represents a singleton UI contribution (e.g., a header badge, a global action button).
+- Registration may run multiple times due to re-mounting or hot reload.
+- You want to guarantee architectural safety against duplication.
 
 Use `register` when:
 
-* Multiple instances of the same plugin are intentionally allowed.
-* Order-sensitive or repeated rendering is required.
+- Multiple instances of the same plugin are intentionally allowed.
+- Order-sensitive or repeated rendering is required.
 
 ---
 
 ## 🧩 How It Works
 
-1. The component retrieves all entries for the given `zone` from the **Linid Zone Store**.
+1. **At initialization time**, the component retrieves all entries for the given `zone` from the **Linid Zone Store**.
 2. Each entry is wrapped as an **async component** retrieved from its remote module using the
    `loadAsyncComponent(entry.plugin)` method.
 3. All plugins in the zone are rendered sequentially with:
 
 ```vue
-
-<component :is="entry.component" v-bind="entry.props"/>
+<component :is="entry.component" v-bind="entry.props" />
 ```
 
-* This allows multiple plugins to coexist in a single zone.
-* The component reacts automatically to changes in the store.
+- This allows multiple plugins to coexist in a single zone.
+- The component loads plugins once during initialization and does not react to subsequent store changes.
 
 ---
 
@@ -235,23 +245,25 @@ export interface LinidZoneEntry {
 }
 ```
 
-* Props are automatically forwarded to the dynamically loaded component.
-* Components are wrapped in `loadAsyncComponent` for asynchronous loading.
+- Props are automatically forwarded to the dynamically loaded component.
+- Components are wrapped in `loadAsyncComponent` for asynchronous loading.
 
 ---
 
 ## ✅ Advantages
 
-* **Decoupled architecture:** Plugins are independent of the host.
-* **Lazy loading:** Only load components when needed.
-* **Reactive:** Supports runtime addition/removal of plugins.
-* **Standardized interface:** All plugins conform to `LinidZoneEntry`.
-* **Framework-friendly:** Works natively with Vue 3, Pinia, and Module Federation.
+- **Decoupled architecture:** Plugins are independent of the host.
+- **Lazy loading:** Only load components when needed.
+- **Performance optimized:** Plugins are loaded once at initialization, avoiding unnecessary reactivity overhead.
+- **Standardized interface:** All plugins conform to `LinidZoneEntry`.
+- **Framework-friendly:** Works natively with Vue 3, Pinia, and Module Federation.
 
 ---
 
 ## 📌 Notes
 
-* Multiple plugins can be registered for the same zone; they are rendered in registration order.
-* Failed imports are handled automatically; you can provide a `fallback` component.
-* Designed for scalable front-end applications using Module Federation.
+- Multiple plugins can be registered for the same zone; they are rendered in registration order.
+- Plugins must be registered **before the component is mounted** to be rendered.
+- The component does not react to plugins added after initialization.
+- Failed imports are handled automatically; you can provide a `fallback` component.
+- Designed for scalable front-end applications using Module Federation.

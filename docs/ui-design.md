@@ -271,1398 +271,471 @@ Inside `default` namespace, ensure that all keys for the components you plan to 
 supported
 components and their props:
 
-### q-btn:
+### q-btn
 
-```ts
-type LinidQBtnProps = {
-  /**
-   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
-   */
-  icon?: string | undefined;
-  /**
-   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
-   */
-  iconRight?: string | undefined;
-  /**
-   * Size in CSS units, including unit name or standard size name (xs|sm|md|lg|xl)
-   */
-  size?: string | undefined;
-  /**
-   * Use 'outline' design
-   */
-  outline?: boolean | undefined;
-  /**
-   * Use 'flat' design
-   */
-  flat?: boolean | undefined;
-  /**
-   * Remove shadow
-   */
-  unelevated?: boolean | undefined;
-  /**
-   * Applies a more prominent border-radius for a squared shape button
-   */
-  rounded?: boolean | undefined;
-  /**
-   * Use 'push' design
-   */
-  push?: boolean | undefined;
-  /**
-   * Removes border-radius so borders are squared
-   */
-  square?: boolean | undefined;
-  /**
-   * Applies a glossy effect
-   */
-  glossy?: boolean | undefined;
-  /**
-   * Makes button size and shape to fit a Floating Action Button
-   */
-  fab?: boolean | undefined;
-  /**
-   * Makes button size and shape to fit a small Floating Action Button
-   */
-  fabMini?: boolean | undefined;
-  /**
-   * Apply custom padding (vertical [horizontal]); Size in CSS units, including unit name or standard size name (none|xs|sm|md|lg|xl); Also removes the min width and height when set
-   */
-  padding?: string | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Overrides text color (if needed); Color name from the Quasar Color Palette
-   */
-  textColor?: NamedColor | undefined;
-  /**
-   * Avoid turning label text into caps (which happens by default)
-   */
-  noCaps?: boolean | undefined;
-  /**
-   * Avoid label text wrapping
-   */
-  noWrap?: boolean | undefined;
-  /**
-   * Dense mode; occupies less space
-   */
-  dense?: boolean | undefined;
-  /**
-   * Configure material ripple (disable it by setting it to 'false' or supply a config object)
-   * Default value: true
-   */
-  ripple?: boolean | any | undefined;
-  /**
-   * Label or content alignment
-   * Default value: 'center'
-   */
-  align?:
-    | 'left'
-    | 'right'
-    | 'center'
-    | 'around'
-    | 'between'
-    | 'evenly'
-    | undefined;
-  /**
-   * Stack icon and label vertically instead of on same line (like it is by default)
-   */
-  stack?: boolean | undefined;
-  /**
-   * When used on flexbox parent, button will stretch to parent's height
-   */
-  stretch?: boolean | undefined;
-  /**
-   * Makes a circle shaped button
-   */
-  round?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+icon
+iconRight
+noCaps
+noWrap
+align
+stack
+stretch
+size
+outline
+flat
+unelevated
+rounded
+push
+square
+glossy
+fab
+fabMini
+padding
+color
+textColor
+dense
+ripple
+round
 ```
 
-For more details, refer to the [Quasar QBtn API documentation](https://quasar.dev/vue-components/button#qbtn-api).
+For details, refer to the [Quasar QBtn API documentation](https://quasar.dev/vue-components/button#qbtn-api).
 
 ### q-tabs
 
-```ts
-type LinidQTabsProps = {
-  /**
-   * Use vertical design (tabs one on top of each other rather than one next to the other horizontally)
-   */
-  vertical?: boolean | undefined;
-  /**
-   * Reserve space for arrows to place them on each side of the tabs (the arrows fade when inactive)
-   */
-  outsideArrows?: boolean | undefined;
-  /**
-   * Force display of arrows (if needed) on mobile
-   */
-  mobileArrows?: boolean | undefined;
-  /**
-   * Horizontal alignment the tabs within the tabs container
-   * Default value: 'center'
-   */
-  align?: 'left' | 'center' | 'right' | 'justify' | undefined;
-  /**
-   * Breakpoint (in pixels) of tabs container width at which the tabs automatically turn to a justify alignment
-   * Default value: 600
-   */
-  breakpoint?: number | string | undefined;
-  /**
-   * The color to be attributed to the text of the active tab
-   */
-  activeColor?: NamedColor | undefined;
-  /**
-   * The color to be attributed to the background of the active tab
-   */
-  activeBgColor?: NamedColor | undefined;
-  /**
-   * The color to be attributed to the indicator (the underline) of the active tab
-   */
-  indicatorColor?: NamedColor | undefined;
-  /**
-   * Class definitions to be attributed to the content wrapper
-   */
-  contentClass?: string | undefined;
-  /**
-   * The class to be set on the active tab
-   */
-  activeClass?: string | undefined;
-  /**
-   * The name of an icon to replace the default arrow used to scroll through the tabs to the left, when the tabs extend past the width of the tabs container
-   */
-  leftIcon?: string | undefined;
-  /**
-   * The name of an icon to replace the default arrow used to scroll through the tabs to the right, when the tabs extend past the width of the tabs container
-   */
-  rightIcon?: string | undefined;
-  /**
-   * When used on flexbox parent, tabs will stretch to parent's height
-   */
-  stretch?: boolean | undefined;
-  /**
-   * By default, QTabs is set to grow to the available space; However, you can reverse that with this prop; Useful (and required) when placing the component in a QToolbar
-   */
-  shrink?: boolean | undefined;
-  /**
-   * Switches the indicator position (on left of tab for vertical mode or above the tab for default horizontal mode)
-   */
-  switchIndicator?: boolean | undefined;
-  /**
-   * Allows the indicator to be the same width as the tab's content (text or icon), instead of the whole width of the tab
-   */
-  narrowIndicator?: boolean | undefined;
-  /**
-   * Allows the text to be inline with the icon, should one be used
-   */
-  inlineLabel?: boolean | undefined;
-  /**
-   * Turns off capitalizing all letters within the tab (which is the default)
-   */
-  noCaps?: boolean | undefined;
-  /**
-   * Dense mode; occupies less space
-   */
-  dense?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+vertical
+outsideArrows
+mobileArrows
+align
+breakpoint
+leftIcon
+rightIcon
+stretch
+shrink
+switchIndicator
+narrowIndicator
+inlineLabel
+noCaps
+activeColor
+activeBgColor
+indicatorColor
+contentClass
+activeClass
+dense
 ```
 
-For more details, refer to the [Quasar QTabs API documentation](https://quasar.dev/vue-components/tabs#qtabs-api).
+For details, refer to the [Quasar QTabs API documentation](https://quasar.dev/vue-components/tabs#qtabs-api).
 
 ### q-route-tab
 
-```ts
-type LinidQRouteTabProps = {
-  /**
-   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
-   */
-  icon?: string | undefined;
-  /**
-   * Equivalent to Vue Router <router-link> 'active-class' property; Superseded by 'href' prop if used
-   * Default value: 'q-router-link--active'
-   */
-  activeClass?: string | undefined;
-  /**
-   * Equivalent to Vue Router <router-link> 'active-class' property; Superseded by 'href' prop if used
-   * Default value: 'q-router-link--exact-active'
-   */
-  exactActiveClass?: string | undefined;
-  /**
-   * Adds an alert symbol to the tab, notifying the user there are some updates; If its value is not a Boolean, then you can specify a color
-   */
-  alert?: boolean | string | undefined;
-  /**
-   * Turns off capitalizing all letters within the tab (which is the default)
-   */
-  noCaps?: boolean | undefined;
-  /**
-   * Class definitions to be attributed to the content wrapper
-   */
-  contentClass?: string | undefined;
-  /**
-   * Configure material ripple (disable it by setting it to 'false' or supply a config object)
-   * Default value: true
-   */
-  ripple?: boolean | any | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+icon
+activeClass
+exactActiveClass
+noCaps
+alert
+contentClass
+ripple
 ```
 
-For more details, refer to
+For details, refer to
 the [Quasar QRouteTab API documentation](https://quasar.dev/vue-components/tabs#qroutetab-api).
 
 ### q-header
 
-```ts
-type LinidQHeaderProps = {
-  /**
-   * Enable 'reveal' mode; Takes into account user scroll to temporarily show/hide header
-   */
-  reveal?: boolean | undefined;
-  /**
-   * Amount of scroll (in pixels) that should trigger a 'reveal' state change
-   * Default value: 250
-   */
-  revealOffset?: number | undefined;
-  /**
-   * Applies a default border to the component
-   */
-  bordered?: boolean | undefined;
-  /**
-   * Adds a default shadow to the header
-   */
-  elevated?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+reveal
+revealOffset
+elevated
+bordered
 ```
 
-For more details, refer to
+For details, refer to
 the [Quasar QHeader API documentation](https://quasar.dev/layout/header-and-footer#qheader-api).
 
 ### q-toolbar
 
-```ts
-type LinidQToolbarProps = {
-  /**
-   * Apply an inset to content (useful for subsequent toolbars)
-   */
-  inset?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+inset
 ```
 
-For more details, refer to
+For details, refer to
 the [Quasar QToolbar API documentation](https://quasar.dev/vue-components/toolbar#qtoolbar-api).
 
 ### q-toolbar-title
 
-```ts
-type LinidQToolbarTitleProps = {
-  /**
-   * By default, QToolbarTitle is set to grow to the available space. However, you can reverse that with this prop
-   */
-  shrink?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+shrink
 ```
 
-For more details, refer to
+For details, refer to
 the [Quasar QToolbarTitle API documentation](https://quasar.dev/vue-components/toolbar#qtoolbartitle-api).
 
 ### q-avatar
 
-```ts
-type LinidQAvatarProps = {
-  /**
-   * Size in CSS units, including unit name or standard size name (xs|sm|md|lg|xl)
-   */
-  size?: string | undefined;
-  /**
-   * The size in CSS units, including unit name, of the content (icon, text)
-   */
-  fontSize?: string | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Overrides text color (if needed); Color name from the Quasar Color Palette
-   */
-  textColor?: NamedColor | undefined;
-  /**
-   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
-   */
-  icon?: string | undefined;
-  /**
-   * Removes border-radius so borders are squared
-   */
-  square?: boolean | undefined;
-  /**
-   * Applies a small standard border-radius for a squared shape of the component
-   */
-  rounded?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+icon
+size
+fontSize
+color
+textColor
+square
+rounded
 ```
 
-For more details, refer to the [Quasar QAvatar API documentation](https://quasar.dev/vue-components/avatar#qavatar-api).
+For details, refer to the [Quasar QAvatar API documentation](https://quasar.dev/vue-components/avatar#qavatar-api).
 
 ### q-badge
 
-```ts
-type LinidQBadgeProps = {
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Overrides text color (if needed); Color name from the Quasar Color Palette
-   */
-  textColor?: NamedColor | undefined;
-  /**
-   * Tell QBadge if it should float to the top right side of the relative positioned parent element or not
-   */
-  floating?: boolean | undefined;
-  /**
-   * Applies a 0.8 opacity; Useful especially for floating QBadge
-   */
-  transparent?: boolean | undefined;
-  /**
-   * Content can wrap to multiple lines
-   */
-  multiLine?: boolean | undefined;
-  /**
-   * Sets vertical-align CSS prop
-   */
-  align?: 'top' | 'middle' | 'bottom' | undefined;
-  /**
-   * Use 'outline' design (colored text and borders only)
-   */
-  outline?: boolean | undefined;
-  /**
-   * Makes a rounded shaped badge
-   */
-  rounded?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+floating
+multiLine
+align
+color
+textColor
+transparent
+outline
+rounded
 ```
 
-For more details, refer to the [Quasar QBadge API documentation](https://quasar.dev/vue-components/badge#qbadge-api).
+For details, refer to the [Quasar QBadge API documentation](https://quasar.dev/vue-components/badge#qbadge-api).
 
 ### q-table
 
-```ts
-type LinidQTableProps = {
-  /**
-   * Default size in pixels of a row; This value is used for rendering the initial table; Try to use a value close to the minimum size of a row; Default value: 48 (24 if dense)
-   * Default value: # 48/24
-   */
-  virtualScrollItemSize?: number | string | undefined;
-  /**
-   * Size in pixels of the sticky header (if using one); A correct value will improve scroll precision; Will be also used for non-virtual-scroll tables for fixing top alignment when using scrollTo method
-   * Default value: 0
-   */
-  virtualScrollStickySizeStart?: number | string | undefined;
-  /**
-   * Size in pixels of the sticky footer part (if using one); A correct value will improve scroll precision
-   * Default value: 0
-   */
-  virtualScrollStickySizeEnd?: number | string | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   * Default value: 'grey-8'
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Icon name following Quasar convention for stepping to first page; Make sure you have the icon library installed unless you are using 'img:' prefix
-   */
-  iconFirstPage?: string | undefined;
-  /**
-   * Icon name following Quasar convention for stepping to previous page; Make sure you have the icon library installed unless you are using 'img:' prefix
-   */
-  iconPrevPage?: string | undefined;
-  /**
-   * Icon name following Quasar convention for stepping to next page; Make sure you have the icon library installed unless you are using 'img:' prefix
-   */
-  iconNextPage?: string | undefined;
-  /**
-   * Icon name following Quasar convention for stepping to last page; Make sure you have the icon library installed unless you are using 'img:' prefix
-   */
-  iconLastPage?: string | undefined;
-  /**
-   * Display data as a grid instead of the default table
-   */
-  grid?: boolean | undefined;
-  /**
-   * Display header for grid-mode also
-   */
-  gridHeader?: boolean | undefined;
-  /**
-   * Dense mode; Connect with $q.screen for responsive behavior
-   */
-  dense?: boolean | undefined;
-  /**
-   * Hide table header layer
-   */
-  hideHeader?: boolean | undefined;
-  /**
-   * Hide table bottom layer regardless of what it has to display
-   */
-  hideBottom?: boolean | undefined;
-  /**
-   * Hide the selected rows banner (if any)
-   */
-  hideSelectedBanner?: boolean | undefined;
-  /**
-   * Hide the default no data bottom layer
-   */
-  hideNoData?: boolean | undefined;
-  /**
-   * Hide the pagination controls at the bottom
-   */
-  hidePagination?: boolean | undefined;
-  /**
-   * Applies a 'flat' design (no default shadow)
-   */
-  flat?: boolean | undefined;
-  /**
-   * Applies a default border to the component
-   */
-  bordered?: boolean | undefined;
-  /**
-   * Removes border-radius so borders are squared
-   */
-  square?: boolean | undefined;
-  /**
-   * Use a separator/border between rows, columns or all cells
-   * Default value: 'horizontal'
-   */
-  separator?: 'horizontal' | 'vertical' | 'cell' | 'none' | undefined;
-  /**
-   * Wrap text within table cells
-   */
-  wrapCells?: boolean | undefined;
-  /**
-   * CSS style to apply to native HTML <table> element's wrapper (which is a DIV)
-   */
-  tableStyle?: VueStyleProp | undefined;
-  /**
-   * CSS classes to apply to native HTML <table> element's wrapper (which is a DIV)
-   */
-  tableClass?: VueClassProp | undefined;
-  /**
-   * CSS style to apply to header of native HTML <table> (which is a TR)
-   */
-  tableHeaderStyle?: VueStyleProp | undefined;
-  /**
-   * CSS classes to apply to header of native HTML <table> (which is a TR)
-   */
-  tableHeaderClass?: VueClassProp | undefined;
-  /**
-   * CSS style to apply to the cards container (when in grid mode)
-   */
-  cardContainerStyle?: VueStyleProp | undefined;
-  /**
-   * CSS classes to apply to the cards container (when in grid mode)
-   */
-  cardContainerClass?: VueClassProp | undefined;
-  /**
-   * CSS style to apply to the card (when in grid mode) or container card (when not in grid mode)
-   */
-  cardStyle?: VueStyleProp | undefined;
-  /**
-   * CSS classes to apply to the card (when in grid mode) or container card (when not in grid mode)
-   */
-  cardClass?: VueClassProp | undefined;
-  /**
-   * CSS classes to apply to the title (if using 'title' prop)
-   */
-  titleClass?: VueClassProp | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+virtualScrollItemSize
+virtualScrollStickySizeStart
+virtualScrollStickySizeEnd
+color
+iconFirstPage
+iconPrevPage
+iconNextPage
+iconLastPage
+grid
+gridHeader
+dense
+hideHeader
+hideBottom
+hideSelectedBanner
+hideNoData
+hidePagination
+flat
+bordered
+square
+separator
+wrapCells
+tableStyle
+tableClass
+tableHeaderStyle
+tableHeaderClass
+cardContainerStyle
+cardContainerClass
+cardStyle
+cardClass
+titleClass
 ```
 
-For more details, refer to the [Quasar QTable API documentation](https://quasar.dev/vue-components/table#qtable-api).
+For details, refer to the [Quasar QTable API documentation](https://quasar.dev/vue-components/table#qtable-api).
 
 ### q-card
 
-```ts
-type LinidQCardProps = {
-  /**
-   * Notify the component that the background is a dark color
-   * Default value: null
-   */
-  dark?: boolean | null | undefined;
-  /**
-   * Removes border-radius so borders are squared
-   */
-  square?: boolean | undefined;
-  /**
-   * Applies a 'flat' design (no default shadow)
-   */
-  flat?: boolean | undefined;
-  /**
-   * Applies a default border to the component
-   */
-  bordered?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+dark
+square
+flat
+bordered
 ```
 
-For more details, refer to the [Quasar QCard API documentation](https://quasar.dev/vue-components/card#qcard-api).
+For details, refer to the [Quasar QCard API documentation](https://quasar.dev/vue-components/card#qcard-api).
 
 ### q-card-actions
 
-```ts
-type LinidQCardActionsProps = {
-  /**
-   * Specify how to align the actions; For horizontal mode, the default is 'left', while for vertical mode, the default is 'stretch'
-   * Default value: # 'left'/'stretch'
-   */
-  align?:
-    | 'left'
-    | 'center'
-    | 'right'
-    | 'between'
-    | 'around'
-    | 'evenly'
-    | 'stretch'
-    | undefined;
-  /**
-   * Display actions one below the other
-   */
-  vertical?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+align
+vertical
 ```
 
-For more details, refer to
+For details, refer to
 the [Quasar QCardActions API documentation](https://quasar.dev/vue-components/card#qcardactions-api).
 
 ### q-icon
 
-```ts
-type LinidQIconProps = {
-  /**
-   * Useful if icon is on the left side of something: applies a standard margin on the right side of Icon
-   */
-  left?: boolean | undefined;
-  /**
-   * Useful if icon is on the right side of something: applies a standard margin on the left side of Icon
-   */
-  right?: boolean | undefined;
-  /**
-   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
-   */
-  name?: string | undefined;
-  /**
-   * Size in CSS units, including unit name or standard size name (xs|sm|md|lg|xl)
-   */
-  size?: string | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+left
+right
+name
+size
+color
 ```
 
-For more details, refer to
+For details, refer to
 the [Quasar QIcon API documentation](https://quasar.dev/vue-components/icon#qicon-api).
 
 ### q-toggle
 
-```ts
-type LinidQToggleProps = {
-  /**
-   * Determines toggle order of the two states ('t' stands for state of true, 'f' for state of false); If 'toggle-indeterminate' is true, then the order is: indet -> first state -> second state -> indet (and repeat), otherwise: indet -> first state -> second state -> first state -> second state -> ...
-   */
-  toggleOrder?: 'tf' | 'ft' | undefined;
-  /**
-   * When user clicks/taps on the component, should we toggle through the indeterminate state too?
-   */
-  toggleIndeterminate?: boolean | undefined;
-  /**
-   * Should the color (if specified any) be kept when the component is unticked/ off?
-   */
-  keepColor?: boolean | undefined;
-  /**
-   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
-   */
-  icon?: string | undefined;
-  /**
-   * The icon to be used when the toggle is on
-   */
-  checkedIcon?: string | undefined;
-  /**
-   * The icon to be used when the toggle is off
-   */
-  uncheckedIcon?: string | undefined;
-  /**
-   * The icon to be used when the model is indeterminate
-   */
-  indeterminateIcon?: string | undefined;
-  /**
-   * Label (if any specified) should be displayed on the left side of the component
-   */
-  leftLabel?: boolean | undefined;
-  /**
-   * Size in CSS units, including unit name or standard size name (xs|sm|md|lg|xl)
-   */
-  size?: string | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Notify the component that the background is a dark color
-   * Default value: null
-   */
-  dark?: boolean | null | undefined;
-  /**
-   * Dense mode; occupies less space
-   */
-  dense?: boolean | undefined;
-  /**
-   * Override default icon color (for truthy state only); Color name for component from the Quasar Color Palette
-   */
-  iconColor?: NamedColor | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+toggleOrder
+toggleIndeterminate
+keepColor
+icon
+checkedIcon
+uncheckedIcon
+indeterminateIcon
+leftLabel
+size
+color
+dark
+dense
+iconColor
 ```
 
-For more details, refer to
+For details, refer to
 the [Quasar QToggle API documentation](https://quasar.dev/vue-components/toggle#qtoggle-api).
 
 ### q-input
 
-```ts
-type LinidQInputProps = {
-  /**
-   * Focus field on initial component render
-   */
-  autofocus?: boolean | undefined;
-  /**
-   * Label will be always shown above the field regardless of field content (if any)
-   */
-  stackLabel?: boolean | undefined;
-  /**
-   * Hide the helper (hint) text when field doesn't have focus
-   */
-  hideHint?: boolean | undefined;
-  /**
-   * Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null
-   */
-  clearable?: boolean | undefined;
-  /**
-   * Custom icon to use for the clear button when using along with 'clearable' prop
-   */
-  clearIcon?: string | undefined;
-  /**
-   * Show an automatic counter on bottom right
-   */
-  counter?: boolean | undefined;
-  /**
-   * Make field autogrow along with its content (uses a textarea)
-   */
-  autogrow?: boolean | undefined;
-  /**
-   * Fills string with specified characters (or underscore if value is not string) to fill mask's length
-   */
-  fillMask?: boolean | string | undefined;
-  /**
-   * Fills string from the right side of the mask
-   */
-  reverseFillMask?: boolean | undefined;
-  /**
-   * Model will be unmasked (won't contain tokens/separation characters)
-   */
-  unmaskedValue?: boolean | undefined;
-  /**
-   * Debounce amount (in milliseconds) when updating model
-   */
-  debounce?: string | number | undefined;
-  /**
-   * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop; The difference from 'color' prop is that the label will always have this color, even when field is not focused
-   */
-  labelColor?: NamedColor | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  bgColor?: NamedColor | undefined;
-  /**
-   * Notify the component that the background is a dark color
-   * Default value: null
-   */
-  dark?: boolean | null | undefined;
-  /**
-   * Use 'filled' design for the field
-   */
-  filled?: boolean | undefined;
-  /**
-   * Use 'outlined' design for the field
-   */
-  outlined?: boolean | undefined;
-  /**
-   * Use 'borderless' design for the field
-   */
-  borderless?: boolean | undefined;
-  /**
-   * Use 'standout' design for the field; Specifies classes to be applied when focused (overriding default ones)
-   */
-  standout?: boolean | string | undefined;
-  /**
-   * Do not reserve space for hint/error/counter anymore when these are not used; As a result, it also disables the animation for those; It also allows the hint/error area to stretch vertically based on its content
-   */
-  hideBottomSpace?: boolean | undefined;
-  /**
-   * Applies a small standard border-radius for a squared shape of the component
-   */
-  rounded?: boolean | undefined;
-  /**
-   * Remove border-radius so borders are squared; Overrides 'rounded' prop
-   */
-  square?: boolean | undefined;
-  /**
-   * Dense mode; occupies less space
-   */
-  dense?: boolean | undefined;
-  /**
-   * Match inner content alignment to that of QItem
-   */
-  itemAligned?: boolean | undefined;
-  /**
-   * Hide error icon when there is an error
-   */
-  noErrorIcon?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+autofocus
+stackLabel
+hideHint
+clearable
+clearIcon
+counter
+autogrow
+fillMask
+reverseFillMask
+unmaskedValue
+debounce
+labelColor
+color
+bgColor
+dark
+filled
+outlined
+borderless
+standout
+hideBottomSpace
+rounded
+square
+dense
+itemAligned
+noErrorIcon
 ```
 
-For more details, refer to
+For details, refer to
 the [Quasar QInput API documentation](https://quasar.dev/vue-components/input#qinput-api).
 
 ### q-date
 
-```ts
-type LinidQDateProps = {
-  /**
-   * Display the component in landscape mode
-   */
-  landscape?: boolean | undefined;
-  /**
-   * Show the years selector in months view
-   */
-  yearsInMonthView?: boolean | undefined;
-  /**
-   * Display a button that selects the current day
-   */
-  todayBtn?: boolean | undefined;
-  /**
-   * Don’t display the header
-   */
-  minimal?: boolean | undefined;
-  /**
-   * The view which will be displayed by default
-   * Default value: 'Calendar'
-   */
-  defaultView?: 'Calendar' | 'Months' | 'Years' | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Overrides text color (if needed); Color name from the Quasar Color Palette
-   */
-  textColor?: NamedColor | undefined;
-  /**
-   * Notify the component that the background is a dark color
-   * Default value: null
-   */
-  dark?: boolean | null | undefined;
-  /**
-   * Removes border-radius so borders are squared
-   */
-  square?: boolean | undefined;
-  /**
-   * Applies a 'flat' design (no default shadow)
-   */
-  flat?: boolean | undefined;
-  /**
-   * Applies a default border to the component
-   */
-  bordered?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+landscape
+yearsInMonthView
+todayBtn
+minimal
+defaultView
+color
+textColor
+dark
+square
+flat
+bordered
 ```
 
-For more details, refer to
+For details, refer to
 the [Quasar QDate API documentation](https://quasar.dev/vue-components/date#qdate-api).
 
 ### q-img
 
-```ts
-type LinidQImgProps = {
-  /**
-   * Lazy or immediate load; Same syntax as <img> loading attribute
-   * Default value: 'lazy'
-   */
-  loading?: 'lazy' | 'eager' | undefined;
-  /**
-   * Delay showing the spinner when image changes; Gives time for the browser to load the image from cache to prevent flashing the spinner unnecessarily; Value should represent milliseconds
-   * Default value: 0
-   */
-  loadingShowDelay?: number | string | undefined;
-  /**
-   * Do not display the default spinner while waiting for the image to be loaded; It is overriden by the 'loading' slot when one is present
-   */
-  noSpinner?: boolean | undefined;
-  /**
-   * Disables the native context menu for the image
-   */
-  noNativeMenu?: boolean | undefined;
-  /**
-   * Disable default transition when switching between old and new image
-   */
-  noTransition?: boolean | undefined;
-  /**
-   * Adds the native 'draggable' attribute
-   */
-  draggable?: boolean | undefined;
-  /**
-   * Path to image
-   */
-  src?: string | undefined;
-  /**
-   * Same syntax as <img> srcset attribute
-   */
-  srcset?: string | undefined;
-  /**
-   * Same syntax as <img> sizes attribute
-   */
-  sizes?: string | undefined;
-  /**
-   * While waiting for your image to load, you can use a placeholder image
-   */
-  placeholderSrc?: string | undefined;
-  /**
-   * In case your image fails to load, you can use an error image
-   */
-  errorSrc?: string | undefined;
-  /**
-   * Force the component to maintain an aspect ratio
-   */
-  ratio?: string | number | undefined;
-  /**
-   * Use it when not specifying 'ratio' but still wanting an initial aspect ratio
-   * Default value: 1.7778
-   */
-  initialRatio?: string | number | undefined;
-  /**
-   * Forces image width; Must also include the unit (px or %)
-   */
-  width?: string | undefined;
-  /**
-   * Forces image height; Must also include the unit (px or %)
-   */
-  height?: string | undefined;
-  /**
-   * How the image will fit into the container; Equivalent of the object-fit prop; Can be coordinated with 'position' prop
-   * Default value: 'cover'
-   */
-  fit?: 'cover' | 'fill' | 'contain' | 'none' | 'scale-down' | undefined;
-  /**
-   * The alignment of the image into the container; Equivalent of the object-position CSS prop
-   * Default value: '50% 50%'
-   */
-  position?: string | undefined;
-  /**
-   * CSS classes to be attributed to the native img element
-   */
-  imgClass?: string | undefined;
-  /**
-   * Apply CSS to the native img element
-   */
-  imgStyle?: VueStyleObjectProp | undefined;
-  /**
-   * Color name for default Spinner (unless using a 'loading' slot)
-   */
-  spinnerColor?: NamedColor | undefined;
-  /**
-   * Size in CSS units, including unit name, for default Spinner (unless using a 'loading' slot)
-   */
-  spinnerSize?: string | undefined;
-};
-```
+The following props are officially supported and design-validated in our system:
 
-For more details, refer to the [Quasar QImg API documentation](https://quasar.dev/vue-components/img#qimg-api).
+```
+loading
+loadingShowDelay
+noSpinner
+noNativeMenu
+noTransition
+draggable
+src
+srcset
+sizes
+placeholderSrc
+errorSrc
+ratio
+initialRatio
+width
+height
+fit
+position
+imgClass
+imgStyle
+spinnerColor
+spinnerSize
+```
+For details, refer to the [Quasar QImg API documentation](https://quasar.dev/vue-components/img#qimg-api).
 
 ### q-dialog
 
-```ts
-type LinidQDialogProps = {
-  /**
-   * User cannot dismiss Dialog if clicking outside of it or hitting ESC key; Also, an app route change won't dismiss it
-   */
-  persistent?: boolean | undefined;
-  /**
-   * User cannot dismiss Dialog by hitting ESC key; No need to set it if 'persistent' prop is also set
-   */
-  noEscDismiss?: boolean | undefined;
-  /**
-   * User cannot dismiss Dialog by clicking outside of it; No need to set it if 'persistent' prop is also set
-   */
-  noBackdropDismiss?: boolean | undefined;
-  /**
-   * Changing route app won't dismiss Dialog; No need to set it if 'persistent' prop is also set
-   */
-  noRouteDismiss?: boolean | undefined;
-  /**
-   * Any click/tap inside of the dialog will close it
-   */
-  autoClose?: boolean | undefined;
-  /**
-   * (Accessibility) When Dialog gets hidden, do not refocus on the DOM element that previously had focus
-   */
-  noRefocus?: boolean | undefined;
-  /**
-   * (Accessibility) When Dialog gets shown, do not switch focus on it
-   */
-  noFocus?: boolean | undefined;
-  /**
-   * Do not shake up the Dialog to catch user's attention
-   */
-  noShake?: boolean | undefined;
-  /**
-   * Allow elements outside of the Dialog to be focusable; By default, for accessibility reasons, QDialog does not allow outer focus
-   */
-  allowFocusOutside?: boolean | undefined;
-  /**
-   * Put Dialog into seamless mode; Does not use a backdrop so user is able to interact with the rest of the page too
-   */
-  seamless?: boolean | undefined;
-  /**
-   * Put Dialog into maximized mode
-   */
-  maximized?: boolean | undefined;
-  /**
-   * Dialog will try to render with same width as the window
-   */
-  fullWidth?: boolean | undefined;
-  /**
-   * Dialog will try to render with same height as the window
-   */
-  fullHeight?: boolean | undefined;
-  /**
-   * Stick dialog to one of the sides (top, right, bottom or left)
-   * Default value: 'standard'
-   */
-  position?: 'standard' | 'top' | 'right' | 'bottom' | 'left' | undefined;
-  /**
-   * Apply a backdrop filter; The value needs to be the same as in the CSS specs for backdrop-filter; The examples are not an exhaustive list
-   */
-  backdropFilter?: string | undefined;
-  /**
-   * Forces content to have squared borders
-   */
-  square?: boolean | undefined;
-  /**
-   * One of Quasar's embedded transitions
-   * Default value: 'fade'
-   */
-  transitionShow?: string | undefined;
-  /**
-   * One of Quasar's embedded transitions
-   * Default value: 'fade'
-   */
-  transitionHide?: string | undefined;
-  /**
-   * Transition duration (in milliseconds, without unit)
-   * Default value: 300
-   */
-  transitionDuration?: string | number | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+persistent
+noEscDismiss
+noBackdropDismiss
+noRouteDismiss
+autoClose
+noRefocus
+noFocus
+noShake
+allowFocusOutside
+seamless
+maximized
+fullWidth
+fullHeight
+position
+backdropFilter
+square
+transitionShow
+transitionHide
+transitionDuration
 ```
 
-For more details, refer to the [Quasar QDialog API documentation](https://quasar.dev/vue-components/dialog#dialog-api).
+For details, refer to the [Quasar QDialog API documentation](https://quasar.dev/vue-components/dialog#dialog-api).
 
 ### q-file
 
-```ts
-type LinidQFileProps = {
-  /**
-   * Focus field on initial component render
-   */
-  autofocus?: boolean | undefined;
-  /**
-   * Label will be always shown above the field regardless of field content (if any)
-   */
-  stackLabel?: boolean | undefined;
-  /**
-   * Hide the helper (hint) text when field doesn't have focus
-   */
-  hideHint?: boolean | undefined;
-  /**
-   * Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null
-   */
-  clearable?: boolean | undefined;
-  /**
-   * Custom icon to use for the clear button when using along with 'clearable' prop
-   */
-  clearIcon?: string | undefined;
-  /**
-   * Use QChip to show picked files
-   */
-  useChips?: boolean | undefined;
-  /**
-   * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop; The difference from 'color' prop is that the label will always have this color, even when field is not focused
-   */
-  labelColor?: string | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  bgColor?: NamedColor | undefined;
-  /**
-   * Notify the component that the background is a dark color
-   * Default value: null
-   */
-  dark?: boolean | null | undefined;
-  /**
-   * Use 'filled' design for the field
-   */
-  filled?: boolean | undefined;
-  /**
-   * Use 'outlined' design for the field
-   */
-  outlined?: boolean | undefined;
-  /**
-   * Use 'borderless' design for the field
-   */
-  borderless?: boolean | undefined;
-  /**
-   * Use 'standout' design for the field; Specifies classes to be applied when focused (overriding default ones)
-   */
-  standout?: boolean | string | undefined;
-  /**
-   * Do not reserve space for hint/error/counter anymore when these are not used; As a result, it also disables the animation for those; It also allows the hint/error area to stretch vertically based on its content
-   */
-  hideBottomSpace?: boolean | undefined;
-  /**
-   * Applies a small standard border-radius for a squared shape of the component
-   */
-  rounded?: boolean | undefined;
-  /**
-   * Remove border-radius so borders are squared; Overrides 'rounded' prop
-   */
-  square?: boolean | undefined;
-  /**
-   * Dense mode; occupies less space
-   */
-  dense?: boolean | undefined;
-  /**
-   * Match inner content alignment to that of QItem
-   */
-  itemAligned?: boolean | undefined;
-  /**
-   * Class definitions to be attributed to the underlying selection container
-   */
-  inputClass?: VueClassProp | undefined;
-  /**
-   * Style definitions to be attributed to the underlying selection container
-   */
-  inputStyle?: VueStyleProp | undefined;
-  /**
-   * Hide error icon when there is an error
-   */
-  noErrorIcon?: boolean | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+autofocus
+stackLabel
+hideHint
+clearable
+clearIcon
+useChips
+labelColor
+color
+bgColor
+dark
+filled
+outlined
+borderless
+standout
+hideBottomSpace
+rounded
+square
+dense
+itemAligned
+inputClass
+inputStyle
+noErrorIcon
 ```
 
-For more details, refer to the [Quasar QFile API documentation](https://quasar.dev/vue-components/file#qfile-api).
+For details, refer to the [Quasar QFile API documentation](https://quasar.dev/vue-components/file#qfile-api).
 
 ### q-select
 
-```ts
-type LinidQSelectProps = {
-  /**
-   * Make virtual list work in horizontal mode
-   */
-  virtualScrollHorizontal?: boolean | undefined;
-  /**
-   * Appends clearable icon when a value (not undefined or null) is set; When clicked, model becomes null
-   */
-  clearable?: boolean | undefined;
-  /**
-   * Focus field on initial component render
-   */
-  autofocus?: boolean | undefined;
-  /**
-   * Hides dropdown icon
-   */
-  hideDropdownIcon?: boolean | undefined;
-  /**
-   * Changing route app won't dismiss the popup (menu or dialog)
-   */
-  popupNoRouteDismiss?: boolean | undefined;
-  /**
-   * Fills the input with current value; Useful along with 'hide-selected'; Does NOT work along with 'multiple' selection
-   */
-  fillInput?: boolean | undefined;
-  /**
-   * Transition when showing the menu/dialog; One of Quasar's embedded transitions
-   * Default value: 'fade'
-   */
-  transitionShow?: string | undefined;
-  /**
-   * Transition when hiding the menu/dialog; One of Quasar's embedded transitions
-   * Default value: 'fade'
-   */
-  transitionHide?: string | undefined;
-  /**
-   * Transition duration when hiding the menu/dialog (in milliseconds, without unit)
-   * Default value: 300
-   */
-  transitionDuration?: string | number | undefined;
-  /**
-   * Overrides the default dynamic mode of showing as menu on desktop and dialog on mobiles
-   * Default value: 'default'
-   */
-  behavior?: 'default' | 'menu' | 'dialog' | undefined;
-  /**
-   * Label will be always shown above the field regardless of field content (if any)
-   */
-  stackLabel?: boolean | undefined;
-  /**
-   * Hide the helper (hint) text when field doesn't have focus
-   */
-  hideHint?: boolean | undefined;
-  /**
-   * Custom icon to use for the clear button when using along with 'clearable' prop
-   */
-  clearIcon?: string | undefined;
-  /**
-   * Show an automatic counter on bottom right
-   */
-  counter?: boolean | undefined;
-  /**
-   * Icon name following Quasar convention; Make sure you have the icon library installed unless you are using 'img:' prefix; If 'none' (String) is used as value then no icon is rendered (but screen real estate will still be used for it)
-   */
-  dropdownIcon?: string | undefined;
-  /**
-   * Use an input tag where users can type
-   */
-  useInput?: boolean | undefined;
-  /**
-   * Debounce the input model update with an amount of milliseconds (also affects the 'filter' event, if used)
-   * Default value: 500
-   */
-  inputDebounce?: number | string | undefined;
-  /**
-   * Dense mode for options list; occupies less space
-   */
-  optionsDense?: boolean | undefined;
-  /**
-   * Options menu will be colored with a dark color
-   * Default value: null
-   */
-  optionsDark?: boolean | null | undefined;
-  /**
-   * CSS class name for options that are active/selected; Set it to an empty string to stop applying the default (which is text-* where * is the 'color' prop value)
-   */
-  optionsSelectedClass?: string | undefined;
-  /**
-   * Expanded menu will cover the component (will not work along with 'use-input' prop for obvious reasons)
-   */
-  optionsCover?: boolean | undefined;
-  /**
-   * Allow the options list to be narrower than the field (only in menu mode)
-   */
-  menuShrink?: boolean | undefined;
-  /**
-   * Prevents the tab key from confirming the currently hovered option
-   */
-  disableTabSelection?: boolean | undefined;
-  /**
-   * Two values setting the starting position or anchor point of the options list relative to the field (only in menu mode)
-   */
-  menuAnchor?:
-    | 'top left'
-    | 'top middle'
-    | 'top right'
-    | 'top start'
-    | 'top end'
-    | 'center left'
-    | 'center middle'
-    | 'center right'
-    | 'center start'
-    | 'center end'
-    | 'bottom left'
-    | 'bottom middle'
-    | 'bottom right'
-    | 'bottom start'
-    | 'bottom end'
-    | undefined;
-  /**
-   * Two values setting the options list's own position relative to its target (only in menu mode)
-   */
-  menuSelf?:
-    | 'top left'
-    | 'top middle'
-    | 'top right'
-    | 'top start'
-    | 'top end'
-    | 'center left'
-    | 'center middle'
-    | 'center right'
-    | 'center start'
-    | 'center end'
-    | 'bottom left'
-    | 'bottom middle'
-    | 'bottom right'
-    | 'bottom start'
-    | 'bottom end'
-    | undefined;
-  /**
-   * An array of two numbers to offset the options list horizontally and vertically in pixels (only in menu mode)
-   */
-  menuOffset?: readonly any[] | undefined;
-  /**
-   * Force render the selected option(s) as HTML; This can lead to XSS attacks so make sure that you sanitize the content; Does NOT apply when using 'selected' or 'selected-item' slots!
-   */
-  displayValueHtml?: boolean | undefined;
-  /**
-   * Hides selection; Use the underlying input tag to hold the label (instead of showing it to the right of the input) of the selected option; Only works for non 'multiple' Selects
-   */
-  hideSelected?: boolean | undefined;
-  /**
-   * Use QChip to show what is currently selected
-   */
-  useChips?: boolean | undefined;
-  /**
-   * Color name for the label from the Quasar Color Palette; Overrides the 'color' prop; The difference from 'color' prop is that the label will always have this color, even when field is not focused
-   */
-  labelColor?: NamedColor | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  bgColor?: NamedColor | undefined;
-  /**
-   * Notify the component that the background is a dark color
-   * Default value: null
-   */
-  dark?: boolean | null | undefined;
-  /**
-   * Use 'filled' design for the field
-   */
-  filled?: boolean | undefined;
-  /**
-   * Use 'outlined' design for the field
-   */
-  outlined?: boolean | undefined;
-  /**
-   * Use 'borderless' design for the field
-   */
-  borderless?: boolean | undefined;
-  /**
-   * Use 'standout' design for the field; Specifies classes to be applied when focused (overriding default ones)
-   */
-  standout?: boolean | string | undefined;
-  /**
-   * Do not reserve space for hint/error/counter anymore when these are not used; As a result, it also disables the animation for those; It also allows the hint/error area to stretch vertically based on its content
-   */
-  hideBottomSpace?: boolean | undefined;
-  /**
-   * Applies a small standard border-radius for a squared shape of the component
-   */
-  rounded?: boolean | undefined;
-  /**
-   * Remove border-radius so borders are squared; Overrides 'rounded' prop
-   */
-  square?: boolean | undefined;
-  /**
-   * Dense mode; occupies less space
-   */
-  dense?: boolean | undefined;
-  /**
-   * Match inner content alignment to that of QItem
-   */
-  itemAligned?: boolean | undefined;
-  /**
-   * Class definitions to be attributed to the popup content
-   */
-  popupContentClass?: string | undefined;
-  /**
-   * Style definitions to be attributed to the popup content
-   */
-  popupContentStyle?: VueStyleProp | undefined;
-  /**
-   * Class definitions to be attributed to the underlying input tag
-   */
-  inputClass?: VueClassProp | undefined;
-  /**
-   * Style definitions to be attributed to the underlying input tag
-   */
-  inputStyle?: VueStyleProp | undefined;
-  /**
-   * Hide error icon when there is an error
-   */
-  noErrorIcon?: boolean | undefined;
-  /**
-   * Minimum number of items to render in the virtual list
-   * Default value: 10
-   */
-  virtualScrollSliceSize?: number | string | null | undefined;
-  /**
-   * Ratio of number of items in visible zone to render before it
-   * Default value: 1
-   */
-  virtualScrollSliceRatioBefore?: number | string | undefined;
-  /**
-   * Ratio of number of items in visible zone to render after it
-   * Default value: 1
-   */
-  virtualScrollSliceRatioAfter?: number | string | undefined;
-  /**
-   * Default size in pixels (height if vertical, width if horizontal) of an item; This value is used for rendering the initial list; Try to use a value close to the minimum size of an item
-   * Default value: 24
-   */
-  virtualScrollItemSize?: number | string | undefined;
-  /**
-   * Size in pixels (height if vertical, width if horizontal) of the sticky part (if using one) at the start of the list; A correct value will improve scroll precision
-   * Default value: 0
-   */
-  virtualScrollStickySizeStart?: number | string | undefined;
-  /**
-   * Size in pixels (height if vertical, width if horizontal) of the sticky part (if using one) at the end of the list; A correct value will improve scroll precision
-   * Default value: 0
-   */
-  virtualScrollStickySizeEnd?: number | string | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+virtualScrollHorizontal
+clearable
+autofocus
+hideDropdownIcon
+popupNoRouteDismiss
+fillInput
+transitionShow
+transitionHide
+transitionDuration
+behavior
+stackLabel
+hideHint
+clearIcon
+counter
+dropdownIcon
+useInput
+inputDebounce
+optionsDense
+optionsDark
+optionsSelectedClass
+optionsCover
+menuShrink
+disableTabSelection
+menuAnchor
+menuSelf
+menuOffset
+displayValueHtml
+hideSelected
+useChips
+labelColor
+color
+bgColor
+dark
+filled
+outlined
+borderless
+standout
+hideBottomSpace
+rounded
+square
+dense
+itemAligned
+popupContentClass
+popupContentStyle
+inputClass
+inputStyle
+noErrorIcon
+virtualScrollSliceSize
+virtualScrollSliceRatioBefore
+virtualScrollSliceRatioAfter
+virtualScrollItemSize
+virtualScrollStickySizeStart
+virtualScrollStickySizeEnd
 ```
 
-For more details, refer to the [Quasar QSelect API documentation](https://quasar.dev/vue-components/select#qselect-api).
+For details, refer to the [Quasar QSelect API documentation](https://quasar.dev/vue-components/select#qselect-api).
 
 ### q-spinner
 
-```ts
-type LinidQSpinnerProps = {
-  /**
-   * Size in CSS units, including unit name or standard size name (xs|sm|md|lg|xl)
-   * Default value: '1em'
-   */
-  size?: string | undefined;
-  /**
-   * Color name for component from the Quasar Color Palette
-   */
-  color?: NamedColor | undefined;
-  /**
-   * Override value to use for stroke-width
-   * Default value: 5
-   */
-  thickness?: number | undefined;
-};
+The following props are officially supported and design-validated in our system:
+
+```
+size
+color
+thickness
 ```
 
-For more details, refer to
-the [Quasar QSpinner API documentation](https://quasar.dev/vue-components/spinners#qspinner-api).
+For details, refer to the [Quasar QSpinner API documentation](https://quasar.dev/vue-components/spinners#qspinner-api).
 
 More components can be added as needed.
 

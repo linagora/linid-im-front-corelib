@@ -876,6 +876,22 @@ See description in [Ui design documentation](./ui-design.md#q-spinner).
 
 See description in [Ui design documentation](./ui-design.md#q-btn-dropdown).
 
+### LinidQListProps
+
+See description in [Ui design documentation](./ui-design.md#q-list).
+
+### LinidQItemProps
+
+See description in [Ui design documentation](./ui-design.md#q-item).
+
+### LinidQItemSectionProps
+
+See description in [Ui design documentation](./ui-design.md#q-item-section).
+
+### LinidQItemLabelProps
+
+See description in [Ui design documentation](./ui-design.md#q-item-label).
+
 ---
 
 ## 🖼️ Linid Ui Store types
@@ -959,6 +975,10 @@ export interface NavigationMenuItem {
 | `LinidQSelectProps`             | QSelect component properties supported by Ui Design       |
 | `LinidQSpinnerProps`            | QSpinner component properties supported by Ui Design      |
 | `LinidQBtnDropdownProps`        | QBtnDropdown component properties supported by Ui Design  |
+| `LinidQListProps`               | QList component properties supported by Ui Design         |
+| `LinidQItemProps`               | QItem component properties supported by Ui Design         |
+| `LinidQItemSectionProps`        | QItemSection component properties supported by Ui Design  |
+| `LinidQItemLabelProps`          | QItemLabel component properties supported by Ui Design    |
 | `LinidQDialogProps`             | QDialog component properties supported by Ui Design       |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
 | `NavigationMenuItem`            | Describes a main navigation menu item                     |

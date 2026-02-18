@@ -50,6 +50,10 @@ import type {
   VueClassProp,
   VueStyleObjectProp,
   VueStyleProp,
+  QListProps,
+  QItemProps,
+  QItemSectionProps,
+  QItemLabelProps,
 } from 'quasar';
 
 /**
@@ -513,6 +517,49 @@ const Q_BTN_DROPDOWN_PROPS = [
 ] as const;
 
 /**
+ * List of QListProps keys for type-safe UI design retrieval.
+ */
+const Q_LIST_PROPS = [
+  'separator',
+  'padding',
+  'tag',
+  'bordered',
+  'dense',
+  'dark',
+] as const;
+
+/**
+ * List of QItemProps keys for type-safe UI design retrieval.
+ */
+const Q_ITEM_PROPS = [
+  'insetLevel',
+  'tag',
+  'activeClass',
+  'exactActiveClass',
+  'clickable',
+  'manualFocus',
+  'focused',
+  'dark',
+  'dense',
+] as const;
+
+/**
+ * List of QItemSectionProps keys for type-safe UI design retrieval.
+ */
+const Q_ITEM_SECTION_PROPS = [
+  'avatar',
+  'thumbnail',
+  'side',
+  'top',
+  'noWrap',
+] as const;
+
+/**
+ * List of QItemLabelProps keys for type-safe UI design retrieval.
+ */
+const Q_ITEM_LABEL_PROPS = ['lines', 'overline', 'caption', 'header'] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -537,6 +584,10 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-dialog': Q_DIALOG_PROPS,
   'q-spinner': Q_SPINNER_PROPS,
   'q-btn-dropdown': Q_BTN_DROPDOWN_PROPS,
+  'q-list': Q_LIST_PROPS,
+  'q-item': Q_ITEM_PROPS,
+  'q-item-section': Q_ITEM_SECTION_PROPS,
+  'q-item-label': Q_ITEM_LABEL_PROPS,
 } as const;
 
 /**
@@ -687,6 +738,32 @@ export type LinidQBtnDropdownProps = Pick<
 >;
 
 /**
+ * Subset of QListProps props supported in UI design configuration.
+ */
+export type LinidQListProps = Pick<QListProps, (typeof Q_LIST_PROPS)[number]>;
+
+/**
+ * Subset of QItemProps props supported in UI design configuration.
+ */
+export type LinidQItemProps = Pick<QItemProps, (typeof Q_ITEM_PROPS)[number]>;
+
+/**
+ * Subset of QItemSectionProps props supported in UI design configuration.
+ */
+export type LinidQItemSectionProps = Pick<
+  QItemSectionProps,
+  (typeof Q_ITEM_SECTION_PROPS)[number]
+>;
+
+/**
+ * Subset of QItemLabelProps props supported in UI design configuration.
+ */
+export type LinidItemLabelProps = Pick<
+  QItemLabelProps,
+  (typeof Q_ITEM_LABEL_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -710,7 +787,11 @@ export type LinidQComponentProps =
   | LinidQSelectProps
   | LinidQDialogProps
   | LinidQSpinnerProps
-  | LinidQBtnDropdownProps;
+  | LinidQBtnDropdownProps
+  | LinidQListProps
+  | LinidQItemProps
+  | LinidQItemSectionProps
+  | LinidItemLabelProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -736,4 +817,8 @@ export type QComponentName =
   | 'q-select'
   | 'q-dialog'
   | 'q-spinner'
-  | 'q-btn-dropdown';
+  | 'q-btn-dropdown'
+  | 'q-list'
+  | 'q-item'
+  | 'q-item-section'
+  | 'q-item-label';

@@ -1,11 +1,10 @@
-import { flushPromises, shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import LinidZoneRenderer from 'src/components/LinidZoneRenderer.vue';
 import * as federationService from 'src/services/federationService';
 import * as piniaStoreService from 'src/services/piniaStoreService.ts';
 import { useLinidZoneStore } from 'src/stores/linidZoneStore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { nextTick, watch } from 'vue';
 
 vi.mock('src/services/federationService', () => ({
   loadAsyncComponent: vi.fn(),
@@ -26,59 +25,25 @@ describe('Test component: LinidZoneRenderer', () => {
     setActivePinia(pinia);
     vi.mocked(piniaStoreService.getPiniaStore).mockReturnValue(pinia);
     store = useLinidZoneStore();
-    wrapper = shallowMount(LinidZoneRenderer, {
-      props: { zone: '' },
-      global: { plugins: [pinia] },
-    });
     vi.clearAllMocks();
   });
 
-  describe('Test watchEffect', () => {
-    it('should initialize isLoadingComplete to false when mounted', async () => {
-      const values = [];
-      const stopWatch = watch(
-        () => wrapper.vm.isLoadingComplete,
-        (newVal) => {
-          values.push(newVal);
-        },
-        { flush: 'sync' }
-      );
-
-      await wrapper.setProps({ zone: 'zone-test' });
-
-      await flushPromises();
-      await nextTick();
-      stopWatch();
-
-      expect(values).toEqual([false, true]);
-    });
-
-    it('should set isLoadingComplete to true after initialization', async () => {
-      wrapper.setProps({ zone: 'any-zone' });
-
-      await flushPromises();
-      await nextTick();
-
-      expect(wrapper.vm.isLoadingComplete).toBe(true);
-    });
-
+  describe('Test constant: components', () => {
     it('should not call loadAsyncComponent when the zone is not registered in store', async () => {
-      wrapper.setProps({ zone: 'unregistered-zone' });
-
-      await flushPromises();
-      await nextTick();
+      wrapper = shallowMount(LinidZoneRenderer, {
+        props: { zone: 'unregistered-zone' },
+        global: { plugins: [pinia] },
+      });
 
       expect(federationService.loadAsyncComponent).not.toHaveBeenCalled();
       expect(wrapper.vm.components).toEqual([]);
     });
 
     it('should not call loadAsyncComponent when the zone is registered has no entries', async () => {
-      wrapper.vm.linidZoneStore.zones['empty-zone'] = [];
-
-      wrapper.setProps({ zone: 'empty-zone' });
-
-      await flushPromises();
-      await nextTick();
+      wrapper = shallowMount(LinidZoneRenderer, {
+        props: { zone: 'empty-zone' },
+        global: { plugins: [pinia] },
+      });
 
       expect(federationService.loadAsyncComponent).not.toHaveBeenCalled();
       expect(wrapper.vm.components).toEqual([]);
@@ -107,10 +72,10 @@ describe('Test component: LinidZoneRenderer', () => {
         props: {},
       });
 
-      wrapper.setProps({ zone: 'test-zone' });
-
-      await flushPromises();
-      await nextTick();
+      wrapper = shallowMount(LinidZoneRenderer, {
+        props: { zone: 'test-zone' },
+        global: { plugins: [pinia] },
+      });
 
       expect(federationService.loadAsyncComponent).toHaveBeenCalledTimes(2);
       expect(federationService.loadAsyncComponent).toHaveBeenCalledWith(

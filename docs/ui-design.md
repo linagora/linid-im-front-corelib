@@ -224,6 +224,10 @@ export type QComponentName =
   | 'q-icon'
   | 'q-img'
   | 'q-input'
+  | 'q-item'
+  | 'q-item-label'
+  | 'q-item-section'
+  | 'q-list'
   | 'q-route-tab'
   | 'q-select'
   | 'q-spinner'
@@ -250,6 +254,10 @@ export type LinidQComponentProps =
   | LinidQIconProps
   | LinidQImgProps
   | LinidQInputProps
+  | LinidItemProps
+  | LinidItemLabelProps
+  | LinidItemSectionProps
+  | LinidListeProps
   | LinidQRouteTabProps
   | LinidQSelectProps
   | LinidQSpinnerProps
@@ -789,6 +797,66 @@ transitionDuration
 ```
 
 For details, refer to the [Quasar QBtnDropdown API documentation](https://quasar.dev/vue-components/button-dropdown#qbtndropdown-api).
+
+### q-list
+
+The following props are officially supported and design-validated in our system:
+
+```
+separator
+padding
+tag
+bordered
+dense
+dark
+```
+
+For details, refer to the [Quasar QList API documentation](https://quasar.dev/vue-components/list-and-list-items#qlist-api).
+
+### q-item
+
+The following props are officially supported and design-validated in our system:
+
+```
+insetLevel
+tag
+activeClass
+exactActiveClass
+clickable
+manualFocus
+focused
+dark
+dense
+```
+
+For details, refer to the [Quasar QItem API documentation](https://quasar.dev/vue-components/list-and-list-items#qitem-api).
+
+### q-item-section
+
+The following props are officially supported and design-validated in our system:
+
+```
+avatar
+thumbnail
+side
+top
+noWrap
+```
+
+For details, refer to the [Quasar QItemSection API documentation](https://quasar.dev/vue-components/list-and-list-items#qitemsection-api).
+
+### q-item-label
+
+The following props are officially supported and design-validated in our system:
+
+```
+lines
+overline
+caption
+header
+```
+
+For details, refer to the [Quasar QItemLabel API documentation](https://quasar.dev/vue-components/list-and-list-items#qitem-label-api).
 
 More components can be added as needed.
 

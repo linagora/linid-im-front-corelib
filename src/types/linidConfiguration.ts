@@ -28,7 +28,13 @@
  * Supported UI input types for attribute rendering.
  * Each type corresponds to a specific form component.
  */
-export type AttributeInputType = 'Text' | 'Number' | 'Boolean' | 'Date';
+export type AttributeInputType =
+  | 'Text'
+  | 'Number'
+  | 'Boolean'
+  | 'Date'
+  | 'List'
+  | 'DynamicList';
 
 /**
  * Describes a single attribute of an entity.

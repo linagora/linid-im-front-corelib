@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.43](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.42...v0.0.43) (2026-02-19)
+
+
+### Features
+
+* add type for new fields list and DynamicList ([f1c07cc](https://github.com/linagora/linid-im-front-corelib/commit/f1c07cca37eab3f3472bc0beb55dfdbd6f300e0a))
+
+
+### Bug Fixes
+
+* remove default string without components to render ([07db5aa](https://github.com/linagora/linid-im-front-corelib/commit/07db5aa6982473c4727a2d5e3a6d5a9784229db8))
+* vue warning to avoid performance overhead ([2d80ab3](https://github.com/linagora/linid-im-front-corelib/commit/2d80ab3ac8daf7f089ab2e5c47c3b6ecd2e0fa9c))
+
 ### [0.0.42](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.41...v0.0.42) (2026-02-16)
 
 

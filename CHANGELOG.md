@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.44](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.43...v0.0.44) (2026-02-19)
+
+
+### Features
+
+* add list and item design ([8cb30f7](https://github.com/linagora/linid-im-front-corelib/commit/8cb30f7b3ac783e13a70c9cfa36becb1f2301ff7))
+* add q-btn-dropdown design ([1a0ee97](https://github.com/linagora/linid-im-front-corelib/commit/1a0ee97adfe1cddc8bb8a342422031c92852fb8a))
+
 ### [0.0.43](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.42...v0.0.43) (2026-02-19)
 
 

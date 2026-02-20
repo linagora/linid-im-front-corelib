@@ -121,6 +121,7 @@ export type {
   LinidQDateProps,
   LinidQDialogProps,
   LinidQFileProps,
+  LinidQFormProps,
   LinidQHeaderProps,
   LinidQIconProps,
   LinidQImgProps,

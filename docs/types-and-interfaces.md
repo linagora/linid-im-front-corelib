@@ -860,6 +860,10 @@ See description in [Ui design documentation](./ui-design.md#q-img).
 
 See description in [Ui design documentation](./ui-design.md#q-file).
 
+### LinidQFormProps
+
+See description in [Ui design documentation](./ui-design.md#q-form).
+
 ### LinidQSelectProps
 
 See description in [Ui design documentation](./ui-design.md#q-select).
@@ -972,6 +976,7 @@ export interface NavigationMenuItem {
 | `LinidQDateProps`               | QDate component properties supported by Ui Design         |
 | `LinidQImgProps`                | QImg component properties supported by Ui Design          |
 | `LinidQFileProps`               | QFile component properties supported by Ui Design         |
+| `LinidQFormProps`               | QForm component properties supported by Ui Design         |
 | `LinidQSelectProps`             | QSelect component properties supported by Ui Design       |
 | `LinidQSpinnerProps`            | QSpinner component properties supported by Ui Design      |
 | `LinidQBtnDropdownProps`        | QBtnDropdown component properties supported by Ui Design  |

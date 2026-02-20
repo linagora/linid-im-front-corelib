@@ -860,6 +860,10 @@ See description in [Ui design documentation](./ui-design.md#q-img).
 
 See description in [Ui design documentation](./ui-design.md#q-file).
 
+### LinidQFormProps
+
+See description in [Ui design documentation](./ui-design.md#q-form).
+
 ### LinidQSelectProps
 
 See description in [Ui design documentation](./ui-design.md#q-select).

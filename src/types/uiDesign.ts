@@ -35,6 +35,7 @@ import type {
   QDateProps,
   QDialogProps,
   QFileProps,
+  QFormProps,
   QHeaderProps,
   QIconProps,
   QImgProps,
@@ -555,6 +556,16 @@ const Q_ITEM_SECTION_PROPS = [
 ] as const;
 
 /**
+ * List of QFormProps keys for type-safe UI design retrieval.
+ */
+const Q_FORM_PROPS = [
+  'autofocus',
+  'noErrorFocus',
+  'noResetFocus',
+  'greedy',
+] as const;
+
+/**
  * List of QItemLabelProps keys for type-safe UI design retrieval.
  */
 const Q_ITEM_LABEL_PROPS = ['lines', 'overline', 'caption', 'header'] as const;
@@ -563,31 +574,32 @@ const Q_ITEM_LABEL_PROPS = ['lines', 'overline', 'caption', 'header'] as const;
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
-  'q-btn': Q_BTN_PROPS,
-  'q-tabs': Q_TABS_PROPS,
-  'q-route-tab': Q_ROUTE_TAB_PROPS,
-  'q-header': Q_HEADER_PROPS,
-  'q-toolbar': Q_TOOLBAR_PROPS,
-  'q-toolbar-title': Q_TOOLBAR_TITLE_PROPS,
   'q-avatar': Q_AVATAR_PROPS,
   'q-badge': Q_BADGE_PROPS,
-  'q-table': Q_TABLE_PROPS,
+  'q-btn': Q_BTN_PROPS,
+  'q-btn-dropdown': Q_BTN_DROPDOWN_PROPS,
   'q-card': Q_CARD_PROPS,
   'q-card-actions': Q_CARD_ACTIONS_PROPS,
-  'q-icon': Q_ICON_PROPS,
-  'q-toggle': Q_TOGGLE_PROPS,
-  'q-input': Q_INPUT_PROPS,
   'q-date': Q_DATE_PROPS,
-  'q-img': Q_IMG_PROPS,
-  'q-file': Q_FILE_PROPS,
-  'q-select': Q_SELECT_PROPS,
   'q-dialog': Q_DIALOG_PROPS,
-  'q-spinner': Q_SPINNER_PROPS,
-  'q-btn-dropdown': Q_BTN_DROPDOWN_PROPS,
-  'q-list': Q_LIST_PROPS,
+  'q-file': Q_FILE_PROPS,
+  'q-form': Q_FORM_PROPS,
+  'q-header': Q_HEADER_PROPS,
+  'q-icon': Q_ICON_PROPS,
+  'q-img': Q_IMG_PROPS,
+  'q-input': Q_INPUT_PROPS,
   'q-item': Q_ITEM_PROPS,
-  'q-item-section': Q_ITEM_SECTION_PROPS,
   'q-item-label': Q_ITEM_LABEL_PROPS,
+  'q-item-section': Q_ITEM_SECTION_PROPS,
+  'q-list': Q_LIST_PROPS,
+  'q-route-tab': Q_ROUTE_TAB_PROPS,
+  'q-select': Q_SELECT_PROPS,
+  'q-spinner': Q_SPINNER_PROPS,
+  'q-table': Q_TABLE_PROPS,
+  'q-tabs': Q_TABS_PROPS,
+  'q-toggle': Q_TOGGLE_PROPS,
+  'q-toolbar': Q_TOOLBAR_PROPS,
+  'q-toolbar-title': Q_TOOLBAR_TITLE_PROPS,
 } as const;
 
 /**
@@ -706,6 +718,11 @@ export type LinidQImgProps = Pick<QImgProps, (typeof Q_IMG_PROPS)[number]>;
 export type LinidQFileProps = Pick<QFileProps, (typeof Q_FILE_PROPS)[number]>;
 
 /**
+ * Subset of QForm props supported in UI design configuration.
+ */
+export type LinidQFormProps = Pick<QFormProps, (typeof Q_FORM_PROPS)[number]>;
+
+/**
  * Subset of QSelect props supported in UI design configuration.
  */
 export type LinidQSelectProps = Pick<
@@ -767,58 +784,60 @@ export type LinidQItemLabelProps = Pick<
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
-  | LinidQBtnProps
-  | LinidQTabsProps
-  | LinidQRouteTabProps
-  | LinidQHeaderProps
-  | LinidQToolbarProps
-  | LinidQToolbarTitleProps
   | LinidQAvatarProps
   | LinidQBadgeProps
-  | LinidQTableProps
-  | LinidQCardProps
-  | LinidQCardActionsProps
-  | LinidQIconProps
-  | LinidQToggleProps
-  | LinidQInputProps
-  | LinidQDateProps
-  | LinidQImgProps
-  | LinidQFileProps
-  | LinidQSelectProps
-  | LinidQDialogProps
-  | LinidQSpinnerProps
   | LinidQBtnDropdownProps
-  | LinidQListProps
+  | LinidQBtnProps
+  | LinidQCardActionsProps
+  | LinidQCardProps
+  | LinidQDateProps
+  | LinidQDialogProps
+  | LinidQFileProps
+  | LinidQFormProps
+  | LinidQHeaderProps
+  | LinidQIconProps
+  | LinidQImgProps
+  | LinidQInputProps
+  | LinidQItemLabelProps
   | LinidQItemProps
   | LinidQItemSectionProps
-  | LinidQItemLabelProps;
+  | LinidQListProps
+  | LinidQRouteTabProps
+  | LinidQSelectProps
+  | LinidQSpinnerProps
+  | LinidQTableProps
+  | LinidQTabsProps
+  | LinidQToggleProps
+  | LinidQToolbarProps
+  | LinidQToolbarTitleProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
  */
 export type QComponentName =
-  | 'q-btn'
-  | 'q-tabs'
-  | 'q-route-tab'
-  | 'q-header'
-  | 'q-toolbar'
-  | 'q-toolbar-title'
   | 'q-avatar'
   | 'q-badge'
-  | 'q-table'
+  | 'q-btn'
+  | 'q-btn-dropdown'
   | 'q-card'
   | 'q-card-actions'
-  | 'q-icon'
-  | 'q-toggle'
-  | 'q-input'
   | 'q-date'
-  | 'q-img'
-  | 'q-file'
-  | 'q-select'
   | 'q-dialog'
-  | 'q-spinner'
-  | 'q-btn-dropdown'
-  | 'q-list'
+  | 'q-file'
+  | 'q-form'
+  | 'q-header'
+  | 'q-icon'
+  | 'q-img'
+  | 'q-input'
   | 'q-item'
+  | 'q-item-label'
   | 'q-item-section'
-  | 'q-item-label';
+  | 'q-list'
+  | 'q-route-tab'
+  | 'q-select'
+  | 'q-spinner'
+  | 'q-table'
+  | 'q-tabs'
+  | 'q-toggle'
+  | 'q-toolbar'
+  | 'q-toolbar-title';

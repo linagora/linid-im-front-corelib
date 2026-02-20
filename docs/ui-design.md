@@ -220,6 +220,7 @@ export type QComponentName =
   | 'q-date'
   | 'q-dialog'
   | 'q-file'
+  | 'q-form'
   | 'q-header'
   | 'q-icon'
   | 'q-img'
@@ -250,6 +251,7 @@ export type LinidQComponentProps =
   | LinidQDateProps
   | LinidQDialogProps
   | LinidQFileProps
+  | LinidQFormProps
   | LinidQHeaderProps
   | LinidQIconProps
   | LinidQImgProps
@@ -612,6 +614,7 @@ imgStyle
 spinnerColor
 spinnerSize
 ```
+
 For details, refer to the [Quasar QImg API documentation](https://quasar.dev/vue-components/img#qimg-api).
 
 ### q-dialog
@@ -672,6 +675,19 @@ noErrorIcon
 ```
 
 For details, refer to the [Quasar QFile API documentation](https://quasar.dev/vue-components/file#qfile-api).
+
+### q-form
+
+The following props are officially supported and design-validated in our system:
+
+```
+autofocus
+noErrorFocus
+noResetFocus
+greedy
+```
+
+For details, refer to the [Quasar QForm API documentation](https://quasar.dev/vue-components/form/#qform-api).
 
 ### q-select
 

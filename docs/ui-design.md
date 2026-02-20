@@ -243,7 +243,7 @@ export type QComponentName =
 export type LinidQComponentProps =
   | LinidQAvatarProps
   | LinidQBadgeProps
-  | LinidQBtnProps 
+  | LinidQBtnProps
   | LinidQBtnDropdownProps
   | LinidQCardProps
   | LinidQCardActionsProps
@@ -254,10 +254,10 @@ export type LinidQComponentProps =
   | LinidQIconProps
   | LinidQImgProps
   | LinidQInputProps
-  | LinidItemProps
-  | LinidItemLabelProps
-  | LinidItemSectionProps
-  | LinidListeProps
+  | LinidQItemProps
+  | LinidQItemLabelProps
+  | LinidQItemSectionProps
+  | LinidQListeProps
   | LinidQRouteTabProps
   | LinidQSelectProps
   | LinidQSpinnerProps

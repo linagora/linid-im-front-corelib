@@ -28,8 +28,8 @@ import type {
   NamedColor,
   QAvatarProps,
   QBadgeProps,
-  QBtnProps,
   QBtnDropdownProps,
+  QBtnProps,
   QCardActionsProps,
   QCardProps,
   QDateProps,
@@ -39,6 +39,10 @@ import type {
   QIconProps,
   QImgProps,
   QInputProps,
+  QItemLabelProps,
+  QItemProps,
+  QItemSectionProps,
+  QListProps,
   QRouteTabProps,
   QSelectProps,
   QSpinnerProps,
@@ -50,10 +54,6 @@ import type {
   VueClassProp,
   VueStyleObjectProp,
   VueStyleProp,
-  QListProps,
-  QItemProps,
-  QItemSectionProps,
-  QItemLabelProps,
 } from 'quasar';
 
 /**
@@ -758,7 +758,7 @@ export type LinidQItemSectionProps = Pick<
 /**
  * Subset of QItemLabelProps props supported in UI design configuration.
  */
-export type LinidItemLabelProps = Pick<
+export type LinidQItemLabelProps = Pick<
   QItemLabelProps,
   (typeof Q_ITEM_LABEL_PROPS)[number]
 >;
@@ -791,7 +791,7 @@ export type LinidQComponentProps =
   | LinidQListProps
   | LinidQItemProps
   | LinidQItemSectionProps
-  | LinidItemLabelProps;
+  | LinidQItemLabelProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.

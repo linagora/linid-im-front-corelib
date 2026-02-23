@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.46](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.45...v0.0.46) (2026-02-23)
+
+
+### Features
+
+* add q-form design ([9dcd005](https://github.com/linagora/linid-im-front-corelib/commit/9dcd0056863f6cc8db3779ad278c160fcef23fa3))
+
 ### [0.0.45](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.44...v0.0.45) (2026-02-20)
 
 

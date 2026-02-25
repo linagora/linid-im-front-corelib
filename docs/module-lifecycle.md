@@ -184,6 +184,7 @@ async ready(config: ModuleHostConfig<MyModuleOptions>): Promise<ModuleLifecycleR
 **Use cases:**
 
 - Receive configuration from host (`module-<name>.json`)
+- Register zones from configuration into the Linid Zone Store
 - Register module information in shared Pinia store states (e.g., navigation items)
 - Integrate with other modules
 - Set up cross-module communication
@@ -199,6 +200,16 @@ async postInit(config: ModuleHostConfig<T>): Promise<ModuleLifecycleResult>
 
 ```typescript
 async postInit(config: ModuleHostConfig<MyModuleOptions>): Promise<ModuleLifecycleResult> {
+  // Register zones defined in configuration
+  if (config.zones.length > 0) {
+    const zoneStore = useLinidZoneStore();
+    config.zones.forEach((zoneDefinition) => {
+      zoneStore.registerOnce(zoneDefinition.zone, {
+        plugin: zoneDefinition.plugin,
+        props: zoneDefinition.props,
+      });
+    });
+  }
   // Register module in main navigation items of Ui Store
   const store = useLinidUiStore();
   const { t } = useScopedI18n('user');
@@ -360,7 +371,16 @@ class MyModule implements RemoteModule<MyModuleOptions> {
   async postInit(
     config: ModuleHostConfig<MyModuleOptions>
   ): Promise<ModuleLifecycleResult> {
-    // Cross-module integrations
+    // Register zones defined in configuration
+    if (config.zones.length > 0) {
+      const zoneStore = useLinidZoneStore();
+      config.zones.forEach((zoneDefinition) => {
+        zoneStore.registerOnce(zoneDefinition.zone, {
+          plugin: zoneDefinition.plugin,
+          props: zoneDefinition.props,
+        });
+      });
+    }
 
     // Register module in main navigation items of Ui Store
     const store = useLinidUiStore();

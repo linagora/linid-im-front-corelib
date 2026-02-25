@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.47](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.46...v0.0.47) (2026-02-25)
+
+
+### Features
+
+* add standardized interface for cross-module component zones configuration ([d113395](https://github.com/linagora/linid-im-front-corelib/commit/d1133950a6228dd17a509543141ba5ccb4558196)), closes [#76](https://github.com/linagora/linid-im-front-corelib/issues/76)
+
 ### [0.0.46](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.45...v0.0.46) (2026-02-23)
 
 

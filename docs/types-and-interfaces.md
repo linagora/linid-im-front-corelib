@@ -81,7 +81,7 @@ export interface FederatedModule<T> {
 </template>
 
 <script setup lang="ts">
-  // Default export is automatic
+// Default export is automatic
 </script>
 ```
 
@@ -107,7 +107,7 @@ Defines the configuration provided to a remote module by the host application.
  *
  * This is what the host provides to each module during the configuration phase.
  * The host reads this from `module-<name>.json` files.
- * @template T Type of the module-specific options.
+ * @template T Type of the module-specific options
  */
 export interface ModuleHostConfig<T> {
   /**
@@ -142,6 +142,13 @@ export interface ModuleHostConfig<T> {
   basePath: string;
 
   /**
+   * Definitions of the zones where the module will render exposed elements in other modules.
+   *
+   * Zones should always be set (empty array [] when no zones).
+   */
+  zones: ModuleZoneDefinition[];
+
+  /**
    * Module-specific options provided in the host configuration.
    * These options are passed to the module during configuration.
    */
@@ -152,6 +159,7 @@ export interface ModuleHostConfig<T> {
 **Usage:**
 
 - Passed to remote modules during their lifecycle `configure` phase.
+- The `zones` field allows modules to declare UI elements that should be rendered in zones exposed by other modules. It can be an empty array if no zones are needed.
 
 ### RemoteModule
 
@@ -197,6 +205,66 @@ export interface RemoteModule<T> extends ModuleLifecycleHooks<T> {
 **Usage:**
 
 - Used to define the contract for remote modules loaded into the host application.
+
+### ModuleZoneDefinition
+
+Defines a UI zone injection, allowing a module to declare that one of its exposed elements should be rendered inside a named zone exposed by another module.
+
+```ts
+/**
+ * Definition of a UI zone injection.
+ *
+ * Allows a module to declare that one of its exposed elements through module
+ * federation should be rendered inside a named zone exposed by another module,
+ * optionally with props.
+ * @template T Props type for the injected element.
+ */
+export interface ModuleZoneDefinition<T = Record<string, unknown>> {
+  /**
+   * Name of the target zone exposed by another module where the element will be rendered.
+   */
+  zone: string;
+  /**
+   * Name of the exposed element to render in the zone.
+   */
+  plugin: string;
+  /**
+   * Optional props to pass to the exposed element rendered in this zone.
+   * The module can define the structure of these props as needed.
+   */
+  props?: T;
+}
+```
+
+**Usage:**
+
+- Declared in `module-<name>.json` configuration files in the `zones` array.
+- Allows modules to inject UI elements into predefined zones exposed by other modules.
+- The `zone` field identifies the target zone (e.g., "user-details", "sidebar").
+- The `plugin` field specifies which federated element to render.
+- The `props` field is optional and allows passing configuration to the element.
+
+**Example:**
+
+```json
+{
+  "instanceId": "moduleRoles-instance",
+  "remoteName": "moduleRoles",
+  "entity": "roles",
+  "apiEndpoint": "/api/roles",
+  "basePath": "/roles",
+  "zones": [
+    {
+      "zone": "user-details",
+      "plugin": "moduleRoles/RoleCardPlugin",
+      "props": {
+        "showAvatar": true
+      }
+    }
+  ],
+  "options": {}
+}
+```
 
 ---
 

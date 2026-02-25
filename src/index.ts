@@ -102,6 +102,7 @@ export type {
   FederatedModule,
   ModuleHostConfig,
   RemoteModule,
+  ModuleZoneDefinition,
 } from './types/module';
 
 // Types - Module Lifecycle

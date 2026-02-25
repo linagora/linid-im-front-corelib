@@ -101,6 +101,13 @@ export interface ModuleHostConfig<T> {
   basePath: string;
 
   /**
+   * Definitions of the zones where the module will render exposed elements in other modules.
+   *
+   * Zones should always be set (empty array [] when no zones).
+   */
+  zones: ModuleZoneDefinition[];
+
+  /**
    * Module-specific options provided in the host configuration.
    * These options are passed to the module during configuration.
    */
@@ -124,4 +131,28 @@ export interface FederatedModule<T> {
    * or plain object depending on the remote’s contract.
    */
   default: T;
+}
+
+/**
+ * Definition of a UI zone injection.
+ *
+ * Allows a module to declare that one of its exposed elements through module
+ * federation should be rendered inside a named zone exposed by another module,
+ * optionally with props.
+ * @template T Props type for the injected element.
+ */
+export interface ModuleZoneDefinition<T = Record<string, unknown>> {
+  /**
+   * Name of the target zone exposed by another module where the element will be rendered.
+   */
+  zone: string;
+  /**
+   * Name of the exposed element to render in the zone.
+   */
+  plugin: string;
+  /**
+   * Optional props to pass to the exposed element rendered in this zone.
+   * The module can define the structure of these props as needed.
+   */
+  props?: T;
 }

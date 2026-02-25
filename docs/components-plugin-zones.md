@@ -96,6 +96,79 @@ You can provide your own fallback content using the default slot:
 
 ---
 
+## 🔧 Configuring Zones in Module Configuration
+
+Modules can declare exposed elements, through module federation, that should be rendered in zones via their configuration file (`module-<name>.json`). This provides a **declarative, configuration-driven approach** to zone management.
+
+### ModuleZoneDefinition Interface
+
+The `ModuleZoneDefinition` interface standardizes how zones are declared in module configuration:
+
+```typescript
+interface ModuleZoneDefinition<T = Record<string, unknown>> {
+  /** Name of the target zone */
+  zone: string;
+
+  /** Remote/element name (e.g. "remoteA/componentB") */
+  plugin: string;
+
+  /** Optional element props (can be strongly typed) */
+  props?: T;
+}
+```
+
+### Configuration Example
+
+In your `module-<name>.json` file:
+
+```json
+{
+  "instanceId": "moduleRoles-instance",
+  "remoteName": "moduleRoles",
+  "entity": "roles",
+  "apiEndpoint": "/api/roles",
+  "basePath": "/roles",
+  "zones": [
+    {
+      "zone": "user-details",
+      "plugin": "moduleRoles/RoleCardPlugin",
+      "props": {
+        "showAvatar": true,
+        "theme": "dark"
+      }
+    },
+    {
+      "zone": "sidebar",
+      "plugin": "moduleRoles/QuickActionsPlugin"
+    }
+  ],
+  "options": {}
+}
+```
+
+In this example, the module declares that its `RoleCardPlugin` component should be rendered in the `user-details` zone, with a prop to show avatars. We suppose that `user-details` is a zone exposed by another module, for example the User Management module, allowing this Roles module to extend the user details view with role information.
+
+### Key Points
+
+- **Declarative:** Zones are configured in JSON, separate from code
+- **Type-safe:** The `props` field can be strongly typed when needed
+- **Optional props:** If no configuration is needed, `props` can be omitted
+- **Multiple zones:** A module can inject elements into multiple zones
+- **Centralized:** All zone declarations are in one place
+- **Static:** Zones must be known at build time for this approach
+- **Integration:** The module lifecycle will automatically register these zones in the Linid Zone Store during initialization
+
+### When to Use Configuration vs. Store
+
+| Approach                                   | Use When                                                                                                        |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| **Configuration** (`ModuleZoneDefinition`) | Static zone declarations known at build time, configuration-driven architecture, cleaner separation of concerns |
+| **Store** (`registerOnce`/`register`)      | Dynamic runtime registration, programmatic control needed, bootstrap-time setup in module lifecycle             |
+
+Both approaches can coexist: use configuration for standard zones and the store for dynamic cases.
+
+---
+
 ## ⚡ Adding a Plugin with the Store
 
 Plugins must be registered in the **Linid Zone Store** before they can be rendered.

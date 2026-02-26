@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.48](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.47...v0.0.48) (2026-02-26)
+
+
+### Features
+
+* forward $attrs to ui elements rendered in a zone ([9691dc2](https://github.com/linagora/linid-im-front-corelib/commit/9691dc22604ee4a8eccc3fa8d960d63902a6db92))
+
 ### [0.0.47](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.46...v0.0.47) (2026-02-25)
 
 

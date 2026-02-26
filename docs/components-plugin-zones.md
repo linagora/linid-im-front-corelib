@@ -36,9 +36,24 @@ LinidZoneRenderer provides:
 
 ### Props
 
-| Prop   | Type   | Description                    |
-| ------ | ------ | ------------------------------ |
-| `zone` | string | The name of the zone to render |
+| Prop            | Type    | Description                                                                                                                                                                     |
+| --------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `zone`          | string  | The name of the zone to render                                                                                                                                                  |
+| `...additional` | unknown | Any additional attributes and event listeners passed to the component are forwarded to all rendered zone plugins via `$attrs`. These take precedence over entry-specific props. |
+
+**Example with additional attributes:**
+
+```vue
+<template>
+  <LinidZoneRenderer
+    zone="user-details"
+    :userId="42"
+    :theme="dark"
+  />
+</template>
+```
+
+In this example, `userId` and `theme` are forwarded to all plugins registered in the `user-details` zone, and will override any same-named props defined in the zone entry configuration. Event listeners (e.g. `@my-event`) would be forwarded the same way.
 
 ### Default Slot - Fallback Component
 
@@ -293,14 +308,51 @@ Use `register` when:
 1. **At initialization time**, the component retrieves all entries for the given `zone` from the **Linid Zone Store**.
 2. Each entry is wrapped as an **async component** retrieved from its remote module using the
    `loadAsyncComponent(entry.plugin)` method.
-3. All plugins in the zone are rendered sequentially with:
+3. The component sets `inheritAttrs: false` to take manual control over attribute forwarding. This is required because the template has multiple root nodes (a fragment), so Vue cannot automatically determine which node should receive the inherited attributes. Disabling automatic inheritance allows each plugin to receive `$attrs` explicitly via `v-bind`.
+4. All plugins in the zone are rendered sequentially with their props merged:
 
 ```vue
-<component :is="entry.component" v-bind="entry.props" />
+<component :is="entry.component" v-bind="{ ...entry.props, ...$attrs }" />
+```
+
+**Props merge behavior:**
+
+- `entry.props`: Props from the zone entry configuration (from `module-<name>.json`). These serve as default values for the plugin.
+- `$attrs`: All attributes and event listeners passed to `LinidZoneRenderer` that are not declared as props or emits. This includes bound props (e.g. `:userId="42"`) as well as event listeners (e.g. `@my-event="handler"`). The `zone` prop is declared and therefore excluded from `$attrs` automatically. See [Vue Fallthrough Attributes](https://vuejs.org/guide/components/attrs) for details.
+- **`$attrs` takes precedence:** If the same key is present in both, the value from `$attrs` wins.
+
+**Example:**
+
+```vue
+<!-- In parent component -->
+<LinidZoneRenderer zone="user-details" :theme="dark" :readOnly="true" />
+```
+
+In module-<name>.json zone configuration
+
+```json
+{
+  "zone": "user-details",
+  "plugin": "myModule/UserCard",
+  "props": {
+    "theme": "light",
+    "showAvatar": true
+  }
+}
+```
+
+```ts
+// Rendered component receives
+{
+  theme: 'dark', // from $attrs (takes precedence)
+  readOnly: true, //from $attrs
+  showAvatar: true // from entry.props
+}
 ```
 
 - This allows multiple plugins to coexist in a single zone.
 - The component loads plugins once during initialization and does not react to subsequent store changes.
+- Attributes passed to the zone renderer override entry-specific props, making `entry.props` act as default values.
 
 ---
 

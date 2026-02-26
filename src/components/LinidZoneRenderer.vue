@@ -29,7 +29,7 @@
     :is="entry.component"
     v-for="(entry, index) in components"
     :key="entry.plugin + index"
-    v-bind="entry.props"
+    v-bind="{ ...entry.props, ...$attrs }"
   />
   <slot v-if="components.length === 0" />
 </template>
@@ -38,6 +38,10 @@
 import { loadAsyncComponent } from '../services/federationService';
 import { useLinidZoneStore } from '../stores/linidZoneStore';
 import type { LinidZoneEntry } from '../types/linidZone';
+
+defineOptions({
+  inheritAttrs: false,
+});
 
 const props = defineProps<{
   /**

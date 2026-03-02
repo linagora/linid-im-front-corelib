@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.49](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.48...v0.0.49) (2026-03-02)
+
+
+### Bug Fixes
+
+* make zone attributes override components attributes ([6745295](https://github.com/linagora/linid-im-front-corelib/commit/6745295c1fb2d5749d20a1383377437ecf979d49))
+
 ### [0.0.48](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.47...v0.0.48) (2026-02-26)
 
 

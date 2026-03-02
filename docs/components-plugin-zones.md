@@ -36,10 +36,10 @@ LinidZoneRenderer provides:
 
 ### Props
 
-| Prop            | Type    | Description                                                                                                                                                                     |
-| --------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `zone`          | string  | The name of the zone to render                                                                                                                                                  |
-| `...additional` | unknown | Any additional attributes and event listeners passed to the component are forwarded to all rendered zone plugins via `$attrs`. These take precedence over entry-specific props. |
+| Prop            | Type    | Description                                                                                                                                                                |
+|-----------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `zone`          | string  | The name of the zone to render                                                                                                                                             |
+| `...additional` | unknown | Any additional attributes and event listeners passed to the component are forwarded to all rendered zone plugins via `$attrs`. These is overriden by entry-specific props. |
 
 **Example with additional attributes:**
 
@@ -53,7 +53,9 @@ LinidZoneRenderer provides:
 </template>
 ```
 
-In this example, `userId` and `theme` are forwarded to all plugins registered in the `user-details` zone, and will override any same-named props defined in the zone entry configuration. Event listeners (e.g. `@my-event`) would be forwarded the same way.
+In this example, `userId` and `theme` are forwarded to all plugins registered in the `user-details` zone, and will
+override any same-named props defined in the zone entry configuration. Event listeners (e.g. `@my-event`) would be
+forwarded the same way.
 
 ### Default Slot - Fallback Component
 
@@ -113,7 +115,9 @@ You can provide your own fallback content using the default slot:
 
 ## 🔧 Configuring Zones in Module Configuration
 
-Modules can declare exposed elements, through module federation, that should be rendered in zones via their configuration file (`module-<name>.json`). This provides a **declarative, configuration-driven approach** to zone management.
+Modules can declare exposed elements, through module federation, that should be rendered in zones via their
+configuration file (`module-<name>.json`). This provides a **declarative, configuration-driven approach** to zone
+management.
 
 ### ModuleZoneDefinition Interface
 
@@ -161,7 +165,9 @@ In your `module-<name>.json` file:
 }
 ```
 
-In this example, the module declares that its `RoleCardPlugin` component should be rendered in the `user-details` zone, with a prop to show avatars. We suppose that `user-details` is a zone exposed by another module, for example the User Management module, allowing this Roles module to extend the user details view with role information.
+In this example, the module declares that its `RoleCardPlugin` component should be rendered in the `user-details` zone,
+with a prop to show avatars. We suppose that `user-details` is a zone exposed by another module, for example the User
+Management module, allowing this Roles module to extend the user details view with role information.
 
 ### Key Points
 
@@ -171,12 +177,13 @@ In this example, the module declares that its `RoleCardPlugin` component should 
 - **Multiple zones:** A module can inject elements into multiple zones
 - **Centralized:** All zone declarations are in one place
 - **Static:** Zones must be known at build time for this approach
-- **Integration:** The module lifecycle will automatically register these zones in the Linid Zone Store during initialization
+- **Integration:** The module lifecycle will automatically register these zones in the Linid Zone Store during
+  initialization
 
 ### When to Use Configuration vs. Store
 
 | Approach                                   | Use When                                                                                                        |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+|--------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | **Configuration** (`ModuleZoneDefinition`) | Static zone declarations known at build time, configuration-driven architecture, cleaner separation of concerns |
 | **Store** (`registerOnce`/`register`)      | Dynamic runtime registration, programmatic control needed, bootstrap-time setup in module lifecycle             |
 
@@ -202,7 +209,8 @@ linidZoneStore.register('user-details', {
 - `plugin`: Path or identifier of the remote component to load.
 - `props`: Optional props passed to the plugin component.
 
-> Once registered **before the component mounts**, the `LinidZoneRenderer` component will render this plugin in the specified zone.
+> Once registered **before the component mounts**, the `LinidZoneRenderer` component will render this plugin in the
+> specified zone.
 
 ---
 
@@ -267,13 +275,16 @@ instead.
 
 ### ⚠️ Lifecycle Constraint
 
-Plugin registration must occur during the **module initialization phase** (i.e., within the module lifecycle bootstrap logic).
+Plugin registration must occur during the **module initialization phase** (i.e., within the module lifecycle bootstrap
+logic).
 
 The `register` and `registerOnce` methods are designed to be invoked only at initialization time.
 
-Any plugin registered **after the module has completed its initialization** will **not be rendered or taken into account** by `LinidZoneRenderer`.
+Any plugin registered **after the module has completed its initialization** will **not be rendered or taken into account
+** by `LinidZoneRenderer`.
 
-This constraint ensures architectural consistency and prevents unpredictable runtime mutations of the zone configuration.
+This constraint ensures architectural consistency and prevents unpredictable runtime mutations of the zone
+configuration.
 
 > In short: zone registration is a bootstrap-time operation, not a runtime dynamic mutation mechanism.
 
@@ -282,9 +293,9 @@ This constraint ensures architectural consistency and prevents unpredictable run
 ### ⚖️ `register` vs `registerOnce`
 
 | Method         | Allows duplicates | Typical Use Case                             |
-| -------------- | ----------------- | -------------------------------------------- |
-| `register`     | ✅ Yes            | When multiple identical plugins are expected |
-| `registerOnce` | ❌ No             | When idempotent registration is required     |
+|----------------|-------------------|----------------------------------------------|
+| `register`     | ✅ Yes             | When multiple identical plugins are expected |
+| `registerOnce` | ❌ No              | When idempotent registration is required     |
 
 ---
 
@@ -308,18 +319,25 @@ Use `register` when:
 1. **At initialization time**, the component retrieves all entries for the given `zone` from the **Linid Zone Store**.
 2. Each entry is wrapped as an **async component** retrieved from its remote module using the
    `loadAsyncComponent(entry.plugin)` method.
-3. The component sets `inheritAttrs: false` to take manual control over attribute forwarding. This is required because the template has multiple root nodes (a fragment), so Vue cannot automatically determine which node should receive the inherited attributes. Disabling automatic inheritance allows each plugin to receive `$attrs` explicitly via `v-bind`.
+3. The component sets `inheritAttrs: false` to take manual control over attribute forwarding. This is required because
+   the template has multiple root nodes (a fragment), so Vue cannot automatically determine which node should receive
+   the inherited attributes. Disabling automatic inheritance allows each plugin to receive `$attrs` explicitly via
+   `v-bind`.
 4. All plugins in the zone are rendered sequentially with their props merged:
 
 ```vue
-<component :is="entry.component" v-bind="{ ...entry.props, ...$attrs }" />
+<component :is="entry.component" v-bind="{ ...$attrs, ...entry.props }" />
 ```
 
 **Props merge behavior:**
 
-- `entry.props`: Props from the zone entry configuration (from `module-<name>.json`). These serve as default values for the plugin.
-- `$attrs`: All attributes and event listeners passed to `LinidZoneRenderer` that are not declared as props or emits. This includes bound props (e.g. `:userId="42"`) as well as event listeners (e.g. `@my-event="handler"`). The `zone` prop is declared and therefore excluded from `$attrs` automatically. See [Vue Fallthrough Attributes](https://vuejs.org/guide/components/attrs) for details.
-- **`$attrs` takes precedence:** If the same key is present in both, the value from `$attrs` wins.
+- `entry.props`: Props from the zone entry configuration (from `module-<name>.json`). These serve as default values for
+  the plugin.
+- `$attrs`: All attributes and event listeners passed to `LinidZoneRenderer` that are not declared as props or emits.
+  This includes bound props (e.g. `:userId="42"`) as well as event listeners (e.g. `@my-event="handler"`). The `zone`
+  prop is declared and therefore excluded from `$attrs` automatically.
+  See [Vue Fallthrough Attributes](https://vuejs.org/guide/components/attrs) for details.
+- **`$attrs` is overridden:** If the same key is present in both, the value from `zone entry` wins.
 
 **Example:**
 
@@ -344,7 +362,7 @@ In module-<name>.json zone configuration
 ```ts
 // Rendered component receives
 {
-  theme: 'dark', // from $attrs (takes precedence)
+  theme: 'light', // from $attrs (override)
   readOnly: true, //from $attrs
   showAvatar: true // from entry.props
 }

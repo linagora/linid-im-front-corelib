@@ -29,12 +29,12 @@
     :is="entry.component"
     v-for="(entry, index) in components"
     :key="entry.plugin + index"
-    v-bind="{ ...entry.props, ...$attrs }"
+    v-bind="{ ...$attrs, ...entry.props }"
   />
   <slot v-if="components.length === 0" />
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { loadAsyncComponent } from '../services/federationService';
 import { useLinidZoneStore } from '../stores/linidZoneStore';
 import type { LinidZoneEntry } from '../types/linidZone';

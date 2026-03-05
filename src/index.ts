@@ -28,9 +28,9 @@
 export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
 
 // Composables
+export { useDialog } from './composables/useDialog';
 export { useFieldValidation } from './composables/useFieldValidation';
 export { useNotify } from './composables/useNotify';
-export { useDialog } from './composables/useDialog';
 export { usePagination } from './composables/usePagination';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
 export { useQuasarRules } from './composables/useQuasarRules';
@@ -66,6 +66,7 @@ export {
   getModuleHostConfiguration,
   registerModuleHostConfiguration,
 } from './services/linidModuleConfigurationService';
+export { getNunjucksEnv, setNunjucksEnv } from './services/nunjucksService';
 export {
   deepEqual,
   fromDot,
@@ -101,8 +102,8 @@ export type {
 export type {
   FederatedModule,
   ModuleHostConfig,
-  RemoteModule,
   ModuleZoneDefinition,
+  RemoteModule,
 } from './types/module';
 
 // Types - Module Lifecycle
@@ -115,8 +116,8 @@ export type {
 export type {
   LinidQAvatarProps,
   LinidQBadgeProps,
-  LinidQBtnProps,
   LinidQBtnDropdownProps,
+  LinidQBtnProps,
   LinidQCardActionsProps,
   LinidQCardProps,
   LinidQDateProps,
@@ -127,8 +128,8 @@ export type {
   LinidQIconProps,
   LinidQImgProps,
   LinidQInputProps,
-  LinidQItemProps,
   LinidQItemLabelProps,
+  LinidQItemProps,
   LinidQItemSectionProps,
   LinidQListProps,
   LinidQRouteTabProps,

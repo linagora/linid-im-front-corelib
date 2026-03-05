@@ -221,4 +221,66 @@ describe('Test composable: useFieldValidation', () => {
       });
     });
   });
+
+  describe('Test function: unique', () => {
+    it('should return true when value is unique', () => {
+      const { unique } = useFieldValidation('test-instance', 'roles');
+
+      expect(unique('uniqueRole', ['roleA'])).toBe(true);
+    });
+
+    it('should return error message when value is not unique', () => {
+      const { unique } = useFieldValidation('test-instance', 'roles');
+
+      const result = unique('roleA', ['roleA']);
+      expect(result).toBe('translated.validation.unique');
+      expect(mockT).toHaveBeenCalledWith('validation.unique');
+    });
+
+    it('should return true when value is null or undefined', () => {
+      const { unique } = useFieldValidation('test-instance', 'roles');
+
+      expect(unique(null, ['roleA'])).toBe(true);
+      expect(unique(undefined, ['roleA'])).toBe(true);
+    });
+
+    it('should handle number mixed with string values', () => {
+      const { unique } = useFieldValidation('test-instance', 'roles');
+
+      expect(unique('2', [1, 3])).toBe(true);
+      expect(unique('2', [1, 2])).toContain('translated.validation.unique');
+    });
+
+    it('should handle object values', () => {
+      const { unique } = useFieldValidation('test-instance', 'roles');
+
+      expect(unique({ name: 'alice' }, [{ name: 'bob' }])).toBe(true);
+      expect(unique({ name: 'alice' }, [{ name: 'alice' }])).toBe(
+        'translated.validation.unique'
+      );
+    });
+
+    it('should handle array values', () => {
+      const { unique } = useFieldValidation('test-instance', 'roles');
+
+      expect(
+        unique(
+          [1, 2],
+          [
+            [3, 4],
+            [5, 6],
+          ]
+        )
+      ).toBe(true);
+      expect(
+        unique(
+          [1, 2],
+          [
+            [1, 2],
+            [3, 4],
+          ]
+        )
+      ).toBe('translated.validation.unique');
+    });
+  });
 });

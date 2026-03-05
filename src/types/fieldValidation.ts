@@ -34,4 +34,5 @@ export type ValidatorName =
   | 'max'
   | 'minLength'
   | 'maxLength'
-  | 'pattern';
+  | 'pattern'
+  | 'unique';

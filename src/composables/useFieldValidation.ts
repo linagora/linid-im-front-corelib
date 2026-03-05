@@ -27,6 +27,7 @@
 import type { AxiosError } from 'axios';
 import axios, { HttpStatusCode } from 'axios';
 import { validate } from '../services/linidEntityService';
+import { deepEqualUnordered } from '../services/objectService';
 import type { LinidApiErrorResponseBody } from '../types/linidApi';
 import { useScopedI18n } from './useScopedI18n';
 
@@ -157,5 +158,37 @@ export function useFieldValidation(instanceId: string, fieldName: string) {
     return true;
   }
 
-  return { validateFromApi, required, minLength, maxLength, min, max, pattern };
+  /**
+   * Validates that a value is unique within a given array of items.
+   * - For primitive values (`string`, `number`, `boolean`), comparison uses `String()` conversion, so `1` and `"1"` are considered equal.
+   * - For objects and arrays, comparison uses deep equality.
+   * Returns `true` if value is `null` or `undefined`.
+   * @param value - The value to validate.
+   * @param items - The array of items to check against.
+   * @returns `true` if the value is unique, or an error message string if not.
+   */
+  function unique(value: unknown, items: unknown[]): true | string {
+    if (value == null) {
+      return true;
+    }
+    const isDuplicate =
+      typeof value === 'object'
+        ? items.some((item) => deepEqualUnordered(value, item))
+        : items.some((item) => item != null && String(item) === String(value));
+    if (isDuplicate) {
+      return t('validation.unique');
+    }
+    return true;
+  }
+
+  return {
+    validateFromApi,
+    required,
+    minLength,
+    maxLength,
+    min,
+    max,
+    pattern,
+    unique,
+  };
 }

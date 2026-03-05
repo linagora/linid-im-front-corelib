@@ -32,10 +32,11 @@ describe('Test composable: useQuasarFieldValidation', () => {
     expect(validators).toHaveProperty('minLength');
     expect(validators).toHaveProperty('maxLength');
     expect(validators).toHaveProperty('pattern');
+    expect(validators).toHaveProperty('unique');
   });
 
   it('should return curried functions for validators with parameters', () => {
-    const { minLength, maxLength, min, max, pattern } =
+    const { minLength, maxLength, min, max, pattern, unique } =
       useQuasarFieldValidation('test-instance', 'username');
 
     const minLengthValidator = minLength(5);
@@ -61,6 +62,10 @@ describe('Test composable: useQuasarFieldValidation', () => {
     const patternValidator = pattern('^[a-z]+$');
     expect(patternValidator('abc')).toBe(true);
     expect(patternValidator('123')).toContain('translated.validation.pattern');
+
+    const uniqueValidator = unique(['roleA']);
+    expect(uniqueValidator('roleB')).toBe(true);
+    expect(uniqueValidator('roleA')).toContain('translated.validation.unique');
   });
 
   describe('Test function: min', () => {

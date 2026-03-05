@@ -59,6 +59,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 - **`min(value, min)`**: Validates minimum numeric value
 - **`max(value, max)`**: Validates maximum numeric value
 - **`pattern(value, pattern)`**: Validates against a regex pattern
+- **`unique(value, items)`**: Validates that a value is not already present in a list
 
 #### useQuasarFieldValidation (Recommended for Quasar)
 
@@ -69,6 +70,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 - **`min(min)`**: Returns a validator for minimum numeric value
 - **`max(max)`**: Returns a validator for maximum numeric value
 - **`pattern(pattern)`**: Returns a validator for regex pattern matching
+- **`unique(items)`**: Returns a validator that checks the value is not already in the list
 
 #### useQuasarRules (Easiest for Quasar)
 
@@ -331,7 +333,18 @@ const { pattern } = useQuasarFieldValidation('user-module', 'postalCode');
 :rules="[pattern(attribute.definition.inputSettings.pattern)]"
 ```
 
-### 5.6 Combining Validators
+### 5.6 Uniqueness Validation
+
+```ts
+const { unique } = useQuasarFieldValidation('user-module', 'username');
+
+const existingUsernames = ['alice', 'bob', 'charlie'];
+:rules="[unique(existingUsernames)]" // Returns a validator that checks the value is not in the list
+```
+
+> **Note**: For primitives (`string`, `number`, `boolean`), comparison uses `String()` conversion — `1` and `"1"` are treated as equal. For objects and arrays, deep equality is used. A `null` or `undefined` value always passes (considered the responsibility of `required`).
+
+### 5.7 Combining Validators
 
 ```ts
 const validation = useQuasarFieldValidation('user-module', 'email');
@@ -346,7 +359,7 @@ const emailPattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
 ]"
 ```
 
-### 5.7 Using useQuasarRules for Automatic Rule Generation
+### 5.8 Using useQuasarRules for Automatic Rule Generation
 
 ```ts
 import { useQuasarRules } from '@linagora/linid-im-front-corelib';
@@ -405,6 +418,7 @@ function useFieldValidation(
   min: (value: number, minValue: number) => true | string;
   max: (value: number, maxValue: number) => true | string;
   pattern: (value: string, pattern: string) => true | string;
+  unique: (value: unknown, items: unknown[]) => true | string;
 };
 ```
 
@@ -426,6 +440,7 @@ function useQuasarFieldValidation(
   min: (minValue: number) => (value: number) => true | string;
   max: (maxValue: number) => (value: number) => true | string;
   pattern: (pattern: string) => (value: string) => true | string;
+  unique: (items: unknown[]) => (value: unknown) => true | string;
 };
 ```
 
@@ -439,7 +454,13 @@ function useQuasarRules<T extends Record<string, unknown>>(
 ): ValidationRule[];
 
 // ValidatorName type
-type ValidatorName = 'min' | 'max' | 'minLength' | 'maxLength' | 'pattern';
+type ValidatorName =
+  | 'min'
+  | 'max'
+  | 'minLength'
+  | 'maxLength'
+  | 'pattern'
+  | 'unique';
 
 // LinidAttributeConfiguration interface (simplified)
 interface LinidAttributeConfiguration<T> {
@@ -452,6 +473,7 @@ interface LinidAttributeConfiguration<T> {
     minLength?: number;
     maxLength?: number;
     pattern?: string;
+    unique?: unknown[];
   };
 }
 ```
@@ -505,11 +527,18 @@ interface LinidAttributeConfiguration<T> {
 - **Returns**: `(value: string) => true | string` - Validator function
 - **Use case**: Custom format validation (email, phone, etc.)
 
+#### unique(items)
+
+- **items**: `unknown[]` - The list of existing values to check against
+- **Returns**: `(value: unknown) => true | string` - Validator function
+- **Use case**: Ensure a value does not already exist in a list (e.g. unique username)
+- **Note**: For primitives, comparison uses `String()` conversion (`1` and `"1"` are equal). For objects and arrays, deep equality is used. Returns `true` if value is `null` or `undefined`.
+
 #### useQuasarRules(instanceId, attributeConfig, validatorsNames)
 
 - **instanceId**: `string` - The unique identifier of the module instance
 - **attributeConfig**: `LinidAttributeConfiguration<T>` - The configuration of the attribute being validated
-- **validatorsNames**: `ValidatorName[]` - Array of validator names to include (`'min'`, `'max'`, `'minLength'`, `'maxLength'`, `'pattern'`)
+- **validatorsNames**: `ValidatorName[]` - Array of validator names to include (`'min'`, `'max'`, `'minLength'`, `'maxLength'`, `'pattern'`, `'unique'`)
 - **Returns**: `ValidationRule[]` - Array of validation functions ready to use in Quasar's `rules` prop
 - **Use case**: Automatic rule generation from configuration
 - **Behavior**:
@@ -538,6 +567,7 @@ All validation error messages must be defined in your i18n files under the scope
           "minLength": "Must be at least {min} characters.",
           "maxLength": "Must not exceed {max} characters.",
           "pattern": "Invalid format. Expected pattern: {pattern}",
+          "unique": "This value already exists.",
           "unknownError": "Unknown error while validating the field."
         }
       },

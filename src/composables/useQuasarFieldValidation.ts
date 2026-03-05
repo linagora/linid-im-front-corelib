@@ -36,8 +36,16 @@ export function useQuasarFieldValidation(
   instanceId: string,
   fieldName: string
 ) {
-  const { validateFromApi, required, minLength, maxLength, min, max, pattern } =
-    useFieldValidation(instanceId, fieldName);
+  const {
+    validateFromApi,
+    required,
+    minLength,
+    maxLength,
+    min,
+    max,
+    pattern,
+    unique,
+  } = useFieldValidation(instanceId, fieldName);
 
   return {
     validateFromApi,
@@ -52,5 +60,6 @@ export function useQuasarFieldValidation(
       maxLength(value, maxValue),
     pattern: (patternValue: string) => (value: string) =>
       pattern(value, patternValue),
+    unique: (items: unknown[]) => (value: unknown) => unique(value, items),
   };
 }

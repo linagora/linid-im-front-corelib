@@ -1094,4 +1094,141 @@ This service is intended as a **foundational utility layer** for configuration h
 
 ---
 
+## 🖨️ Nunjucks Service
+
+Provides a singleton Nunjucks `Environment` instance shared across all modules, ensuring a unified template rendering context for the entire application.
+
+| Function                            | Description                                             |
+| ----------------------------------- | ------------------------------------------------------- |
+| [`setNunjucksEnv`](#setnunjucksenv) | Initializes the shared Nunjucks environment (call once) |
+| [`getNunjucksEnv`](#getnunjucksenv) | Returns the shared Nunjucks environment instance        |
+
+---
+
+### `setNunjucksEnv`
+
+Initializes the shared Nunjucks `Environment` instance to be used by all modules. Should be called **once** during application bootstrapping by the host application.
+
+```typescript
+import { setNunjucksEnv } from '@linagora/linid-im-front-corelib';
+import nunjucks from 'nunjucks';
+
+const env = new nunjucks.Environment();
+setNunjucksEnv(env);
+```
+
+#### Parameters
+
+| Parameter | Type          | Description                                   |
+| --------- | ------------- | --------------------------------------------- |
+| `env`     | `Environment` | The Nunjucks `Environment` instance to share. |
+
+#### Returns
+
+No return value.
+
+#### Behavior
+
+1. **Singleton:** Only the first call sets the instance; subsequent calls log a warning and do not overwrite the instance.
+2. **Required:** Must be called before any call to `getNunjucksEnv()`.
+
+#### Error Handling
+
+- If called more than once, logs a warning:  
+  `[LinID CoreLib] Nunjucks environment has already been initialized. Re-initialization is ignored.`
+
+---
+
+### `getNunjucksEnv`
+
+Retrieves the shared Nunjucks `Environment` instance initialized by `setNunjucksEnv`.
+
+```typescript
+import { getNunjucksEnv } from '@linagora/linid-im-front-corelib';
+
+const env = getNunjucksEnv();
+```
+
+#### Parameters
+
+None.
+
+#### Returns
+
+| Type          | Description                                 |
+| ------------- | ------------------------------------------- |
+| `Environment` | The shared Nunjucks `Environment` instance. |
+
+#### Behavior
+
+1. **Singleton:** Always returns the same instance set by `setNunjucksEnv`.
+2. **Error Handling:** Throws an error if called before initialization.
+
+#### Error Handling
+
+- If called before initialization, throws:  
+  `[LinID CoreLib] Nunjucks environment is not initialized. Call setNunjucksEnv() first.`
+
+---
+
+### Usage Examples
+
+#### Application Bootstrap
+
+```typescript
+import { setNunjucksEnv } from '@linagora/linid-im-front-corelib';
+import nunjucks from 'nunjucks';
+
+// Host application bootstrapping
+const env = new nunjucks.Environment();
+setNunjucksEnv(env);
+```
+
+#### Rendering a Template
+
+```typescript
+import { getNunjucksEnv } from '@linagora/linid-im-front-corelib';
+
+const env = getNunjucksEnv();
+const result = env.renderString('Hello {{ name }}!', { name: 'Alice' });
+// result: "Hello Alice!"
+```
+
+#### Adding a Custom Filter
+
+Filters specific to the host application can be added after initialization:
+
+```typescript
+import {
+  setNunjucksEnv,
+  getNunjucksEnv,
+} from '@linagora/linid-im-front-corelib';
+import nunjucks from 'nunjucks';
+
+const env = new nunjucks.Environment();
+env.addFilter('uppercase', (str: string) => str.toUpperCase());
+setNunjucksEnv(env);
+```
+
+---
+
+### TypeScript Support
+
+```typescript
+import type { Environment } from 'nunjucks';
+
+const env: Environment = getNunjucksEnv();
+```
+
+---
+
+### Rules
+
+- ✅ Host calls `setNunjucksEnv()` once during boot
+- ✅ Modules use `getNunjucksEnv()` to access the same instance
+- ⚠️ Warning logged if re-initialization is attempted
+- ❌ Error thrown if `getNunjucksEnv()` is called before initialization
+
+---
+
 > Additional services will be added as new features are implemented in the library.

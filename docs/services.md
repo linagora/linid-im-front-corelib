@@ -808,13 +808,14 @@ It is designed for **JSON-like structures**, configuration objects, and data tra
 
 This service focuses on **immutability**, **deep operations**, and **safe object introspection**.
 
-| Function                    | Description                                                         |
-| --------------------------- | ------------------------------------------------------------------- |
-| [`merge`](#merge)           | Performs an immutable deep merge of two plain objects               |
-| [`fromDot`](#fromdot)       | Expands dot-notation keys into a nested object structure            |
-| [`isObject`](#isobject)     | Determines whether a value is a non-null plain object               |
-| [`renameKeys`](#renamekeys) | Recursively renames keys of an object using a provided key modifier |
-| [`deepEqual`](#deepequal)   | Performs a deep equality check between two values                   |
+| Function                                    | Description                                                         |
+| ------------------------------------------- | ------------------------------------------------------------------- |
+| [`merge`](#merge)                           | Performs an immutable deep merge of two plain objects               |
+| [`fromDot`](#fromdot)                       | Expands dot-notation keys into a nested object structure            |
+| [`isObject`](#isobject)                     | Determines whether a value is a non-null plain object               |
+| [`renameKeys`](#renamekeys)                 | Recursively renames keys of an object using a provided key modifier |
+| [`deepEqual`](#deepequal)                   | Performs a deep equality check between two values                   |
+| [`deepEqualUnordered`](#deepequalunordered) | Performs a deep equality check ignoring array element order         |
 
 ```js
 import {
@@ -823,6 +824,7 @@ import {
   isObject,
   renameKeys,
   deepEqual,
+  deepEqualUnordered,
 } from '@linagora/linid-im-front-corelib';
 ```
 
@@ -1082,13 +1084,55 @@ deepEqual([1, 2, 3], [1, 2, 4]); // false
 
 ---
 
+### `deepEqualUnordered`
+
+Performs a deep equality check between two values, **ignoring the order of array elements**.
+
+Useful for comparing sets of values where order is not significant (e.g. tags, roles, permissions).
+
+#### Signature
+
+```ts
+deepEqualUnordered(a: unknown, b: unknown): boolean;
+```
+
+#### Parameters
+
+| Parameter | Type      | Description           |
+| --------- | --------- | --------------------- |
+| `a`       | `unknown` | First value to check  |
+| `b`       | `unknown` | Second value to check |
+
+#### Returns
+
+| Type      | Description                                            |
+| --------- | ------------------------------------------------------ |
+| `boolean` | `true` if values are deeply equal ignoring array order |
+
+#### Behavior
+
+1. For arrays, checks that both contain the same elements regardless of order
+2. For plain objects, recursively compares properties (also ignoring array order at any nesting level)
+3. For primitives, delegates to `deepEqual`
+
+#### Example
+
+```ts
+deepEqualUnordered([1, 2, 3], [3, 1, 2]); // true
+deepEqualUnordered({ tags: ['b', 'a'] }, { tags: ['a', 'b'] }); // true
+deepEqualUnordered([1, 2], [1, 2, 3]); // false
+```
+
+---
+
 ### 🧾 Summary
 
 - `merge` enables safe, immutable deep merging of configuration objects
 - `fromDot` simplifies transformation from flat, dot-based keys to nested objects
 - `isObject` provides a reliable runtime guard for plain object detection
 - `renameKeys` — recursive key renaming
-- `deepEqual` — deep equality checks
+- `deepEqual` — deep equality checks (order-sensitive for arrays)
+- `deepEqualUnordered` — deep equality checks ignoring array element order
 
 This service is intended as a **foundational utility layer** for configuration handling, data normalization, and object manipulation across the application.
 

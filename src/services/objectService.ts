@@ -192,3 +192,47 @@ export function deepEqual(a: unknown, b: unknown): boolean {
       deepEqual(recordA[key], recordB[key])
   );
 }
+
+/**
+ * Performs a deep equality check between two values, ignoring the order of array elements.
+ *
+ * - For arrays, checks that both contain the same elements regardless of order.
+ * - For plain objects, recursively compares properties (also ignoring array order).
+ * - For primitives, uses strict equality.
+ * @param a The first value to compare.
+ * @param b The second value to compare.
+ * @returns `true` if the values are deeply equal (ignoring array order), otherwise `false`.
+ */
+export function deepEqualUnordered(a: unknown, b: unknown): boolean {
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) {
+      return false;
+    }
+    const matchedIndices = new Set<number>();
+    return a.every((itemA) => {
+      const idx = b.findIndex(
+        (itemB, i) => !matchedIndices.has(i) && deepEqualUnordered(itemA, itemB)
+      );
+      if (idx === -1) {
+        return false;
+      }
+      matchedIndices.add(idx);
+      return true;
+    });
+  }
+
+  if (isObject(a) && isObject(b)) {
+    const keysA = Object.keys(a);
+    const keysB = Object.keys(b);
+    if (keysA.length !== keysB.length) {
+      return false;
+    }
+    return keysA.every(
+      (key) =>
+        Object.prototype.hasOwnProperty.call(b, key) &&
+        deepEqualUnordered(a[key], b[key])
+    );
+  }
+
+  return deepEqual(a, b);
+}

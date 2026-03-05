@@ -1,5 +1,6 @@
 import {
   deepEqual,
+  deepEqualUnordered,
   fromDot,
   isObject,
   merge,
@@ -328,6 +329,104 @@ describe('Test service: objectService', () => {
     it('handles NaN primitive comparisons', () => {
       expect(deepEqual(NaN, NaN)).toBe(true);
       expect(deepEqual(NaN, 1)).toBe(false);
+    });
+  });
+
+  describe('Test function: deepEqualUnordered', () => {
+    it('returns true for deeply equal objects regardless of key order', () => {
+      expect(
+        deepEqualUnordered({ a: 1, b: { c: 2 } }, { b: { c: 2 }, a: 1 })
+      ).toBe(true);
+    });
+
+    it('returns false for different objects', () => {
+      expect(
+        deepEqualUnordered({ a: 1, b: { c: 2 } }, { a: 1, b: { c: 3 } })
+      ).toBe(false);
+    });
+
+    it('handles arrays regardless of order', () => {
+      expect(deepEqualUnordered([1, 2, { a: 3 }], [{ a: 3 }, 2, 1])).toBe(true);
+      expect(deepEqualUnordered([1, 2, { a: 3 }], [1, 2, { a: 4 }])).toBe(
+        false
+      );
+    });
+
+    it('handles objects containing arrays regardless of order', () => {
+      const obj1 = { c: true, b: null, a: [1, 'two', { three: 3 }] };
+      const obj2 = { a: [{ three: 3 }, 'two', 1], b: null, c: true };
+      expect(deepEqualUnordered(obj1, obj2)).toBe(true);
+      expect(
+        deepEqualUnordered(obj1, { ...obj2, a: [1, 'two', { three: 4 }] })
+      ).toBe(false);
+    });
+
+    it('handles nested arrays regardless of order', () => {
+      expect(
+        deepEqualUnordered(
+          [
+            [1, 2],
+            [3, 4],
+          ],
+          [
+            [3, 4],
+            [1, 2],
+          ]
+        )
+      ).toBe(true);
+      expect(
+        deepEqualUnordered(
+          [
+            [1, 2],
+            [3, 4],
+          ],
+          [
+            [1, 2],
+            [3, 5],
+          ]
+        )
+      ).toBe(false);
+    });
+
+    it('returns false for arrays of different lengths', () => {
+      expect(deepEqualUnordered([1, 2, 3], [3, 2, 1, 4])).toBe(false);
+      expect(deepEqualUnordered([1, 2, 3], [1, 2])).toBe(false);
+    });
+
+    it('handles primitive values', () => {
+      expect(deepEqualUnordered(1, 1)).toBe(true);
+      expect(deepEqualUnordered('a', 'a')).toBe(true);
+      expect(deepEqualUnordered(1, 2)).toBe(false);
+    });
+
+    it('handles null and undefined', () => {
+      expect(deepEqualUnordered(null, null)).toBe(true);
+      expect(deepEqualUnordered(undefined, undefined)).toBe(true);
+      expect(deepEqualUnordered(null, undefined)).toBe(false);
+    });
+
+    it('handles NaN values correctly', () => {
+      expect(deepEqualUnordered({ a: NaN, b: 1 }, { b: 1, a: NaN })).toBe(true);
+      expect(deepEqualUnordered({ a: NaN, b: 1 }, { a: 1, b: NaN })).toBe(
+        false
+      );
+    });
+
+    it('returns false for arrays with same elements but different multiplicities', () => {
+      expect(deepEqualUnordered([1, 1, 2], [1, 2, 2])).toBe(false);
+    });
+
+    it('handles duplicate complex objects in arrays', () => {
+      expect(
+        deepEqualUnordered([{ a: 1 }, { a: 1 }], [{ a: 1 }, { a: 1 }])
+      ).toBe(true);
+      expect(
+        deepEqualUnordered([{ a: 1 }, { a: 1 }], [{ a: 1 }, { a: 2 }])
+      ).toBe(false);
+    });
+
+    it('returns false for array compared to object', () => {
+      expect(deepEqualUnordered([1, 2], { 0: 1, 1: 2 })).toBe(false);
     });
   });
 });

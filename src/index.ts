@@ -69,6 +69,7 @@ export {
 export { getNunjucksEnv, setNunjucksEnv } from './services/nunjucksService';
 export {
   deepEqual,
+  deepEqualUnordered,
   fromDot,
   isObject,
   merge,

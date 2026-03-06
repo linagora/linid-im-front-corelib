@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.50](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.49...v0.0.50) (2026-03-06)
+
+
+### Features
+
+* add service setting and exposing nunjucks instance ([46a7797](https://github.com/linagora/linid-im-front-corelib/commit/46a77974362636ab5aaf20850115881be82461d9))
+
 ### [0.0.49](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.48...v0.0.49) (2026-03-02)
 
 

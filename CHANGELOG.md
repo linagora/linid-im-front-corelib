@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.51](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.50...v0.0.51) (2026-03-06)
+
+
+### Features
+
+* add "unique" field validator ([2c1fad1](https://github.com/linagora/linid-im-front-corelib/commit/2c1fad13e1c17f2d8743325c74f80c6b2616f672))
+* add deepEqualUnordered method in objectService ([0d1922c](https://github.com/linagora/linid-im-front-corelib/commit/0d1922cd120b050bfd78e6f56487e07ec20c4d12))
+
 ### [0.0.50](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.49...v0.0.50) (2026-03-06)
 
 

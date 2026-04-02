@@ -39,6 +39,8 @@ export type LinidRoutes = LinidRoute[];
  * Defines a route exposed by a remote module via Module Federation.
  */
 export interface LinidRoute {
+  /** Optional unique route name, used by Vue Router for deterministic override. */
+  name?: string;
   /** Absolute or nested route path (e.g. "/admin" or "settings"). */
   path: string;
   /** Remote component name, resolved through Module Federation (e.g. "remoteA/ComponentX"). */

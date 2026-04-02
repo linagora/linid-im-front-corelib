@@ -486,6 +486,8 @@ Defines the structure for application routes, supporting recursive nesting for m
 export type LinidRoutes = LinidRoute[];
 
 export interface LinidRoute {
+  /** Optional unique route name, used by Vue Router for deterministic override. */
+  name?: string;
   /** Absolute or nested route path (e.g. "/admin" or "settings"). */
   path: string;
   /** Remote component name, resolved through Module Federation (e.g. "remoteA/ComponentX"). */
@@ -501,6 +503,7 @@ export interface LinidRoute {
 
 - Used to describe both top-level and nested routes in the application.
 - Enables recursive route definitions for complex navigation structures.
+- The optional `name` field enables deterministic route overriding: if two routes share the same name, the latest one replaces the previous one via Vue Router's `addRoute` mechanism.
 
 ---
 

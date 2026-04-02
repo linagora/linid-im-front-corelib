@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.53](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.52...v0.0.53) (2026-04-02)
+
+
+### Features
+
+* add optional name field to LinidRoute type ([3fec67e](https://github.com/linagora/linid-im-front-corelib/commit/3fec67ef3f4e35c1493306b9ad00ba539f8435b1))
+
 ### [0.0.52](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.51...v0.0.52) (2026-03-17)
 
 ### [0.0.51](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.50...v0.0.51) (2026-03-06)

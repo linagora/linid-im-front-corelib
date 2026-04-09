@@ -40,6 +40,51 @@ interface LinidZoneState {
 
 ---
 
+## 🧑‍💼 LinidUser
+
+Represents an authenticated user in the system.
+
+```ts
+export interface LinidUser {
+  /** Username of the user (mapped from the OIDC `sub` claim). */
+  username: string;
+
+  /** Email address of the user. */
+  email: string;
+
+  /** Full name of the user (mapped from the OIDC `name` claim). */
+  fullName: string;
+
+  /** The list of roles assigned to the user. */
+  roles: string[];
+}
+```
+
+**Usage:**
+
+- Populated by the `linidUserStore` from an OIDC ID token's claims.
+- Consumed by components that need to display or check user identity and roles.
+
+---
+
+## 🧱 LinidUserState
+
+Represents the state of the Pinia store that manages user authentication.
+
+```ts
+interface LinidUserState {
+  /** Current authenticated user information. */
+  user: LinidUser;
+  /** Flag indicating whether the user is authenticated. */
+  isAuthenticated: boolean;
+}
+```
+
+- `user` is populated via `setUserFromClaims()` after a successful OIDC login.
+- `isAuthenticated` is set to `true` after the user claims are loaded.
+
+---
+
 ## 📦 Modules types
 
 ### FederatedModule
@@ -1057,6 +1102,8 @@ export interface NavigationMenuItem {
 | `LinidQItemLabelProps`          | QItemLabel component properties supported by Ui Design    |
 | `LinidQDialogProps`             | QDialog component properties supported by Ui Design       |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
+| `LinidUser`                     | Represents an authenticated user in the system           |
+| `LinidUserState`                | Defines the structure of the user store                   |
 | `NavigationMenuItem`            | Describes a main navigation menu item                     |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.

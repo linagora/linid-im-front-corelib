@@ -41,6 +41,7 @@ export { useUiDesign } from './composables/useUiDesign';
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
 export { useLinidUiStore } from './stores/linidUiStore';
 export { useLinidZoneStore } from './stores/linidZoneStore';
+export { useLinidUserStore } from './stores/linidUserStore';
 
 // Services
 export {
@@ -165,3 +166,6 @@ export type { LinidApiErrorResponseBody } from './types/linidApi';
 
 // Types - DialogEvent
 export type { DialogEvent } from './types/dialogType';
+
+// Types - User
+export type { LinidUser } from './types/linidUser';

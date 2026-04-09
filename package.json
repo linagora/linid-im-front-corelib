@@ -79,6 +79,7 @@
     "eslint-plugin-jsdoc": "62.8.0",
     "eslint-plugin-vue": "10.8.0",
     "happy-dom": "20.8.3",
+    "oidc-client-ts": "3.5.0",
     "prettier": "3.8.1",
     "typescript": "5.9.3",
     "vite": "7.3.1",

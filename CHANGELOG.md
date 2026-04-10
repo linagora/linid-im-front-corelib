@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.54](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.53...v0.0.54) (2026-04-10)
+
+
+### Features
+
+* add LinidUserState in pinia store ([cbe1af0](https://github.com/linagora/linid-im-front-corelib/commit/cbe1af060b9b21508a43960d746bcde5d24cc679))
+
 ### [0.0.53](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.52...v0.0.53) (2026-04-02)
 
 

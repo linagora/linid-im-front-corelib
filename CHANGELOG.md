@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.55](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.54...v0.0.55) (2026-04-23)
+
+
+### Features
+
+* add email rule to field validation composables ([3915809](https://github.com/linagora/linid-im-front-corelib/commit/39158091b3ef292cd6a4f01920c453c4f0029b0e))
+* add ui-design for q-banner ([e691fb6](https://github.com/linagora/linid-im-front-corelib/commit/e691fb6fa1952fa4a633920d2aeed890568bda07))
+
 ### [0.0.54](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.53...v0.0.54) (2026-04-10)
 
 

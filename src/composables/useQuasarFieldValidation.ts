@@ -39,6 +39,7 @@ export function useQuasarFieldValidation(
   const {
     validateFromApi,
     required,
+    email,
     minLength,
     maxLength,
     min,
@@ -50,6 +51,7 @@ export function useQuasarFieldValidation(
   return {
     validateFromApi,
     required,
+    email,
     min: (minValue: number) => (value: string | number) =>
       min(typeof value === 'string' ? parseFloat(value) : value, minValue),
     max: (maxValue: number) => (value: string | number) =>

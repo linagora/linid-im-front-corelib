@@ -26,6 +26,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
     const validators = useQuasarFieldValidation('test-instance', 'username');
 
     expect(validators).toHaveProperty('required');
+    expect(validators).toHaveProperty('email');
     expect(validators).toHaveProperty('validateFromApi');
     expect(validators).toHaveProperty('min');
     expect(validators).toHaveProperty('max');
@@ -87,6 +88,16 @@ describe('Test composable: useQuasarFieldValidation', () => {
       expect(maxValidator('150')).toBe('translated.validation.max.{"max":100}');
       expect(maxValidator('50')).toBe(true);
       expect(maxValidator('99.5')).toBe(true);
+    });
+  });
+
+  describe('Test function: email', () => {
+    it('should expose a Quasar-compatible email rule', () => {
+      const { email } = useQuasarFieldValidation('test-instance', 'email');
+
+      expect(email('john.doe@example.com')).toBe(true);
+      expect(email('foo')).toBe('translated.validation.email');
+      expect(email(undefined)).toBe('translated.validation.email');
     });
   });
 });

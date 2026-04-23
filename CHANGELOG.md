@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.56](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.55...v0.0.56) (2026-04-23)
+
+
+### Features
+
+* simplify useFieldValidation ([410d02f](https://github.com/linagora/linid-im-front-corelib/commit/410d02f030f183ef516a5c62540e3b7a8c100d36))
+
 ### [0.0.55](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.54...v0.0.55) (2026-04-23)
 
 

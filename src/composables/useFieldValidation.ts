@@ -88,6 +88,26 @@ export function useFieldValidation(instanceId: string, fieldName: string) {
   }
 
   /**
+   * Validates that a string field value matches a basic email shape.
+   * Local part allows letters, digits and `._%+-`; domain allows
+   * letters, digits, `.` and `-`; top-level label is at least two
+   * letters. Aligned with the "99% of real addresses" pattern from
+   * https://www.regular-expressions.info/email.html — pragmatic, not
+   * RFC 5322 compliant.
+   * @param value - The value to validate.
+   * @returns `true` if the value matches an email shape, or an error message string otherwise.
+   */
+  function email(value: unknown): true | string {
+    if (
+      typeof value !== 'string' ||
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)
+    ) {
+      return t('validation.email');
+    }
+    return true;
+  }
+
+  /**
    * Validates that a string field value meets the minimum length requirement.
    * @param value - The value to validate.
    * @param minValue - The minimum required length.
@@ -184,6 +204,7 @@ export function useFieldValidation(instanceId: string, fieldName: string) {
   return {
     validateFromApi,
     required,
+    email,
     minLength,
     maxLength,
     min,

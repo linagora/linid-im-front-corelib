@@ -119,6 +119,36 @@ describe('Test composable: useFieldValidation', () => {
     });
   });
 
+  describe('Test function: email', () => {
+    it('should return true for well-formed email addresses', () => {
+      const { email } = useFieldValidation('test-instance', 'email');
+
+      expect(email('john.doe@example.com')).toBe(true);
+      expect(email('a@b.cd')).toBe(true);
+    });
+
+    it('should return error message for malformed email addresses', () => {
+      const { email } = useFieldValidation('test-instance', 'email');
+
+      expect(email('')).toBe('translated.validation.email');
+      expect(email('foo')).toBe('translated.validation.email');
+      expect(email('foo@')).toBe('translated.validation.email');
+      expect(email('@bar.tld')).toBe('translated.validation.email');
+      expect(email('foo @bar.tld')).toBe('translated.validation.email');
+      expect(email('a@b.c')).toBe('translated.validation.email');
+      expect(email('foo@bar.123')).toBe('translated.validation.email');
+      expect(mockT).toHaveBeenCalledWith('validation.email');
+    });
+
+    it('should return error message for non-string values', () => {
+      const { email } = useFieldValidation('test-instance', 'email');
+
+      expect(email(undefined)).toBe('translated.validation.email');
+      expect(email(null)).toBe('translated.validation.email');
+      expect(email(42)).toBe('translated.validation.email');
+    });
+  });
+
   describe('Test function: minLength', () => {
     it('should return true when value meets minimum length', () => {
       const { minLength } = useFieldValidation('test-instance', 'username');

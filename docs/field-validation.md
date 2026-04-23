@@ -54,6 +54,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 
 - **`validateFromApi(value)`**: Validates a value against the backend API
 - **`required(value)`**: Validates that a value is provided
+- **`email(value)`**: Validates that a value matches a basic email shape
 - **`minLength(value, min)`**: Validates minimum string length
 - **`maxLength(value, max)`**: Validates maximum string length
 - **`min(value, min)`**: Validates minimum numeric value
@@ -65,6 +66,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 
 - **`validateFromApi`**: Validates against backend API (same as above)
 - **`required`**: Validates that a value is provided (same as above)
+- **`email`**: Validates that a value matches a basic email shape (same as above)
 - **`minLength(min)`**: Returns a validator for minimum string length
 - **`maxLength(max)`**: Returns a validator for maximum string length
 - **`min(min)`**: Returns a validator for minimum numeric value

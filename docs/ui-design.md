@@ -213,6 +213,7 @@ export interface UiDesign {
 export type QComponentName =
   | 'q-avatar'
   | 'q-badge'
+  | 'q-banner'
   | 'q-btn'
   | 'q-btn-dropdown'
   | 'q-card'
@@ -244,6 +245,7 @@ export type QComponentName =
 export type LinidQComponentProps =
   | LinidQAvatarProps
   | LinidQBadgeProps
+  | LinidQBannerProps
   | LinidQBtnProps
   | LinidQBtnDropdownProps
   | LinidQCardProps
@@ -873,6 +875,21 @@ header
 ```
 
 For details, refer to the [Quasar QItemLabel API documentation](https://quasar.dev/vue-components/list-and-list-items#qitem-label-api).
+
+More components can be added as needed.
+
+### q-banner
+
+The following props are officially supported and design-validated in our system:
+
+```
+inlineActions
+dense
+rounded
+dark
+```
+
+For details, refer to the [Quasar QBanner API documentation](https://quasar.dev/vue-components/banner#qbanner-api).
 
 More components can be added as needed.
 

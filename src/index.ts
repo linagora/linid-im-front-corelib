@@ -118,6 +118,7 @@ export type {
 export type {
   LinidQAvatarProps,
   LinidQBadgeProps,
+  LinidQBannerProps,
   LinidQBtnDropdownProps,
   LinidQBtnProps,
   LinidQCardActionsProps,

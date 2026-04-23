@@ -28,6 +28,7 @@ import type {
   NamedColor,
   QAvatarProps,
   QBadgeProps,
+  QBannerProps,
   QBtnDropdownProps,
   QBtnProps,
   QCardActionsProps,
@@ -571,6 +572,11 @@ const Q_FORM_PROPS = [
 const Q_ITEM_LABEL_PROPS = ['lines', 'overline', 'caption', 'header'] as const;
 
 /**
+ * List of QBannerProps keys for type-safe UI design retrieval.
+ */
+const Q_BANNER_PROPS = ['inlineActions', 'dense', 'rounded', 'dark'] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -600,6 +606,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-toggle': Q_TOGGLE_PROPS,
   'q-toolbar': Q_TOOLBAR_PROPS,
   'q-toolbar-title': Q_TOOLBAR_TITLE_PROPS,
+  'q-banner': Q_BANNER_PROPS,
 } as const;
 
 /**
@@ -781,6 +788,14 @@ export type LinidQItemLabelProps = Pick<
 >;
 
 /**
+ * Subset of QBannerProps props supported in UI design configuration.
+ */
+export type LinidQBannerProps = Pick<
+  QBannerProps,
+  (typeof Q_BANNER_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -809,7 +824,8 @@ export type LinidQComponentProps =
   | LinidQTabsProps
   | LinidQToggleProps
   | LinidQToolbarProps
-  | LinidQToolbarTitleProps;
+  | LinidQToolbarTitleProps
+  | LinidQBannerProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -817,6 +833,7 @@ export type LinidQComponentProps =
 export type QComponentName =
   | 'q-avatar'
   | 'q-badge'
+  | 'q-banner'
   | 'q-btn'
   | 'q-btn-dropdown'
   | 'q-card'

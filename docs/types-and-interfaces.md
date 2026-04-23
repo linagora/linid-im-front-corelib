@@ -1012,6 +1012,10 @@ See description in [Ui design documentation](./ui-design.md#q-item-section).
 
 See description in [Ui design documentation](./ui-design.md#q-item-label).
 
+### LinidQBannerProps
+
+See description in [Ui design documentation](./ui-design.md#q-banner).
+
 ---
 
 ## 🖼️ Linid Ui Store types
@@ -1047,7 +1051,7 @@ export interface NavigationMenuItem {
 ## 🧰 Summary
 
 | Type / Interface                | Purpose                                                   |
-| ------------------------------- | --------------------------------------------------------- |
+|---------------------------------|-----------------------------------------------------------|
 | `LinidZoneEntry`                | Defines the contract for a plugin component               |
 | `LinidZoneState`                | Defines the structure of the zone store                   |
 | `FederatedModule`               | Defines the structure of a federated component module     |
@@ -1101,8 +1105,9 @@ export interface NavigationMenuItem {
 | `LinidQItemSectionProps`        | QItemSection component properties supported by Ui Design  |
 | `LinidQItemLabelProps`          | QItemLabel component properties supported by Ui Design    |
 | `LinidQDialogProps`             | QDialog component properties supported by Ui Design       |
+| `LinidQBannerProps`             | QBanner component properties supported by Ui Design       |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
-| `LinidUser`                     | Represents an authenticated user in the system           |
+| `LinidUser`                     | Represents an authenticated user in the system            |
 | `LinidUserState`                | Defines the structure of the user store                   |
 | `NavigationMenuItem`            | Describes a main navigation menu item                     |
 

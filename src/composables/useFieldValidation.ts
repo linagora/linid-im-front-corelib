@@ -52,19 +52,24 @@ function hasTranslatedError(error: unknown): error is AxiosError {
 /**
  * Composable for field validation. It exposes various validation methods
  * that can be used to validate form fields.
- * @param instanceId The unique identifier of the module instance.
- * @param fieldName The name of the field to validate.
+ * @param i18nScope - I18n scope for localizing the validators.
  * @returns An object containing validation methods.
  */
-export function useFieldValidation(instanceId: string, fieldName: string) {
-  const { t } = useScopedI18n(`${instanceId}.fields.${fieldName}`);
+export function useFieldValidation(i18nScope: string) {
+  const { t } = useScopedI18n(i18nScope);
 
   /**
    * Validates a field value using the backend API.
+   * @param instanceId The unique identifier of the module instance.
+   * @param fieldName The name of the field to validate.
    * @param value - The value to validate.
    * @returns `true` if the value is valid, or an error message string if invalid.
    */
-  async function validateFromApi(value: unknown): Promise<true | string> {
+  async function validateFromApi(
+    instanceId: string,
+    fieldName: string,
+    value: unknown
+  ): Promise<true | string> {
     try {
       await validate(instanceId, fieldName, value);
       return true;

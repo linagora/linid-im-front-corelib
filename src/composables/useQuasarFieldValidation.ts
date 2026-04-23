@@ -46,10 +46,11 @@ export function useQuasarFieldValidation(
     max,
     pattern,
     unique,
-  } = useFieldValidation(instanceId, fieldName);
+  } = useFieldValidation(`${instanceId}.fields.${fieldName}`);
 
   return {
-    validateFromApi,
+    validateFromApi: (value: string) =>
+      validateFromApi(instanceId, fieldName, value),
     required,
     email,
     min: (minValue: number) => (value: string | number) =>

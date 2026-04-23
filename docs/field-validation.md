@@ -32,8 +32,8 @@ import {
   useQuasarRules,
 } from '@linagora/linid-im-front-corelib';
 
-// Option 1: Base validation (two-parameter functions)
-const baseValidation = useFieldValidation('user-module', 'email');
+// Option 1: Base validation
+const baseValidation = useFieldValidation('i18nScope');
 // Usage: baseValidation.minLength('test', 5)
 
 // Option 2: Quasar-compatible validation (curried functions)
@@ -52,7 +52,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 
 #### useFieldValidation
 
-- **`validateFromApi(value)`**: Validates a value against the backend API
+- **`validateFromApi(instanceId, fieldName, value)`**: Validates a value against the backend API
 - **`required(value)`**: Validates that a value is provided
 - **`email(value)`**: Validates that a value matches a basic email shape
 - **`minLength(value, min)`**: Validates minimum string length
@@ -64,7 +64,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 
 #### useQuasarFieldValidation (Recommended for Quasar)
 
-- **`validateFromApi`**: Validates against backend API (same as above)
+- **`validateFromApi(value)`**: Validates against backend API
 - **`required`**: Validates that a value is provided (same as above)
 - **`email`**: Validates that a value matches a basic email shape (same as above)
 - **`minLength(min)`**: Returns a validator for minimum string length

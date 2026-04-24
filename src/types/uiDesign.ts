@@ -45,6 +45,7 @@ import type {
   QItemProps,
   QItemSectionProps,
   QListProps,
+  QMenuProps,
   QRouteTabProps,
   QSelectProps,
   QSpinnerProps,
@@ -577,11 +578,39 @@ const Q_ITEM_LABEL_PROPS = ['lines', 'overline', 'caption', 'header'] as const;
 const Q_BANNER_PROPS = ['inlineActions', 'dense', 'rounded', 'dark'] as const;
 
 /**
+ * List of QMenuProps keys for type-safe UI design retrieval.
+ */
+const Q_MENU_PROPS = [
+  'contextMenu',
+  'touchPosition',
+  'persistent',
+  'noEscDismiss',
+  'noRouteDismiss',
+  'autoClose',
+  'separateClosePopup',
+  'noRefocus',
+  'noFocus',
+  'fit',
+  'cover',
+  'anchor',
+  'self',
+  'offset',
+  'dark',
+  'square',
+  'maxHeight',
+  'maxWidth',
+  'transitionShow',
+  'transitionHide',
+  'transitionDuration',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-avatar': Q_AVATAR_PROPS,
   'q-badge': Q_BADGE_PROPS,
+  'q-banner': Q_BANNER_PROPS,
   'q-btn': Q_BTN_PROPS,
   'q-btn-dropdown': Q_BTN_DROPDOWN_PROPS,
   'q-card': Q_CARD_PROPS,
@@ -598,6 +627,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-item-label': Q_ITEM_LABEL_PROPS,
   'q-item-section': Q_ITEM_SECTION_PROPS,
   'q-list': Q_LIST_PROPS,
+  'q-menu': Q_MENU_PROPS,
   'q-route-tab': Q_ROUTE_TAB_PROPS,
   'q-select': Q_SELECT_PROPS,
   'q-spinner': Q_SPINNER_PROPS,
@@ -606,7 +636,6 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-toggle': Q_TOGGLE_PROPS,
   'q-toolbar': Q_TOOLBAR_PROPS,
   'q-toolbar-title': Q_TOOLBAR_TITLE_PROPS,
-  'q-banner': Q_BANNER_PROPS,
 } as const;
 
 /**
@@ -796,11 +825,17 @@ export type LinidQBannerProps = Pick<
 >;
 
 /**
+ * Subset of QMenuProps props supported in UI design configuration.
+ */
+export type LinidQMenuProps = Pick<QMenuProps, (typeof Q_MENU_PROPS)[number]>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
   | LinidQAvatarProps
   | LinidQBadgeProps
+  | LinidQBannerProps
   | LinidQBtnDropdownProps
   | LinidQBtnProps
   | LinidQCardActionsProps
@@ -817,6 +852,7 @@ export type LinidQComponentProps =
   | LinidQItemProps
   | LinidQItemSectionProps
   | LinidQListProps
+  | LinidQMenuProps
   | LinidQRouteTabProps
   | LinidQSelectProps
   | LinidQSpinnerProps
@@ -824,8 +860,7 @@ export type LinidQComponentProps =
   | LinidQTabsProps
   | LinidQToggleProps
   | LinidQToolbarProps
-  | LinidQToolbarTitleProps
-  | LinidQBannerProps;
+  | LinidQToolbarTitleProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -850,6 +885,7 @@ export type QComponentName =
   | 'q-item-label'
   | 'q-item-section'
   | 'q-list'
+  | 'q-menu'
   | 'q-route-tab'
   | 'q-select'
   | 'q-spinner'

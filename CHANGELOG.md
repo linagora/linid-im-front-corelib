@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.57](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.56...v0.0.57) (2026-04-24)
+
+
+### Features
+
+* add ui-design for q-menu ([287407e](https://github.com/linagora/linid-im-front-corelib/commit/287407e125b57385590fd1a9c82775703430e822))
+
 ### [0.0.56](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.55...v0.0.56) (2026-04-23)
 
 

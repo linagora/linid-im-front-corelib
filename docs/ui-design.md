@@ -230,6 +230,7 @@ export type QComponentName =
   | 'q-item-label'
   | 'q-item-section'
   | 'q-list'
+  | 'q-menu'
   | 'q-route-tab'
   | 'q-select'
   | 'q-spinner'
@@ -262,6 +263,7 @@ export type LinidQComponentProps =
   | LinidQItemLabelProps
   | LinidQItemSectionProps
   | LinidQListeProps
+  | LinidQMenuProps
   | LinidQRouteTabProps
   | LinidQSelectProps
   | LinidQSpinnerProps
@@ -876,8 +878,6 @@ header
 
 For details, refer to the [Quasar QItemLabel API documentation](https://quasar.dev/vue-components/list-and-list-items#qitem-label-api).
 
-More components can be added as needed.
-
 ### q-banner
 
 The following props are officially supported and design-validated in our system:
@@ -890,6 +890,36 @@ dark
 ```
 
 For details, refer to the [Quasar QBanner API documentation](https://quasar.dev/vue-components/banner#qbanner-api).
+
+### q-menu
+
+The following props are officially supported and design-validated in our system:
+
+```
+contextMenu
+touchPosition
+persistent
+noEscDismiss
+noRouteDismiss
+autoClose
+separateClosePopup
+noRefocus
+noFocus
+fit
+cover
+anchor
+self
+offset
+dark
+square
+maxHeight
+maxWidth
+transitionShow
+transitionHide
+transitionDuration
+```
+
+For details, refer to the [Quasar QMenu API documentation](https://quasar.dev/vue-components/menu#qmenu-api).
 
 More components can be added as needed.
 

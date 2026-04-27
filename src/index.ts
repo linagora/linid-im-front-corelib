@@ -36,6 +36,7 @@ export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation
 export { useQuasarRules } from './composables/useQuasarRules';
 export { useScopedI18n } from './composables/useScopedI18n';
 export { useUiDesign } from './composables/useUiDesign';
+export { useTree } from './composables/useTree';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
@@ -144,6 +145,7 @@ export type {
   LinidQToggleProps,
   LinidQToolbarProps,
   LinidQToolbarTitleProps,
+  LinidQTreeProps,
   UiDesign,
   UiDesignNamespace,
   UiDesignValue,
@@ -171,3 +173,6 @@ export type { DialogEvent } from './types/dialogType';
 
 // Types - User
 export type { LinidUser } from './types/linidUser';
+
+// Types - Tree
+export type { TreeNode } from './types/linidTree';

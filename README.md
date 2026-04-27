@@ -117,6 +117,10 @@ A full technical documentation is available in the `docs/` directory:
   Learn how to implement field validation compatible with Quasar framework.
   → [`docs/field-validation.md`](docs/field-validation.md)
 
+- 🌳 **Tree (`useTree`)**
+  Learn how to convert between LinID tree models and Quasar QTree component formats.
+  → [`docs/useTree.md`](docs/useTree.md)
+
 More documents will be added as the library evolves.
 
 ---

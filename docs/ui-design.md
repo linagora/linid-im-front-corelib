@@ -170,6 +170,8 @@ console.log(ui('custom.other', 'q-btn', { color: 'negative', size: 'lg' }));
 The `UiDesign` interface provides type safety:
 
 ```ts
+import { LinidQTreeProps } from './uiDesign';
+
 /**
  * Represents a single primitive value in the UI configuration.
  */
@@ -238,7 +240,8 @@ export type QComponentName =
   | 'q-tabs'
   | 'q-toggle'
   | 'q-toolbar'
-  | 'q-toolbar-title';
+  | 'q-toolbar-title'
+  | 'q-tree';
 
 /**
  * Union type of all supported Quasar component props subsets.
@@ -271,7 +274,8 @@ export type LinidQComponentProps =
   | LinidQTabsProps
   | LinidQToggleProps
   | LinidQToolbarProps
-  | LinidQToolbarTitleProps;
+  | LinidQToolbarTitleProps
+  | LinidQTreeProps;
 ```
 
 For `NamedColor`, refer to the Quasar documentation on [Color Palette](https://quasar.dev/style/color-palette).
@@ -920,6 +924,28 @@ transitionDuration
 ```
 
 For details, refer to the [Quasar QMenu API documentation](https://quasar.dev/vue-components/menu#qmenu-api).
+
+### q-tree
+
+The following props are officially supported and design-validated in our system:
+
+```
+tickStrategy,
+noSelectionUnset,
+defaultExpandAll,
+accordion,
+noTransition,
+noConnectors,
+color,
+controlColor,
+textColor,
+selectedColor,
+dense,
+dark,
+duration,
+```
+
+For details, refer to the [Quasar QTree API documentation](https://quasar.dev/vue-components/tree#qtree-api).
 
 More components can be added as needed.
 

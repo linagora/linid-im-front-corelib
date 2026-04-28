@@ -1020,6 +1020,59 @@ See description in [Ui design documentation](./ui-design.md#q-banner).
 
 See description in [Ui design documentation](./ui-design.md#q-menu).
 
+### LinidQTreeProps
+
+See description in [Ui design documentation](./ui-design.md#q-tree).
+
+---
+
+## 🌳 Tree types
+
+Types used to represent tree structures in LinID components.
+Defined in `src/types/linidTree.ts`.
+
+### TreeNode
+
+Represents a node in the tree structure. Nodes are recursive — each node can contain child nodes.
+
+```ts
+export type TreeNode = {
+  /** The type of the node, used to differentiate node categories. */
+  type: string;
+
+  /** Unique key identifying the node within the tree. */
+  key: string;
+
+  /** The value associated with the node, which can be a string, number, or an object for complex nodes. */
+  value: string | number | Record<string, unknown>;
+
+  /** Child nodes nested under this node. */
+  nodes: TreeNode[];
+};
+```
+
+**Example:**
+
+```ts
+import type { TreeNode } from '@linagora/linid-im-front-corelib';
+
+const nodes: TreeNode[] = [
+  {
+    type: 'group',
+    key: 'group-1',
+    value: 'Engineering',
+    nodes: [
+      {
+        type: 'user',
+        key: 'user-1',
+        value: 'Alice',
+        nodes: [],
+      },
+    ],
+  },
+];
+```
+
 ---
 
 ## 🖼️ Linid Ui Store types
@@ -1111,6 +1164,8 @@ export interface NavigationMenuItem {
 | `LinidQDialogProps`             | QDialog component properties supported by Ui Design       |
 | `LinidQBannerProps`             | QBanner component properties supported by Ui Design       |
 | `LinidQMenuProps`               | QMenu component properties supported by Ui Design         |
+| `LinidQTreeProps`               | QTree component properties supported by Ui Design         |
+| `TreeNode`                      | Represents a node in the tree structure (recursive)       |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
 | `LinidUser`                     | Represents an authenticated user in the system            |
 | `LinidUserState`                | Defines the structure of the user store                   |

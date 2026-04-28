@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.58](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.57...v0.0.58) (2026-04-28)
+
+
+### Features
+
+* add qtree ui design ([8f6c11d](https://github.com/linagora/linid-im-front-corelib/commit/8f6c11d1876fd0c7c7ec72d80aa606e83e246719))
+* add useTree composable and TreeNode types ([c1afa30](https://github.com/linagora/linid-im-front-corelib/commit/c1afa300287dfbeff3a4f6856c113cc7d55fd5c3))
+
 ### [0.0.57](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.56...v0.0.57) (2026-04-24)
 
 

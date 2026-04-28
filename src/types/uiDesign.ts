@@ -54,6 +54,7 @@ import type {
   QToggleProps,
   QToolbarProps,
   QToolbarTitleProps,
+  QTreeProps,
   VueClassProp,
   VueStyleObjectProp,
   VueStyleProp,
@@ -605,6 +606,25 @@ const Q_MENU_PROPS = [
 ] as const;
 
 /**
+ * List of QTreeProps keys for type-safe UI design retrieval.
+ */
+const Q_TREE_PROPS = [
+  'tickStrategy',
+  'noSelectionUnset',
+  'defaultExpandAll',
+  'accordion',
+  'noTransition',
+  'noConnectors',
+  'color',
+  'controlColor',
+  'textColor',
+  'selectedColor',
+  'dense',
+  'dark',
+  'duration',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -636,6 +656,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-toggle': Q_TOGGLE_PROPS,
   'q-toolbar': Q_TOOLBAR_PROPS,
   'q-toolbar-title': Q_TOOLBAR_TITLE_PROPS,
+  'q-tree': Q_TREE_PROPS,
 } as const;
 
 /**
@@ -830,6 +851,11 @@ export type LinidQBannerProps = Pick<
 export type LinidQMenuProps = Pick<QMenuProps, (typeof Q_MENU_PROPS)[number]>;
 
 /**
+ * Subset of QTreeProps props supported in UI design configuration.
+ */
+export type LinidQTreeProps = Pick<QTreeProps, (typeof Q_TREE_PROPS)[number]>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -860,7 +886,8 @@ export type LinidQComponentProps =
   | LinidQTabsProps
   | LinidQToggleProps
   | LinidQToolbarProps
-  | LinidQToolbarTitleProps;
+  | LinidQToolbarTitleProps
+  | LinidQTreeProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -893,4 +920,5 @@ export type QComponentName =
   | 'q-tabs'
   | 'q-toggle'
   | 'q-toolbar'
-  | 'q-toolbar-title';
+  | 'q-toolbar-title'
+  | 'q-tree';

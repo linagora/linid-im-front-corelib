@@ -1031,6 +1031,33 @@ See description in [Ui design documentation](./ui-design.md#q-tree).
 Types used to represent tree structures in LinID components.
 Defined in `src/types/linidTree.ts`.
 
+### TreeNodeType
+
+Describes a type of node that can appear in the tree, along with the default actions for that type.
+
+```ts
+export type TreeNodeType = {
+  /** Unique identifier for the node type. */
+  type: string;
+
+  /** Default actions for nodes of this type. */
+  actions: string[];
+};
+```
+
+**Example:**
+
+```ts
+import type { TreeNodeType } from '@linagora/linid-im-front-corelib';
+
+const nodeTypes: TreeNodeType[] = [
+  { type: 'group', actions: ['import', 'export'] },
+  { type: 'user',  actions: ['view', 'edit', 'delete'] },
+];
+```
+
+---
+
 ### TreeNode
 
 Represents a node in the tree structure. Nodes are recursive — each node can contain child nodes.
@@ -1048,6 +1075,9 @@ export type TreeNode = {
 
   /** Child nodes nested under this node. */
   nodes: TreeNode[];
+
+  /** Additional actions. */
+  extraActions?: string[];
 };
 ```
 
@@ -1061,11 +1091,13 @@ const nodes: TreeNode[] = [
     type: 'group',
     key: 'group-1',
     value: 'Engineering',
+    extraActions: [],
     nodes: [
       {
         type: 'user',
         key: 'user-1',
         value: 'Alice',
+        extraActions: ['import', 'export'],
         nodes: [],
       },
     ],
@@ -1166,6 +1198,7 @@ export interface NavigationMenuItem {
 | `LinidQMenuProps`               | QMenu component properties supported by Ui Design         |
 | `LinidQTreeProps`               | QTree component properties supported by Ui Design         |
 | `TreeNode`                      | Represents a node in the tree structure (recursive)       |
+| `TreeNodeType`                  | Describes a node type and its default actions             |
 | `LinidUiState`                  | Defines the structure of the UI store                     |
 | `LinidUser`                     | Represents an authenticated user in the system            |
 | `LinidUserState`                | Defines the structure of the user store                   |

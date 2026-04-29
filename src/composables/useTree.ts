@@ -49,6 +49,7 @@ export function useTree() {
       type: node.type,
       key: node.key,
       value: node.value,
+      extraActions: node.extraActions,
       children: toQTreeNodes(node.nodes),
     }));
   }

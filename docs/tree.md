@@ -47,8 +47,8 @@ function toQTreeNodes(nodes: TreeNode[]): QTreeNode[];
 
 ```ts
 const nodes: TreeNode[] = [
-  { type: 'one', key: 'a', value: 'Element A', nodes: [] },
-  { type: 'two', key: 'b', value: 'Element B', nodes: [] },
+  { type: 'one', key: 'a', value: 'Element A', nodes: [], extraActions: [] },
+  { type: 'two', key: 'b', value: 'Element B', nodes: [], extraActions: ['import'] },
 ];
 
 const qNodes = toQTreeNodes(nodes);

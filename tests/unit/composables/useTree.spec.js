@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 describe('Test composable: useTree', () => {
   const { toQTreeNodes } = useTree();
 
-  describe('Test function: toPagination', () => {
+  describe('Test function: toQTreeNodes', () => {
     it('should return an empty array when given an empty array', () => {
       expect(toQTreeNodes([])).toEqual([]);
     });
@@ -15,6 +15,7 @@ describe('Test composable: useTree', () => {
           type: 'user',
           key: 'user-1',
           value: 'Alice',
+          extraActions: [],
           nodes: [],
         },
       ];
@@ -40,20 +41,19 @@ describe('Test composable: useTree', () => {
             {
               type: 'user',
               key: 'user-1',
-              value: {
-                label: 'Alice',
-              },
+              value: { label: 'Alice' },
+              extraActions: ['view'],
               nodes: [],
             },
             {
               type: 'user',
               key: 'user-2',
-              value: {
-                label: 'Bob',
-              },
+              value: { label: 'Bob' },
+              extraActions: [],
               nodes: [],
             },
           ],
+          extraActions: [],
         },
       ];
 
@@ -67,17 +67,13 @@ describe('Test composable: useTree', () => {
       expect(result[0].children[0]).toMatchObject({
         type: 'user',
         key: 'user-1',
-        value: {
-          label: 'Alice',
-        },
+        value: { label: 'Alice' },
         children: [],
       });
       expect(result[0].children[1]).toMatchObject({
         type: 'user',
         key: 'user-2',
-        value: {
-          label: 'Bob',
-        },
+        value: { label: 'Bob' },
         children: [],
       });
     });

@@ -175,4 +175,4 @@ export type { DialogEvent } from './types/dialogType';
 export type { LinidUser } from './types/linidUser';
 
 // Types - Tree
-export type { TreeNode } from './types/linidTree';
+export type { TreeNode, TreeNodeType } from './types/linidTree';

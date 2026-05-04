@@ -50,7 +50,7 @@ export function useQuasarRules<T extends Record<string, unknown>>(
   }
 
   const { required, validateFromApi, ...validatorsWithParam } =
-    useQuasarFieldValidation(instanceId, attributeConfig.name);
+    useQuasarFieldValidation(`${instanceId}.fields.${attributeConfig.name}`);
 
   const rulesWithParam = validatorsNames
     .filter((name) => attributeConfig.inputSettings?.[name] != null)
@@ -64,6 +64,6 @@ export function useQuasarRules<T extends Record<string, unknown>>(
   return [
     ...(attributeConfig.required ? [required] : []),
     ...rulesWithParam,
-    validateFromApi,
+    validateFromApi(instanceId, attributeConfig.name),
   ];
 }

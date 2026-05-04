@@ -52,7 +52,7 @@ const baseValidation = useFieldValidation('i18nScope');
 // Usage: baseValidation.minLength('test', 5)
 
 // Option 2: Quasar-compatible validation (curried functions)
-const quasarValidation = useQuasarFieldValidation('user-module', 'email');
+const quasarValidation = useQuasarFieldValidation('user-module.fields.email');
 // Usage in Quasar rules: [quasarValidation.minLength(5)]
 
 // Option 3: Auto-generate rules from attribute configuration
@@ -81,7 +81,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 
 #### useQuasarFieldValidation (Recommended for Quasar)
 
-- **`validateFromApi(value)`**: Validates against backend API
+- **`validateFromApi(instanceId, fieldName)`**: Returns a validator bound to the given instance and field. The returned function validates a value against the backend API.
 - **`required`**: Validates that a value is provided (same as above)
 - **`email`**: Validates that a value matches a basic email shape (same as above)
 - **`minLength(min)`**: Returns a validator for minimum string length
@@ -172,11 +172,11 @@ const email = ref('');
 const age = ref<number>();
 
 // Email field validators
-const emailValidation = useQuasarFieldValidation('user-module', 'email');
+const emailValidation = useQuasarFieldValidation('user-module.fields.email');
 const emailPattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
 
 // Age field validators
-const ageValidation = useQuasarFieldValidation('user-module', 'age');
+const ageValidation = useQuasarFieldValidation('user-module.fields.age');
 </script>
 
 <template>
@@ -190,7 +190,7 @@ const ageValidation = useQuasarFieldValidation('user-module', 'age');
         emailValidation.minLength(5),
         emailValidation.maxLength(100),
         emailValidation.pattern(emailPattern),
-        emailValidation.validateFromApi,
+        emailValidation.validateFromApi('user-module', 'email'),
       ]"
     />
 
@@ -281,16 +281,17 @@ const usernameRules = useQuasarRules('user-module', usernameConfig, [
 ### 5.1 Backend Validation
 
 ```ts
-const { validateFromApi } = useQuasarFieldValidation('user-module', 'email');
+const { validateFromApi } = useQuasarFieldValidation('user-module.fields.email');
 
-// Use directly in Quasar rules - it takes the value and validates it
-:rules="[validateFromApi]"
+// validateFromApi is curried: first call binds instanceId and fieldName,
+// the returned function is the Quasar validator that takes the field value.
+:rules="[validateFromApi('user-module', 'email')]"
 ```
 
 ### 5.2 Required Field
 
 ```ts
-const { required } = useQuasarFieldValidation('user-module', 'username');
+const { required } = useQuasarFieldValidation('user-module.fields.username');
 
 // Use directly in Quasar rules - it validates the value
 :rules="[required]"
@@ -299,7 +300,7 @@ const { required } = useQuasarFieldValidation('user-module', 'username');
 ### 5.3 String Length Validation
 
 ```ts
-const { minLength, maxLength } = useQuasarFieldValidation('user-module', 'username');
+const { minLength, maxLength } = useQuasarFieldValidation('user-module.fields.username');
 
 :rules="[
   minLength(3),   // Returns a validator for at least 3 characters
@@ -308,7 +309,7 @@ const { minLength, maxLength } = useQuasarFieldValidation('user-module', 'userna
 ```
 
 ```ts
-const { minLength, maxLength } = useQuasarFieldValidation('user-module', 'username');
+const { minLength, maxLength } = useQuasarFieldValidation('user-module.fields.username');
 
 // Using input settings from attribute definition
 :rules="[
@@ -320,7 +321,7 @@ const { minLength, maxLength } = useQuasarFieldValidation('user-module', 'userna
 ### 5.4 Numeric Range Validation
 
 ```ts
-const { min, max } = useQuasarFieldValidation('user-module', 'age');
+const { min, max } = useQuasarFieldValidation('user-module.fields.age');
 
 :rules="[
   min(18),   // Returns a validator for at least 18
@@ -329,7 +330,7 @@ const { min, max } = useQuasarFieldValidation('user-module', 'age');
 ```
 
 ```ts
-const { min, max } = useQuasarFieldValidation('user-module', 'age');
+const { min, max } = useQuasarFieldValidation('user-module.fields.age');
 
 // Using input settings from attribute definition
 :rules="[
@@ -341,14 +342,14 @@ const { min, max } = useQuasarFieldValidation('user-module', 'age');
 ### 5.5 Pattern Validation
 
 ```ts
-const { pattern } = useQuasarFieldValidation('user-module', 'postalCode');
+const { pattern } = useQuasarFieldValidation('user-module.fields.postalCode');
 
 const postalCodePattern = '^[0-9]{5}$';
 :rules="[pattern(postalCodePattern)]" // Returns a validator for the pattern
 ```
 
 ```ts
-const { pattern } = useQuasarFieldValidation('user-module', 'postalCode');
+const { pattern } = useQuasarFieldValidation('user-module.fields.postalCode');
 
 // Using input settings from attribute definition
 :rules="[pattern(attribute.definition.inputSettings.pattern)]"
@@ -357,7 +358,7 @@ const { pattern } = useQuasarFieldValidation('user-module', 'postalCode');
 ### 5.6 Uniqueness Validation
 
 ```ts
-const { unique } = useQuasarFieldValidation('user-module', 'username');
+const { unique } = useQuasarFieldValidation('user-module.fields.username');
 
 const existingUsernames = ['alice', 'bob', 'charlie'];
 :rules="[unique(existingUsernames)]" // Returns a validator that checks the value is not in the list
@@ -370,13 +371,13 @@ const existingUsernames = ['alice', 'bob', 'charlie'];
 > **Prerequisite**: `validDate` and `dateNotInPast` require the `customParseFormat` dayjs plugin. See [Prerequisites](#prerequisites) for the one-time setup.
 
 ```ts
-const { validDate } = useQuasarFieldValidation('user-module', 'birthDate');
+const { validDate } = useQuasarFieldValidation('user-module.fields.birthDate');
 
 :rules="[validDate('YYYY-MM-DD')]" // Returns a validator that checks format AND calendrical validity
 ```
 
 ```ts
-const { validDate } = useQuasarFieldValidation('user-module', 'birthDate');
+const { validDate } = useQuasarFieldValidation('user-module.fields.birthDate');
 
 // Without format — uses the Quasar wrapper default ('YYYY/MM/DD'), aligned with QDate
 :rules="[validDate()]"
@@ -391,7 +392,7 @@ const { validDate } = useQuasarFieldValidation('user-module', 'birthDate');
 ### 5.8 Not In Past Validation
 
 ```ts
-const { validDate, dateNotInPast } = useQuasarFieldValidation('user-module', 'startDate');
+const { validDate, dateNotInPast } = useQuasarFieldValidation('user-module.fields.startDate');
 
 // Validate format first, then temporal constraint
 :rules="[
@@ -401,7 +402,7 @@ const { validDate, dateNotInPast } = useQuasarFieldValidation('user-module', 'st
 ```
 
 ```ts
-const { dateNotInPast } = useQuasarFieldValidation('user-module', 'startDate');
+const { dateNotInPast } = useQuasarFieldValidation('user-module.fields.startDate');
 
 // Without format — uses the Quasar wrapper default ('YYYY/MM/DD'). Also works for native Date/Dayjs/timestamp values (format is ignored for non-strings).
 :rules="[dateNotInPast()]"
@@ -417,7 +418,7 @@ const { dateNotInPast } = useQuasarFieldValidation('user-module', 'startDate');
 ### 5.9 Combining Validators
 
 ```ts
-const validation = useQuasarFieldValidation('user-module', 'email');
+const validation = useQuasarFieldValidation('user-module.fields.email');
 const emailPattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
 
 :rules="[
@@ -425,7 +426,7 @@ const emailPattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
   validation.minLength(5),
   validation.maxLength(100),
   validation.pattern(emailPattern),
-  validation.validateFromApi
+  validation.validateFromApi('user-module', 'email')
 ]"
 ```
 
@@ -499,11 +500,11 @@ function useFieldValidation(i18nScope: string): {
 #### useQuasarFieldValidation
 
 ```ts
-function useQuasarFieldValidation(
-  instanceId: string,
-  fieldName: string
-): {
-  validateFromApi: (value: unknown) => Promise<true | string>;
+function useQuasarFieldValidation(i18nScope: string): {
+  validateFromApi: (
+    instanceId: string,
+    fieldName: string
+  ) => (value: unknown) => Promise<true | string>;
   required: (value: unknown) => true | string;
   email: (value: unknown) => true | string;
   minLength: (
@@ -559,10 +560,11 @@ interface LinidAttributeConfiguration<T> {
 
 ### Method Signatures
 
-#### validateFromApi(value)
+#### validateFromApi(instanceId, fieldName)
 
-- **value**: `unknown` - The value to validate against the backend
-- **Returns**: `Promise<true | string>` - Promise resolving to `true` or error message
+- **instanceId**: `string` - The unique identifier of the module instance
+- **fieldName**: `string` - The name of the field to validate
+- **Returns**: `(value: unknown) => Promise<true | string>` - A Quasar-compatible validator bound to the given instance and field
 - **Use case**: Server-side business validation
 - **Error handling**:
   - For HTTP 400/404 responses: Returns the `error` field from `LinidApiErrorResponseBody` (already internationalized by backend)
@@ -710,7 +712,8 @@ All validation error messages must be defined in your i18n files under the scope
 - `validateFromApi` is automatically added at the end by `useQuasarRules` to avoid unnecessary API calls when client-side validation fails
 - Always provide translated error messages for all validation keys
 - When using `useQuasarFieldValidation`:
-  - For `required` and `validateFromApi`, use them directly without calling as functions
+  - For `required` and `email`, use them directly without calling as functions
+  - For `validateFromApi`, call it with `(instanceId, fieldName)` to get the bound validator function
   - For other validators (`minLength`, `maxLength`, `min`, `max`, `pattern`), call them with the parameter to get the validator function
 - When using `useQuasarRules`:
   - Only specify validators that have corresponding values in `inputSettings`
@@ -723,13 +726,13 @@ All validation error messages must be defined in your i18n files under the scope
 
 ```ts
 const { required, minLength, maxLength, validateFromApi } =
-  useQuasarFieldValidation('user-module', 'email');
+  useQuasarFieldValidation('user-module.fields.email');
 
 const emailRules = [
   required,
   minLength(emailConfig.inputSettings.minLength),
   maxLength(emailConfig.inputSettings.maxLength),
-  validateFromApi,
+  validateFromApi('user-module', 'email'),
 ];
 ```
 

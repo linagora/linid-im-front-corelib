@@ -1,7 +1,16 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useQuasarFieldValidation } from 'src/composables/useQuasarFieldValidation';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { validate } from 'src/services/linidEntityService';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
 
 const FIXED_NOW = new Date('2026-06-15T12:00:00.000Z');
 
@@ -11,6 +20,7 @@ const mockT = vi.fn((key, params) => {
   }
   return `translated.${key}`;
 });
+vi.mock('src/services/linidEntityService');
 vi.mock('src/composables/useScopedI18n', async () => {
   const actual = await vi.importActual('src/composables/useScopedI18n');
   return {
@@ -31,7 +41,9 @@ describe('Test composable: useQuasarFieldValidation', () => {
   });
 
   it('should return validators in Quasar format', () => {
-    const validators = useQuasarFieldValidation('test-instance', 'username');
+    const validators = useQuasarFieldValidation(
+      'test-instance.fields.username'
+    );
 
     expect(validators).toHaveProperty('required');
     expect(validators).toHaveProperty('email');
@@ -46,9 +58,27 @@ describe('Test composable: useQuasarFieldValidation', () => {
     expect(validators).toHaveProperty('dateNotInPast');
   });
 
+  describe('Test function: validateFromApi', () => {
+    it('should delegate to the field validation service with instanceId and fieldName', async () => {
+      vi.mocked(validate).mockResolvedValue({});
+
+      const { validateFromApi } = useQuasarFieldValidation(
+        'test-instance.fields.username'
+      );
+      const result = await validateFromApi('test-instance', 'username')('john');
+
+      expect(result).toBe(true);
+      expect(validate).toHaveBeenCalledWith(
+        'test-instance',
+        'username',
+        'john'
+      );
+    });
+  });
+
   it('should return curried functions for validators with parameters', () => {
     const { minLength, maxLength, min, max, pattern, unique } =
-      useQuasarFieldValidation('test-instance', 'username');
+      useQuasarFieldValidation('test-instance.fields.username');
 
     const minLengthValidator = minLength(5);
     expect(minLengthValidator('abc')).toBe(
@@ -81,7 +111,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
   describe('Test function: min', () => {
     it('should handle string values for min validator', () => {
-      const { min } = useQuasarFieldValidation('test-instance', 'age');
+      const { min } = useQuasarFieldValidation('test-instance.fields.age');
 
       const minValidator = min(18);
       expect(minValidator('15')).toBe('translated.validation.min.{"min":18}');
@@ -92,7 +122,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
   describe('Test function: max', () => {
     it('should handle string values for max validator', () => {
-      const { max } = useQuasarFieldValidation('test-instance', 'age');
+      const { max } = useQuasarFieldValidation('test-instance.fields.age');
 
       const maxValidator = max(100);
       expect(maxValidator('150')).toBe('translated.validation.max.{"max":100}');
@@ -103,7 +133,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
   describe('Test function: email', () => {
     it('should expose a Quasar-compatible email rule', () => {
-      const { email } = useQuasarFieldValidation('test-instance', 'email');
+      const { email } = useQuasarFieldValidation('test-instance.fields.email');
 
       expect(email('john.doe@example.com')).toBe(true);
       expect(email('foo')).toBe('translated.validation.email');
@@ -113,14 +143,18 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
   describe('Test function: validDate', () => {
     it('should return a curried validator that accepts a valid date string', () => {
-      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+      const { validDate } = useQuasarFieldValidation(
+        'test-instance.fields.date'
+      );
 
       const validator = validDate('YYYY-MM-DD');
       expect(validator('2026-04-30')).toBe(true);
     });
 
     it('should return a curried validator that rejects a date string not matching the format', () => {
-      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+      const { validDate } = useQuasarFieldValidation(
+        'test-instance.fields.date'
+      );
 
       const validator = validDate('YYYY-MM-DD');
       expect(validator('30/04/2026')).toBe(
@@ -129,7 +163,9 @@ describe('Test composable: useQuasarFieldValidation', () => {
     });
 
     it('should return a curried validator that rejects a calendrically invalid date', () => {
-      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+      const { validDate } = useQuasarFieldValidation(
+        'test-instance.fields.date'
+      );
 
       const validator = validDate('YYYY-MM-DD');
       expect(validator('2026-02-30')).toBe(
@@ -138,7 +174,9 @@ describe('Test composable: useQuasarFieldValidation', () => {
     });
 
     it('should use the default format when no format is provided', () => {
-      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+      const { validDate } = useQuasarFieldValidation(
+        'test-instance.fields.date'
+      );
 
       const validator = validDate();
       expect(validator('2099/04/30')).toBe(true);
@@ -148,7 +186,9 @@ describe('Test composable: useQuasarFieldValidation', () => {
     });
 
     it('should treat an empty string format like an omitted format and use the wrapper default', () => {
-      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+      const { validDate } = useQuasarFieldValidation(
+        'test-instance.fields.date'
+      );
 
       const validator = validDate('');
       expect(validator('2099/04/30')).toBe(true);
@@ -172,8 +212,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
     it("should return a curried validator that accepts today's date", () => {
       const { dateNotInPast } = useQuasarFieldValidation(
-        'test-instance',
-        'date'
+        'test-instance.fields.date'
       );
 
       const validator = dateNotInPast('YYYY-MM-DD');
@@ -182,8 +221,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
     it('should return a curried validator that accepts a future date', () => {
       const { dateNotInPast } = useQuasarFieldValidation(
-        'test-instance',
-        'date'
+        'test-instance.fields.date'
       );
 
       const validator = dateNotInPast('YYYY-MM-DD');
@@ -192,8 +230,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
     it('should return a curried validator that rejects a past date', () => {
       const { dateNotInPast } = useQuasarFieldValidation(
-        'test-instance',
-        'date'
+        'test-instance.fields.date'
       );
 
       const validator = dateNotInPast('YYYY-MM-DD');
@@ -204,8 +241,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
     it('should return a curried validator without format for non-string values (Date, Dayjs)', () => {
       const { dateNotInPast } = useQuasarFieldValidation(
-        'test-instance',
-        'date'
+        'test-instance.fields.date'
       );
 
       const validator = dateNotInPast();
@@ -217,8 +253,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
     it('should use the default format for string values when no format is provided', () => {
       const { dateNotInPast } = useQuasarFieldValidation(
-        'test-instance',
-        'date'
+        'test-instance.fields.date'
       );
 
       const validator = dateNotInPast();
@@ -233,8 +268,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
     it('should treat an empty string format like an omitted format and use the wrapper default', () => {
       const { dateNotInPast } = useQuasarFieldValidation(
-        'test-instance',
-        'date'
+        'test-instance.fields.date'
       );
 
       const validator = dateNotInPast('');
@@ -244,8 +278,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
     it('should return true for an unparseable or calendrically invalid string', () => {
       const { dateNotInPast } = useQuasarFieldValidation(
-        'test-instance',
-        'date'
+        'test-instance.fields.date'
       );
 
       const validator = dateNotInPast('YYYY-MM-DD');

@@ -30,14 +30,10 @@ const QDATE_DEFAULT_MASK = 'YYYY/MM/DD';
 
 /**
  * Composable for field validation compatible with Quasar framework.
- * @param instanceId The unique identifier of the module instance.
- * @param fieldName The name of the field to validate.
+ * @param i18nScope The i18n scope for translation keys used in validation messages.
  * @returns An object containing validation methods formatted for Quasar.
  */
-export function useQuasarFieldValidation(
-  instanceId: string,
-  fieldName: string
-) {
+export function useQuasarFieldValidation(i18nScope: string) {
   const {
     validateFromApi,
     required,
@@ -50,11 +46,13 @@ export function useQuasarFieldValidation(
     unique,
     validDate,
     dateNotInPast,
-  } = useFieldValidation(`${instanceId}.fields.${fieldName}`);
+  } = useFieldValidation(i18nScope);
 
   return {
-    validateFromApi: (value: string) =>
-      validateFromApi(instanceId, fieldName, value),
+    validateFromApi:
+      (instanceId: string, fieldName: string) =>
+      (value: string): Promise<true | string> =>
+        validateFromApi(instanceId, fieldName, value),
     required,
     email,
     min: (minValue: number) => (value: string | number) =>

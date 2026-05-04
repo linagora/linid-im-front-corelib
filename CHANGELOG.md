@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.59](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.58...v0.0.59) (2026-05-04)
+
+
+### Features
+
+* simplify useQuasarFieldValidation to only depend on i18nScope ([69ce3dd](https://github.com/linagora/linid-im-front-corelib/commit/69ce3dd8ad86b3a723a1b8ca4b57687fda4f84ca))
+* validDate and dateNotInPast rules to field validation composables ([f3dcaa6](https://github.com/linagora/linid-im-front-corelib/commit/f3dcaa69846b923e7d391283c5144792b87f0aa0))
+
 ### [0.0.58](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.57...v0.0.58) (2026-04-28)
 
 

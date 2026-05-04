@@ -19,6 +19,21 @@ This module provides three composables for field validation, each in its own fil
 - **Internationalization**: All error messages are automatically translated according to the field context
 - **Quasar compatibility**: All validators follow Quasar's validation rules contract
 
+### Prerequisites
+
+The date validators (`validDate`, `dateNotInPast`) rely on dayjs's [`customParseFormat`](https://day.js.org/docs/en/plugin/custom-parse-format) plugin to perform strict format parsing. The plugin **must be registered once** in your application entry point, before any date validator runs:
+
+```ts
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
+```
+
+> Without this step, dayjs falls back to non-strict parsing: strings that do not match the expected format may be silently accepted, and calendrically invalid dates such as `'2026-02-30'` will not be detected.
+
+The library declares `dayjs` as a peer dependency, so the consumer controls the dayjs version and the set of registered plugins. No date validation side effect is triggered on import.
+
 ---
 
 ## 2. Basic Usage
@@ -61,6 +76,8 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 - **`max(value, max)`**: Validates maximum numeric value
 - **`pattern(value, pattern)`**: Validates against a regex pattern
 - **`unique(value, items)`**: Validates that a value is not already present in a list
+- **`validDate(value, format?)`**: Validates that a value parses to a valid date — strings against `format` with strict parsing, other types (`number`, `Date`, `Dayjs`) via dayjs directly. Empty values (`null`, `undefined`, `''`) are skipped. `format` defaults to `'YYYY-MM-DD'` (ISO 8601) if not provided.
+- **`dateNotInPast(value, format?)`**: Validates that a date value is not strictly before today (compared in the browser's local timezone). Empty or unparseable values are skipped. `format` defaults to `'YYYY-MM-DD'` if not provided.
 
 #### useQuasarFieldValidation (Recommended for Quasar)
 
@@ -73,6 +90,8 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 - **`max(max)`**: Returns a validator for maximum numeric value
 - **`pattern(pattern)`**: Returns a validator for regex pattern matching
 - **`unique(items)`**: Returns a validator that checks the value is not already in the list
+- **`validDate(format?)`**: Returns a validator that checks the value parses to a valid date. `format` defaults to `'YYYY/MM/DD'` to match Quasar's [QDate](https://quasar.dev/vue-components/date#qdate-api) default mask.
+- **`dateNotInPast(format?)`**: Returns a validator that checks the date is today or in the future, compared in the browser's local timezone. `format` defaults to `'YYYY/MM/DD'` to match Quasar's QDate default mask.
 
 #### useQuasarRules (Easiest for Quasar)
 
@@ -346,7 +365,56 @@ const existingUsernames = ['alice', 'bob', 'charlie'];
 
 > **Note**: For primitives (`string`, `number`, `boolean`), comparison uses `String()` conversion — `1` and `"1"` are treated as equal. For objects and arrays, deep equality is used. A `null` or `undefined` value always passes (considered the responsibility of `required`).
 
-### 5.7 Combining Validators
+### 5.7 Valid Date Validation
+
+> **Prerequisite**: `validDate` and `dateNotInPast` require the `customParseFormat` dayjs plugin. See [Prerequisites](#prerequisites) for the one-time setup.
+
+```ts
+const { validDate } = useQuasarFieldValidation('user-module', 'birthDate');
+
+:rules="[validDate('YYYY-MM-DD')]" // Returns a validator that checks format AND calendrical validity
+```
+
+```ts
+const { validDate } = useQuasarFieldValidation('user-module', 'birthDate');
+
+// Without format — uses the Quasar wrapper default ('YYYY/MM/DD'), aligned with QDate
+:rules="[validDate()]"
+```
+
+> **Notes**:
+>
+> - **Strings** are validated against `format` with strict parsing — they must match exactly. Non-string values (`number`, `Date`, `Dayjs`) are passed to dayjs as-is and `format` is ignored.
+> - **Empty values** (`null`, `undefined`, `''`) are skipped and return `true`, so this rule can be combined with `required` without producing duplicate errors.
+> - **Defaults**: the Quasar wrapper defaults to `'YYYY/MM/DD'`, which matches the default mask of Quasar's [QDate](https://quasar.dev/vue-components/date#qdate-api) component — so `v-model` values from `<q-date>` validate out of the box without specifying a format. If your input does not follow the wrapper default, pass an explicit `format`.
+
+### 5.8 Not In Past Validation
+
+```ts
+const { validDate, dateNotInPast } = useQuasarFieldValidation('user-module', 'startDate');
+
+// Validate format first, then temporal constraint
+:rules="[
+  validDate('YYYY-MM-DD'),       // Checks format and calendrical validity
+  dateNotInPast('YYYY-MM-DD'),   // Checks the date is today or in the future
+]"
+```
+
+```ts
+const { dateNotInPast } = useQuasarFieldValidation('user-module', 'startDate');
+
+// Without format — uses the Quasar wrapper default ('YYYY/MM/DD'). Also works for native Date/Dayjs/timestamp values (format is ignored for non-strings).
+:rules="[dateNotInPast()]"
+```
+
+> **Notes**:
+>
+> - **Empty values** (`null`, `undefined`, `''`) are skipped and return `true`.
+> - **Unparseable values** are also skipped (return `true`). Pair `dateNotInPast` with `validDate` to ensure invalid date strings are caught before the temporal check.
+> - **Comparison is performed in the browser's local timezone.** A string parsed against `'YYYY-MM-DD'` (or `'YYYY/MM/DD'`) is treated as local midnight, and "today" is the local current date. For values that carry an absolute moment (ISO strings with explicit offsets, `Date` instances, timestamps), the verdict can differ across timezones — a moment that is "yesterday" in one timezone may be "today" in another. Normalize `value` to UTC before passing it in if you need timezone-independent comparison.
+> - **Defaults**: the Quasar wrapper defaults to `'YYYY/MM/DD'`, which matches the default mask of Quasar's [QDate](https://quasar.dev/vue-components/date#qdate-api) — so `v-model` values from `<q-date>` validate out of the box without specifying a format. If your input does not follow the wrapper default, pass an explicit `format`.
+
+### 5.9 Combining Validators
 
 ```ts
 const validation = useQuasarFieldValidation('user-module', 'email');
@@ -361,7 +429,7 @@ const emailPattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
 ]"
 ```
 
-### 5.8 Using useQuasarRules for Automatic Rule Generation
+### 5.10 Using useQuasarRules for Automatic Rule Generation
 
 ```ts
 import { useQuasarRules } from '@linagora/linid-im-front-corelib';
@@ -403,12 +471,14 @@ const emailRules = useQuasarRules(
 #### useFieldValidation
 
 ```ts
-function useFieldValidation(
-  instanceId: string,
-  fieldName: string
-): {
-  validateFromApi: (value: unknown) => Promise<true | string>;
+function useFieldValidation(i18nScope: string): {
+  validateFromApi: (
+    instanceId: string,
+    fieldName: string,
+    value: unknown
+  ) => Promise<true | string>;
   required: (value: unknown) => true | string;
+  email: (value: unknown) => true | string;
   minLength: (
     value: string | null | undefined,
     minValue: number
@@ -421,6 +491,8 @@ function useFieldValidation(
   max: (value: number, maxValue: number) => true | string;
   pattern: (value: string, pattern: string) => true | string;
   unique: (value: unknown, items: unknown[]) => true | string;
+  validDate: (value: unknown, format?: string) => true | string;
+  dateNotInPast: (value: unknown, format?: string) => true | string;
 };
 ```
 
@@ -433,16 +505,19 @@ function useQuasarFieldValidation(
 ): {
   validateFromApi: (value: unknown) => Promise<true | string>;
   required: (value: unknown) => true | string;
+  email: (value: unknown) => true | string;
   minLength: (
     minValue: number
   ) => (value: string | null | undefined) => true | string;
   maxLength: (
     maxValue: number
   ) => (value: string | null | undefined) => true | string;
-  min: (minValue: number) => (value: number) => true | string;
-  max: (maxValue: number) => (value: number) => true | string;
+  min: (minValue: number) => (value: string | number) => true | string;
+  max: (maxValue: number) => (value: string | number) => true | string;
   pattern: (pattern: string) => (value: string) => true | string;
   unique: (items: unknown[]) => (value: unknown) => true | string;
+  validDate: (format?: string) => (value: unknown) => true | string;
+  dateNotInPast: (format?: string) => (value: unknown) => true | string;
 };
 ```
 
@@ -457,12 +532,14 @@ function useQuasarRules<T extends Record<string, unknown>>(
 
 // ValidatorName type
 type ValidatorName =
+  | 'dateNotInPast'
   | 'min'
   | 'max'
   | 'minLength'
   | 'maxLength'
   | 'pattern'
-  | 'unique';
+  | 'unique'
+  | 'validDate';
 
 // LinidAttributeConfiguration interface (simplified)
 interface LinidAttributeConfiguration<T> {
@@ -536,11 +613,28 @@ interface LinidAttributeConfiguration<T> {
 - **Use case**: Ensure a value does not already exist in a list (e.g. unique username)
 - **Note**: For primitives, comparison uses `String()` conversion (`1` and `"1"` are equal). For objects and arrays, deep equality is used. Returns `true` if value is `null` or `undefined`.
 
+#### validDate(format?)
+
+- **format**: `string | undefined` - Optional date format string (e.g. `'YYYY-MM-DD'`, `'DD/MM/YYYY'`). Defaults to `'YYYY/MM/DD'` in the Quasar wrapper to match Quasar's [QDate](https://quasar.dev/vue-components/date#qdate-api) default mask; the base `useFieldValidation` falls back to `'YYYY-MM-DD'`.
+- **Returns**: `(value: unknown) => true | string` - Validator function
+- **Use case**: Ensure a date input string matches the expected format and is calendrically valid
+- **Notes**:
+  - **Strings** are validated against `format` with strict parsing — they must match exactly.
+  - **Non-string values** (`number`, `Date`, `Dayjs`) are passed to dayjs as-is and checked only for calendrical validity; `format` is intentionally ignored for these types since it is a string-parsing hint, not a type constraint.
+  - **Empty values** (`null`, `undefined`, `''`) intentionally return `true` — presence enforcement is the responsibility of the `required` validator, not `validDate`.
+
+#### dateNotInPast(format?)
+
+- **format**: `string | undefined` - Optional date format string. Used only when the value is a string. Omit for `number`, `Date`, or `Dayjs` values. Defaults to `'YYYY/MM/DD'` in the Quasar wrapper to match Quasar's QDate default mask; the base `useFieldValidation` falls back to `'YYYY-MM-DD'`.
+- **Returns**: `(value: unknown) => true | string` - Validator function
+- **Use case**: Ensure a date field contains today or a future date
+- **Notes**: Empty values (`null`, `undefined`, `''`) return `true`. Values that cannot be parsed into a valid date also return `true` — pair with `validDate` to catch unparseable strings first.
+
 #### useQuasarRules(instanceId, attributeConfig, validatorsNames)
 
 - **instanceId**: `string` - The unique identifier of the module instance
 - **attributeConfig**: `LinidAttributeConfiguration<T>` - The configuration of the attribute being validated
-- **validatorsNames**: `ValidatorName[]` - Array of validator names to include (`'min'`, `'max'`, `'minLength'`, `'maxLength'`, `'pattern'`, `'unique'`)
+- **validatorsNames**: `ValidatorName[]` - Array of validator names to include (`'dateNotInPast'`, `'min'`, `'max'`, `'minLength'`, `'maxLength'`, `'pattern'`, `'unique'`, `'validDate'`)
 - **Returns**: `ValidationRule[]` - Array of validation functions ready to use in Quasar's `rules` prop
 - **Use case**: Automatic rule generation from configuration
 - **Behavior**:
@@ -580,6 +674,14 @@ All validation error messages must be defined in your i18n files under the scope
           "max": "Must not exceed {max}.",
           "unknownError": "Unknown error while validating age."
         }
+      },
+      "birthDate": {
+        "validation": {
+          "required": "Birth date is required.",
+          "invalidDate": "Invalid date. Expected format: {format}.",
+          "dateInPast": "Date must be today or in the future.",
+          "unknownError": "Unknown error while validating the date."
+        }
       }
     }
   }
@@ -591,6 +693,7 @@ All validation error messages must be defined in your i18n files under the scope
 - **minLength/maxLength**: `{ min }` or `{ max }`
 - **min/max**: `{ min }` or `{ max }`
 - **pattern**: `{ pattern }`
+- **invalidDate**: `{ format }` — the format string passed to `validDate`
 
 ## 8. Best Practices
 

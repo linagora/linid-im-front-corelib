@@ -1,5 +1,9 @@
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useQuasarFieldValidation } from 'src/composables/useQuasarFieldValidation';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+
+const FIXED_NOW = new Date('2026-06-15T12:00:00.000Z');
 
 const mockT = vi.fn((key, params) => {
   if (params) {
@@ -18,6 +22,10 @@ vi.mock('src/composables/useScopedI18n', async () => {
 });
 
 describe('Test composable: useQuasarFieldValidation', () => {
+  beforeAll(() => {
+    dayjs.extend(customParseFormat);
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -34,6 +42,8 @@ describe('Test composable: useQuasarFieldValidation', () => {
     expect(validators).toHaveProperty('maxLength');
     expect(validators).toHaveProperty('pattern');
     expect(validators).toHaveProperty('unique');
+    expect(validators).toHaveProperty('validDate');
+    expect(validators).toHaveProperty('dateNotInPast');
   });
 
   it('should return curried functions for validators with parameters', () => {
@@ -98,6 +108,150 @@ describe('Test composable: useQuasarFieldValidation', () => {
       expect(email('john.doe@example.com')).toBe(true);
       expect(email('foo')).toBe('translated.validation.email');
       expect(email(undefined)).toBe('translated.validation.email');
+    });
+  });
+
+  describe('Test function: validDate', () => {
+    it('should return a curried validator that accepts a valid date string', () => {
+      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+
+      const validator = validDate('YYYY-MM-DD');
+      expect(validator('2026-04-30')).toBe(true);
+    });
+
+    it('should return a curried validator that rejects a date string not matching the format', () => {
+      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+
+      const validator = validDate('YYYY-MM-DD');
+      expect(validator('30/04/2026')).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY-MM-DD"}'
+      );
+    });
+
+    it('should return a curried validator that rejects a calendrically invalid date', () => {
+      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+
+      const validator = validDate('YYYY-MM-DD');
+      expect(validator('2026-02-30')).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY-MM-DD"}'
+      );
+    });
+
+    it('should use the default format when no format is provided', () => {
+      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+
+      const validator = validDate();
+      expect(validator('2099/04/30')).toBe(true);
+      expect(validator('2000-01-01')).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY/MM/DD"}'
+      );
+    });
+
+    it('should treat an empty string format like an omitted format and use the wrapper default', () => {
+      const { validDate } = useQuasarFieldValidation('test-instance', 'date');
+
+      const validator = validDate('');
+      expect(validator('2099/04/30')).toBe(true);
+      expect(validator('2099-04-30')).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY/MM/DD"}'
+      );
+    });
+  });
+
+  describe('Test function: dateNotInPast', () => {
+    // Pin the system clock so "today / tomorrow / yesterday" are deterministic
+    // and the tests cannot flake around midnight or month boundaries.
+    beforeAll(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(FIXED_NOW);
+    });
+
+    afterAll(() => {
+      vi.useRealTimers();
+    });
+
+    it("should return a curried validator that accepts today's date", () => {
+      const { dateNotInPast } = useQuasarFieldValidation(
+        'test-instance',
+        'date'
+      );
+
+      const validator = dateNotInPast('YYYY-MM-DD');
+      expect(validator(dayjs().format('YYYY-MM-DD'))).toBe(true);
+    });
+
+    it('should return a curried validator that accepts a future date', () => {
+      const { dateNotInPast } = useQuasarFieldValidation(
+        'test-instance',
+        'date'
+      );
+
+      const validator = dateNotInPast('YYYY-MM-DD');
+      expect(validator(dayjs().add(1, 'day').format('YYYY-MM-DD'))).toBe(true);
+    });
+
+    it('should return a curried validator that rejects a past date', () => {
+      const { dateNotInPast } = useQuasarFieldValidation(
+        'test-instance',
+        'date'
+      );
+
+      const validator = dateNotInPast('YYYY-MM-DD');
+      expect(validator(dayjs().subtract(1, 'day').format('YYYY-MM-DD'))).toBe(
+        'translated.validation.dateInPast'
+      );
+    });
+
+    it('should return a curried validator without format for non-string values (Date, Dayjs)', () => {
+      const { dateNotInPast } = useQuasarFieldValidation(
+        'test-instance',
+        'date'
+      );
+
+      const validator = dateNotInPast();
+      expect(validator(dayjs())).toBe(true);
+      expect(validator(dayjs().subtract(1, 'day'))).toBe(
+        'translated.validation.dateInPast'
+      );
+    });
+
+    it('should use the default format for string values when no format is provided', () => {
+      const { dateNotInPast } = useQuasarFieldValidation(
+        'test-instance',
+        'date'
+      );
+
+      const validator = dateNotInPast();
+      expect(validator('2099/04/30')).toBe(true);
+      // '2000-04-30' does not match the wrapper default 'YYYY/MM/DD' so it
+      // produces an Invalid Dayjs whose `.isBefore()` returns false: the
+      // validator silently passes, demonstrating the "unparseable ⇒ pass"
+      // contract documented for `dateNotInPast`.
+      expect(validator('2000-04-30')).toBe(true);
+      expect(validator('2000/01/01')).toBe('translated.validation.dateInPast');
+    });
+
+    it('should treat an empty string format like an omitted format and use the wrapper default', () => {
+      const { dateNotInPast } = useQuasarFieldValidation(
+        'test-instance',
+        'date'
+      );
+
+      const validator = dateNotInPast('');
+      expect(validator('2099/04/30')).toBe(true);
+      expect(validator('2000/01/01')).toBe('translated.validation.dateInPast');
+    });
+
+    it('should return true for an unparseable or calendrically invalid string', () => {
+      const { dateNotInPast } = useQuasarFieldValidation(
+        'test-instance',
+        'date'
+      );
+
+      const validator = dateNotInPast('YYYY-MM-DD');
+      expect(validator('not-a-date')).toBe(true);
+      expect(validator('2026-13-99')).toBe(true);
+      expect(validator('2026-02-30')).toBe(true);
     });
   });
 });

@@ -11,10 +11,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build output
-dist/
-lib/
-esm/
-*.tsbuildinfo
+#dist/
+#lib/
+#esm/
+#*.tsbuildinfo
 
 # Vue / Vite / Rollup caches
 .vite/

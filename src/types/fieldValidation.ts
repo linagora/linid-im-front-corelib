@@ -30,9 +30,11 @@
  * of `LinidAttributeConfiguration`.
  */
 export type ValidatorName =
+  | 'dateNotInPast'
   | 'min'
   | 'max'
   | 'minLength'
   | 'maxLength'
   | 'pattern'
-  | 'unique';
+  | 'unique'
+  | 'validDate';

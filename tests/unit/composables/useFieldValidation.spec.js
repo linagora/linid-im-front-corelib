@@ -1,6 +1,10 @@
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useFieldValidation } from 'src/composables/useFieldValidation';
 import { validate } from 'src/services/linidEntityService';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+
+const FIXED_NOW = new Date('2026-06-15T12:00:00.000Z');
 
 const mockT = vi.fn((key, params) => {
   if (params) {
@@ -21,6 +25,10 @@ vi.mock('src/composables/useScopedI18n', async () => {
 });
 
 describe('Test composable: useFieldValidation', () => {
+  beforeAll(() => {
+    dayjs.extend(customParseFormat);
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -331,6 +339,209 @@ describe('Test composable: useFieldValidation', () => {
           ]
         )
       ).toBe('translated.validation.unique');
+    });
+  });
+
+  describe('Test function: validDate', () => {
+    it('should return true for a valid date matching the format', () => {
+      const { validDate } = useFieldValidation('test-instance.date');
+
+      expect(validDate('2026-04-30', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return error message for a date not matching the format', () => {
+      const { validDate } = useFieldValidation('test-instance.date');
+
+      const result = validDate('30/04/2026', 'YYYY-MM-DD');
+      expect(result).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY-MM-DD"}'
+      );
+      expect(mockT).toHaveBeenCalledWith('validation.invalidDate', {
+        format: 'YYYY-MM-DD',
+      });
+    });
+
+    it('should return error message for an invalid date string', () => {
+      const { validDate } = useFieldValidation('test-instance.date');
+
+      expect(validDate('not-a-date', 'YYYY-MM-DD')).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY-MM-DD"}'
+      );
+    });
+
+    it('should return error message for a calendrically invalid date', () => {
+      const { validDate } = useFieldValidation('test-instance.date');
+
+      expect(validDate('2026-02-30', 'YYYY-MM-DD')).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY-MM-DD"}'
+      );
+    });
+
+    it('should return true for null, undefined or empty string', () => {
+      const { validDate } = useFieldValidation('test-instance.date');
+
+      expect(validDate(null, 'YYYY-MM-DD')).toBe(true);
+      expect(validDate(undefined, 'YYYY-MM-DD')).toBe(true);
+      expect(validDate('', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return true for a non-string value such as a Date object', () => {
+      const { validDate } = useFieldValidation('test-instance.date');
+
+      expect(validDate(new Date(), 'YYYY-MM-DD')).toBe(true);
+      expect(validDate(42, 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should use the default format when no format is provided', () => {
+      const { validDate } = useFieldValidation('test-instance.date');
+
+      expect(validDate('2026-04-30')).toBe(true);
+      expect(validDate('30/04/2026')).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY-MM-DD"}'
+      );
+    });
+
+    it('should fall back to the default format when format is an empty string', () => {
+      const { validDate } = useFieldValidation('test-instance.date');
+
+      expect(validDate('2026-04-30', '')).toBe(true);
+      expect(validDate('30/04/2026', '')).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY-MM-DD"}'
+      );
+    });
+
+    it('should reject an ISO 8601 datetime string under the default format', () => {
+      const { validDate } = useFieldValidation('test-instance.date');
+
+      expect(validDate('2026-04-30T10:00:00Z')).toBe(
+        'translated.validation.invalidDate.{"format":"YYYY-MM-DD"}'
+      );
+    });
+  });
+
+  describe('Test function: dateNotInPast', () => {
+    // Pin the system clock so "today / tomorrow / yesterday" are deterministic
+    // and the tests cannot flake around midnight or month boundaries.
+    beforeAll(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(FIXED_NOW);
+    });
+
+    afterAll(() => {
+      vi.useRealTimers();
+    });
+
+    it("should return true for today's date", () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast(dayjs().format('YYYY-MM-DD'), 'YYYY-MM-DD')).toBe(
+        true
+      );
+    });
+
+    it('should return true for a future date', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(
+        dateNotInPast(dayjs().add(1, 'day').format('YYYY-MM-DD'), 'YYYY-MM-DD')
+      ).toBe(true);
+    });
+
+    it('should return error message for a past date', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      const result = dateNotInPast(
+        dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+        'YYYY-MM-DD'
+      );
+      expect(result).toBe('translated.validation.dateInPast');
+      expect(mockT).toHaveBeenCalledWith('validation.dateInPast');
+    });
+
+    it('should return true for null, undefined or empty string', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast(null)).toBe(true);
+      expect(dateNotInPast(undefined)).toBe(true);
+      expect(dateNotInPast('')).toBe(true);
+    });
+
+    it('should return true for a Date object representing today', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast(new Date())).toBe(true);
+    });
+
+    it('should return error message for a Date object in the past', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast(new Date('2000-01-01'))).toBe(
+        'translated.validation.dateInPast'
+      );
+    });
+
+    it('should return true for a timestamp number representing today', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast(Date.now())).toBe(true);
+    });
+
+    it('should return error message for a timestamp number in the past', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast(new Date('2000-01-01').getTime())).toBe(
+        'translated.validation.dateInPast'
+      );
+    });
+
+    it('should return true for a Dayjs object representing today', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast(dayjs())).toBe(true);
+    });
+
+    it('should return error message for a Dayjs object in the past', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast(dayjs().subtract(1, 'day'))).toBe(
+        'translated.validation.dateInPast'
+      );
+    });
+
+    it('should use the default format when no format is provided', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast('2099-04-30')).toBe(true);
+      expect(dateNotInPast('2000-01-01')).toBe(
+        'translated.validation.dateInPast'
+      );
+    });
+
+    it('should fall back to the default format when format is an empty string', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      expect(dateNotInPast('2099-04-30', '')).toBe(true);
+      expect(dateNotInPast('2000-01-01', '')).toBe(
+        'translated.validation.dateInPast'
+      );
+    });
+
+    it('should return true for a string that cannot be parsed against the format', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      // Unparseable strings produce an Invalid Dayjs whose `.isBefore()` returns
+      // false, so the validator silently passes. This is documented behaviour:
+      // pair `dateNotInPast` with `validDate` to catch unparseable strings first.
+      expect(dateNotInPast('not-a-date', 'YYYY-MM-DD')).toBe(true);
+      expect(dateNotInPast('30/04/2026', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return true for a calendrically invalid date string', () => {
+      const { dateNotInPast } = useFieldValidation('test-instance.date');
+
+      // Same contract as unparseable strings: invalid Dayjs ⇒ no comparison ⇒ pass.
+      expect(dateNotInPast('2026-13-99', 'YYYY-MM-DD')).toBe(true);
+      expect(dateNotInPast('2026-02-30', 'YYYY-MM-DD')).toBe(true);
     });
   });
 });

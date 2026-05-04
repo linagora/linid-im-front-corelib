@@ -26,6 +26,8 @@
 
 import { useFieldValidation } from './useFieldValidation';
 
+const QDATE_DEFAULT_MASK = 'YYYY/MM/DD';
+
 /**
  * Composable for field validation compatible with Quasar framework.
  * @param instanceId The unique identifier of the module instance.
@@ -46,6 +48,8 @@ export function useQuasarFieldValidation(
     max,
     pattern,
     unique,
+    validDate,
+    dateNotInPast,
   } = useFieldValidation(`${instanceId}.fields.${fieldName}`);
 
   return {
@@ -64,5 +68,9 @@ export function useQuasarFieldValidation(
     pattern: (patternValue: string) => (value: string) =>
       pattern(value, patternValue),
     unique: (items: unknown[]) => (value: unknown) => unique(value, items),
+    validDate: (format?: string) => (value: unknown) =>
+      validDate(value, format || QDATE_DEFAULT_MASK),
+    dateNotInPast: (format?: string) => (value: unknown) =>
+      dateNotInPast(value, format || QDATE_DEFAULT_MASK),
   };
 }

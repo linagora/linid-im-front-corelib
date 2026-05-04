@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.60](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.59...v0.0.60) (2026-05-04)
+
+
+### Features
+
+* add TreeNodeType and extraActions for nodeType ([464f651](https://github.com/linagora/linid-im-front-corelib/commit/464f651f74330377dfdcb0ed88fc93f5713b1585))
+
 ### [0.0.59](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.58...v0.0.59) (2026-05-04)
 
 

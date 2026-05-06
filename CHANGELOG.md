@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.61](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.60...v0.0.61) (2026-05-06)
+
+
+### Features
+
+* add generic MenuItem and DropdownClickPayload types ([4b9fbb2](https://github.com/linagora/linid-im-front-corelib/commit/4b9fbb23accf4b1aab70fe3f04066245d9336d7f))
+
 ### [0.0.60](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.59...v0.0.60) (2026-05-04)
 
 

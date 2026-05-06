@@ -176,3 +176,6 @@ export type { LinidUser } from './types/linidUser';
 
 // Types - Tree
 export type { TreeNode, TreeNodeType } from './types/linidTree';
+
+// Types - Dropdown
+export type { DropdownClickPayload, MenuItem } from './types/dropdownButton';

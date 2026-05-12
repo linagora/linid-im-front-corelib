@@ -49,6 +49,7 @@ import type {
   QRouteTabProps,
   QSelectProps,
   QSpinnerProps,
+  QSplitterProps,
   QTableProps,
   QTabsProps,
   QToggleProps,
@@ -625,6 +626,22 @@ const Q_TREE_PROPS = [
 ] as const;
 
 /**
+ * List of QSplitterProps keys for type-safe UI design retrieval.
+ */
+const Q_SPLITTER_PROPS = [
+  'horizontal',
+  'limits',
+  'disable',
+  'beforeClass',
+  'afterClass',
+  'separatorClass',
+  'separatorStyle',
+  'dark',
+  'reverse',
+  'unit',
+] as const;
+
+/**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
 export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
@@ -657,6 +674,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-toolbar': Q_TOOLBAR_PROPS,
   'q-toolbar-title': Q_TOOLBAR_TITLE_PROPS,
   'q-tree': Q_TREE_PROPS,
+  'q-splitter': Q_SPLITTER_PROPS,
 } as const;
 
 /**
@@ -856,6 +874,14 @@ export type LinidQMenuProps = Pick<QMenuProps, (typeof Q_MENU_PROPS)[number]>;
 export type LinidQTreeProps = Pick<QTreeProps, (typeof Q_TREE_PROPS)[number]>;
 
 /**
+ * Subset of QSplitter props supported in UI design configuration.
+ */
+export type LinidQSplitterProps = Pick<
+  QSplitterProps,
+  (typeof Q_SPLITTER_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -921,4 +947,5 @@ export type QComponentName =
   | 'q-toggle'
   | 'q-toolbar'
   | 'q-toolbar-title'
-  | 'q-tree';
+  | 'q-tree'
+  | 'q-splitter';

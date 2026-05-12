@@ -148,12 +148,12 @@ useQuasarRules (automation layer)
 
 - Takes an attribute configuration and array of validator names
 - Automatically generates the complete `rules` array
-- Return an empty array if `attributeConfig.hasValidations` is `false`
+- Returns an empty array if `attributeConfig.hasValidations` is `false`, `required` is `false`, and no validators are specified
 - Handles `required` based on `attributeConfig.required`
 - `required` validator is the first in the list if `attributeConfig.required` is `true`
 - Filters validators based on available `inputSettings`
 - Follows the order of `validatorNames` parameter
-- Always includes `validateFromApi` at the end
+- Includes `validateFromApi` at the end if `attributeConfig.hasValidations` is `true`
 - Implementation: Uses `useQuasarFieldValidation` internally
 - Use case: Simplified rule generation from configuration
 
@@ -460,7 +460,7 @@ const emailRules = useQuasarRules(
 // The generated rules include:
 // - required (if attributeConfig.required is true)
 // - validators specified in the array (if they have settings in inputSettings)
-// - validateFromApi (always included at the end)
+// - validateFromApi (if attributeConfig.hasValidations is true)
 ```
 
 ---
@@ -640,10 +640,10 @@ interface LinidAttributeConfiguration<T> {
 - **Returns**: `ValidationRule[]` - Array of validation functions ready to use in Quasar's `rules` prop
 - **Use case**: Automatic rule generation from configuration
 - **Behavior**:
-  - Returns empty array if `attributeConfig.hasValidations` is `false`
+  - Returns empty array if `attributeConfig.hasValidations` is `false`, `required` is `false`, and no validators are specified
   - Includes `required` validator if `attributeConfig.required` is `true`
   - Only includes validators that have values in `attributeConfig.inputSettings`
-  - Always includes `validateFromApi` at the end
+  - Includes `validateFromApi` at the end if `attributeConfig.hasValidations` is `true`
 
 > **Note**: All validators return `true | string` following the [Quasar validation rules](https://quasar.dev/vue-components/input#validation-rules) contract.
 

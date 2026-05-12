@@ -22,11 +22,6 @@
  * LinID Identity Manager along with this program. If not, see <http://www.gnu.org/licenses/> for the GNU Affero
  * General Public License version 3 and <http://www.linagora.com/licenses/> for the Additional Terms applicable to the
  * LinID Identity Manager software.
- *
- * @param instanceId The unique identifier of the module instance.
- * @param attributeConfig - The configuration of the attribute being validated.
- * @param validatorsNames - Array of validator names to include.
- * @returns An array of validation functions compatible with Quasar.
  */
 
 import type { ValidationRule } from 'quasar/dist/types/api/validation.js';
@@ -35,7 +30,7 @@ import { useQuasarFieldValidation } from './useQuasarFieldValidation';
 
 /**
  * Generates Quasar validation rules based on configuration.
- * @param instanceId The unique identifier of the module instance.
+ * @param instanceId - The unique identifier of the module instance.
  * @param attributeConfig - The configuration of the attribute being validated.
  * @param validatorsNames - Array of validator names to include.
  * @returns An array of validation functions compatible with Quasar.
@@ -45,25 +40,24 @@ export function useQuasarRules<T extends Record<string, unknown>>(
   attributeConfig: LinidAttributeConfiguration<T>,
   validatorsNames: ValidatorName[]
 ): ValidationRule[] {
-  if (!attributeConfig.hasValidations) {
-    return [];
-  }
-
   const { required, validateFromApi, ...validatorsWithParam } =
     useQuasarFieldValidation(`${instanceId}.fields.${attributeConfig.name}`);
 
-  const rulesWithParam = validatorsNames
-    .filter((name) => attributeConfig.inputSettings?.[name] != null)
-    .map((name) =>
-      validatorsWithParam[name]?.(
-        attributeConfig.inputSettings?.[name] as never
-      )
-    )
-    .filter(Boolean);
+  const rules: ValidationRule[] = attributeConfig.required ? [required] : [];
 
-  return [
-    ...(attributeConfig.required ? [required] : []),
-    ...rulesWithParam,
-    validateFromApi(instanceId, attributeConfig.name),
-  ];
+  validatorsNames.forEach((name) => {
+    if (
+      validatorsWithParam[name] &&
+      attributeConfig.inputSettings?.[name] != null
+    ) {
+      const param = attributeConfig.inputSettings[name] as never;
+      rules.push(validatorsWithParam[name](param));
+    }
+  });
+
+  if (attributeConfig.hasValidations) {
+    rules.push(validateFromApi(instanceId, attributeConfig.name));
+  }
+
+  return rules;
 }

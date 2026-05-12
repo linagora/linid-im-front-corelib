@@ -95,7 +95,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 
 #### useQuasarRules (Easiest for Quasar)
 
-- **`useQuasarRules(instanceId, attributeConfig, validatorNames)`**: Automatically generates an array of Quasar validation rules following the order of validatorNames parameter and based on attribute configuration
+- **`useQuasarRules(instanceId, attributeConfig, validatorNames, i18nScope)`**: Automatically generates an array of Quasar validation rules following the order of validatorNames parameter and based on attribute configuration
 
 ---
 
@@ -243,16 +243,19 @@ const usernameConfig: LinidAttributeConfiguration = {
 };
 
 // Automatically generate rules from configuration
-const emailRules = useQuasarRules('user-module', emailConfig, [
-  'minLength',
-  'maxLength',
-  'pattern',
-]);
+const emailRules = useQuasarRules(
+  'user-module',
+  emailConfig,
+  ['minLength', 'maxLength', 'pattern'],
+  'user-module.fields.email'
+);
 
-const usernameRules = useQuasarRules('user-module', usernameConfig, [
-  'minLength',
-  'maxLength',
-]);
+const usernameRules = useQuasarRules(
+  'user-module',
+  usernameConfig,
+  ['minLength', 'maxLength'],
+  'user-module.fields.username'
+);
 </script>
 
 <template>
@@ -451,7 +454,8 @@ const emailConfig = {
 const emailRules = useQuasarRules(
   'user-module',
   emailConfig,
-  ['minLength', 'maxLength', 'pattern']
+  ['minLength', 'maxLength', 'pattern'],
+  'user-module.fields.email'
 );
 
 // Use directly in component
@@ -528,7 +532,8 @@ function useQuasarFieldValidation(i18nScope: string): {
 function useQuasarRules<T extends Record<string, unknown>>(
   instanceId: string,
   attributeConfig: LinidAttributeConfiguration<T>,
-  validatorsNames: ValidatorName[]
+  validatorsNames: ValidatorName[],
+  i18nScope: string
 ): ValidationRule[];
 
 // ValidatorName type
@@ -633,11 +638,12 @@ interface LinidAttributeConfiguration<T> {
 - **Use case**: Ensure a date field contains today or a future date
 - **Notes**: Empty values (`null`, `undefined`, `''`) return `true`. Values that cannot be parsed into a valid date also return `true` — pair with `validDate` to catch unparseable strings first.
 
-#### useQuasarRules(instanceId, attributeConfig, validatorsNames)
+#### useQuasarRules(instanceId, attributeConfig, validatorsNames, i18nScope)
 
 - **instanceId**: `string` - The unique identifier of the module instance
 - **attributeConfig**: `LinidAttributeConfiguration<T>` - The configuration of the attribute being validated
 - **validatorsNames**: `ValidatorName[]` - Array of validator names to include (`'email'`, `'dateNotInPast'`, `'min'`, `'max'`, `'minLength'`, `'maxLength'`, `'pattern'`, `'unique'`, `'validDate'`)
+- **i18nScope**: `string` - The i18n scope passed to `useQuasarFieldValidation` for error message translation (e.g. `'user-module.fields.email'`)
 - **Returns**: `ValidationRule[]` - Array of validation functions ready to use in Quasar's `rules` prop
 - **Use case**: Automatic rule generation from configuration
 - **Behavior**:

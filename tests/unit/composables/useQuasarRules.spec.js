@@ -48,7 +48,12 @@ describe('Test composable: useQuasarRules', () => {
       required: false,
     };
 
-    const rules = useQuasarRules('test-instance', attributeConfig, []);
+    const rules = useQuasarRules(
+      'test-instance',
+      attributeConfig,
+      [],
+      'test-instance.fields.email'
+    );
 
     expect(rules).toEqual([]);
   });
@@ -60,7 +65,12 @@ describe('Test composable: useQuasarRules', () => {
       required: false,
     };
 
-    const rules = useQuasarRules('test-instance', attributeConfig, []);
+    const rules = useQuasarRules(
+      'test-instance',
+      attributeConfig,
+      [],
+      'test-instance.fields.email'
+    );
 
     expect(rules).toHaveLength(1);
     await expectIsValidateFromApiRule(rules[0]);
@@ -73,7 +83,12 @@ describe('Test composable: useQuasarRules', () => {
       required: true,
     };
 
-    const rules = useQuasarRules('test-instance', attributeConfig, []);
+    const rules = useQuasarRules(
+      'test-instance',
+      attributeConfig,
+      [],
+      'test-instance.fields.email'
+    );
 
     expect(rules).toHaveLength(2);
     expectIsRequiredRule(rules[0]);
@@ -87,7 +102,12 @@ describe('Test composable: useQuasarRules', () => {
       required: false,
     };
 
-    const rules = useQuasarRules('test-instance', attributeConfig, ['email']);
+    const rules = useQuasarRules(
+      'test-instance',
+      attributeConfig,
+      ['email'],
+      'test-instance.fields.email'
+    );
 
     expect(rules).toHaveLength(2);
     expectIsEmailRule(rules[0]);
@@ -105,10 +125,12 @@ describe('Test composable: useQuasarRules', () => {
       },
     };
 
-    const rules = useQuasarRules('test-instance', attributeConfig, [
-      'minLength',
-      'maxLength',
-    ]);
+    const rules = useQuasarRules(
+      'test-instance',
+      attributeConfig,
+      ['minLength', 'maxLength'],
+      'test-instance.fields.username'
+    );
 
     expect(rules).toHaveLength(4);
     expectIsRequiredRule(rules[0]);
@@ -127,10 +149,12 @@ describe('Test composable: useQuasarRules', () => {
       },
     };
 
-    const rules = useQuasarRules('test-instance', attributeConfig, [
-      'minLength',
-      'maxLength',
-    ]);
+    const rules = useQuasarRules(
+      'test-instance',
+      attributeConfig,
+      ['minLength', 'maxLength'],
+      'test-instance.fields.email'
+    );
 
     expect(rules).toHaveLength(3);
     expectIsRequiredRule(rules[0]);
@@ -150,12 +174,12 @@ describe('Test composable: useQuasarRules', () => {
       },
     };
 
-    const rules = useQuasarRules('test-instance', attributeConfig, [
-      'minLength',
-      'maxLength',
-      'pattern',
-      'email',
-    ]);
+    const rules = useQuasarRules(
+      'test-instance',
+      attributeConfig,
+      ['minLength', 'maxLength', 'pattern', 'email'],
+      'test-instance.fields.password'
+    );
 
     expect(rules).toHaveLength(6);
     expectIsRequiredRule(rules[0]);
@@ -189,10 +213,12 @@ describe('Test composable: useQuasarRules', () => {
         },
       };
 
-      const rules = useQuasarRules('test-instance', attributeConfig, [
-        'validDate',
-        'dateNotInPast',
-      ]);
+      const rules = useQuasarRules(
+        'test-instance',
+        attributeConfig,
+        ['validDate', 'dateNotInPast'],
+        'test-instance.fields.startDate'
+      );
 
       expect(rules).toHaveLength(4);
       expectIsRequiredRule(rules[0]);
@@ -211,10 +237,12 @@ describe('Test composable: useQuasarRules', () => {
         },
       };
 
-      const rules = useQuasarRules('test-instance', attributeConfig, [
-        'validDate',
-        'dateNotInPast',
-      ]);
+      const rules = useQuasarRules(
+        'test-instance',
+        attributeConfig,
+        ['validDate', 'dateNotInPast'],
+        'test-instance.fields.startDate'
+      );
 
       expect(rules).toHaveLength(2);
       expectIsValidDateRule(rules[0], 'YYYY-MM-DD');

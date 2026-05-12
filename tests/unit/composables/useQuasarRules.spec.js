@@ -80,6 +80,20 @@ describe('Test composable: useQuasarRules', () => {
     await expectIsValidateFromApiRule(rules[1]);
   });
 
+  it('should include email validator when specified', async () => {
+    const attributeConfig = {
+      name: 'email',
+      hasValidations: true,
+      required: false,
+    };
+
+    const rules = useQuasarRules('test-instance', attributeConfig, ['email']);
+
+    expect(rules).toHaveLength(2);
+    expectIsEmailRule(rules[0]);
+    await expectIsValidateFromApiRule(rules[1]);
+  });
+
   it('should generate rules for validators with parameters', async () => {
     const attributeConfig = {
       name: 'username',
@@ -103,7 +117,7 @@ describe('Test composable: useQuasarRules', () => {
     await expectIsValidateFromApiRule(rules[3]);
   });
 
-  it('should only include validators that have settings configured', async () => {
+  it('should only include validators with parameters that have settings configured', async () => {
     const attributeConfig = {
       name: 'email',
       hasValidations: true,
@@ -140,14 +154,16 @@ describe('Test composable: useQuasarRules', () => {
       'minLength',
       'maxLength',
       'pattern',
+      'email',
     ]);
 
-    expect(rules).toHaveLength(5);
+    expect(rules).toHaveLength(6);
     expectIsRequiredRule(rules[0]);
     expectIsMinLengthRule(rules[1], 8);
     expectIsMaxLengthRule(rules[2], 50);
     expectIsPatternRule(rules[3], '^(?=.*[A-Z])(?=.*[0-9])');
-    await expectIsValidateFromApiRule(rules[4]);
+    expectIsEmailRule(rules[4]);
+    await expectIsValidateFromApiRule(rules[5]);
   });
 
   describe('with date validators', () => {
@@ -254,4 +270,10 @@ function expectIsDateNotInPastRule(rule, format) {
   const result = rule(pastDate);
   expect(result).toBe('translated.validation.dateInPast');
   expect(mockT).toHaveBeenCalledWith('validation.dateInPast');
+}
+
+function expectIsEmailRule(rule) {
+  const result = rule('invalid-email');
+  expect(result).toBe('translated.validation.email');
+  expect(mockT).toHaveBeenCalledWith('validation.email');
 }

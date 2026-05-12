@@ -533,6 +533,7 @@ function useQuasarRules<T extends Record<string, unknown>>(
 
 // ValidatorName type
 type ValidatorName =
+  | 'email'
   | 'dateNotInPast'
   | 'min'
   | 'max'
@@ -636,7 +637,7 @@ interface LinidAttributeConfiguration<T> {
 
 - **instanceId**: `string` - The unique identifier of the module instance
 - **attributeConfig**: `LinidAttributeConfiguration<T>` - The configuration of the attribute being validated
-- **validatorsNames**: `ValidatorName[]` - Array of validator names to include (`'dateNotInPast'`, `'min'`, `'max'`, `'minLength'`, `'maxLength'`, `'pattern'`, `'unique'`, `'validDate'`)
+- **validatorsNames**: `ValidatorName[]` - Array of validator names to include (`'email'`, `'dateNotInPast'`, `'min'`, `'max'`, `'minLength'`, `'maxLength'`, `'pattern'`, `'unique'`, `'validDate'`)
 - **Returns**: `ValidationRule[]` - Array of validation functions ready to use in Quasar's `rules` prop
 - **Use case**: Automatic rule generation from configuration
 - **Behavior**:

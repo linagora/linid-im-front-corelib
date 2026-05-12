@@ -30,6 +30,7 @@
  * of `LinidAttributeConfiguration`.
  */
 export type ValidatorName =
+  | 'email'
   | 'dateNotInPast'
   | 'min'
   | 'max'

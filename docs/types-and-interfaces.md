@@ -398,15 +398,19 @@ const dateAttr: LinidAttributeConfiguration = {
 
 Represents the available validator names that can be used with `useQuasarRules`.
 
-These validators require configuration parameters from the `inputSettings` property of `LinidAttributeConfiguration`.
+Most validators read their parameters from the `inputSettings` property of `LinidAttributeConfiguration`. `'email'` is the exception: it takes no parameter and is applied directly.
 
 ```ts
 export type ValidatorName =
+  | 'email'
+  | 'dateNotInPast'
   | 'min'
   | 'max'
   | 'minLength'
   | 'maxLength'
-  | 'pattern';
+  | 'pattern'
+  | 'unique'
+  | 'validDate';
 ```
 
 **Usage:**

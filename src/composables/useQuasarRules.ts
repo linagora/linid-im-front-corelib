@@ -40,13 +40,15 @@ export function useQuasarRules<T extends Record<string, unknown>>(
   attributeConfig: LinidAttributeConfiguration<T>,
   validatorsNames: ValidatorName[]
 ): ValidationRule[] {
-  const { required, validateFromApi, ...validatorsWithParam } =
+  const { required, email, validateFromApi, ...validatorsWithParam } =
     useQuasarFieldValidation(`${instanceId}.fields.${attributeConfig.name}`);
 
   const rules: ValidationRule[] = attributeConfig.required ? [required] : [];
 
   validatorsNames.forEach((name) => {
-    if (
+    if (name === 'email') {
+      rules.push(email);
+    } else if (
       validatorsWithParam[name] &&
       attributeConfig.inputSettings?.[name] != null
     ) {

@@ -27,7 +27,7 @@
 /**
  * Represents a node in the tree structure.
  */
-export type TreeNode = {
+export type TreeNode<T> = {
   /**
    * The type of the node.
    */
@@ -37,13 +37,13 @@ export type TreeNode = {
    */
   key: string;
   /**
-   * The value associated with the node, which can be a string, number, or an object for complex nodes.
+   * The value associated with the node.
    */
-  value: string | number | Record<string, unknown>;
+  value: T;
   /**
    * Child nodes nested under this node.
    */
-  nodes: TreeNode[];
+  nodes: TreeNode<T>[];
   /**
    * Additional actions specific to this node instance, merged with the
    * default actions defined by the matching `TreeNodeType`.

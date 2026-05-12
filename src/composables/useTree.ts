@@ -44,7 +44,7 @@ export function useTree() {
    * @param nodes - The array of LinID tree nodes to convert.
    * @returns An array of Quasar-compatible tree nodes.
    */
-  function toQTreeNodes(nodes: TreeNode[]): QTreeNode[] {
+  function toQTreeNodes<T>(nodes: TreeNode<T>[]): QTreeNode[] {
     return nodes.map((node) => ({
       type: node.type,
       key: node.key,

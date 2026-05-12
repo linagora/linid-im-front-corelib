@@ -241,7 +241,8 @@ export type QComponentName =
   | 'q-toggle'
   | 'q-toolbar'
   | 'q-toolbar-title'
-  | 'q-tree';
+  | 'q-tree'
+  | 'q-splitter';
 
 /**
  * Union type of all supported Quasar component props subsets.
@@ -270,6 +271,7 @@ export type LinidQComponentProps =
   | LinidQRouteTabProps
   | LinidQSelectProps
   | LinidQSpinnerProps
+  | LinidQSplitterProps
   | LinidQTableProps
   | LinidQTabsProps
   | LinidQToggleProps
@@ -946,6 +948,25 @@ duration,
 ```
 
 For details, refer to the [Quasar QTree API documentation](https://quasar.dev/vue-components/tree#qtree-api).
+
+### q-splitter
+
+The following props are officially supported and design-validated in our system:
+
+```
+horizontal,
+limits,
+disable,
+beforeClass,
+afterClass,
+separatorClass,
+separatorStyle,
+dark,
+reverse,
+unit
+```
+
+For details, refer to the [Quasar QSplitter API documentation](https://quasar.dev/vue-components/splitter).
 
 More components can be added as needed.
 

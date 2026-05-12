@@ -140,6 +140,7 @@ export type {
   LinidQRouteTabProps,
   LinidQSelectProps,
   LinidQSpinnerProps,
+  LinidQSplitterProps,
   LinidQTableProps,
   LinidQTabsProps,
   LinidQToggleProps,

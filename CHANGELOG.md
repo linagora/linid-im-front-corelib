@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.62](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.61...v0.0.62) (2026-05-12)
+
+
+### Features
+
+* add support for email validator inside useQuasarRules handles ([fc30d27](https://github.com/linagora/linid-im-front-corelib/commit/fc30d2752339b9e3399af768ff14958e35438a28))
+* make validateFromApi conditional on hasValidations ([9736885](https://github.com/linagora/linid-im-front-corelib/commit/9736885caa6a1beb88f1a9435b2e1db947d105bd))
+
 ### [0.0.61](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.60...v0.0.61) (2026-05-06)
 
 

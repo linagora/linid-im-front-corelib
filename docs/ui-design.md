@@ -956,14 +956,14 @@ The following props are officially supported and design-validated in our system:
 ```
 horizontal,
 limits,
+reverse,
+unit,
 disable,
 beforeClass,
 afterClass,
 separatorClass,
 separatorStyle,
 dark,
-reverse,
-unit
 ```
 
 For details, refer to the [Quasar QSplitter API documentation](https://quasar.dev/vue-components/splitter).

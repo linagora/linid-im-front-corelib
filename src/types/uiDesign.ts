@@ -631,14 +631,14 @@ const Q_TREE_PROPS = [
 const Q_SPLITTER_PROPS = [
   'horizontal',
   'limits',
+  'reverse',
+  'unit',
   'disable',
   'beforeClass',
   'afterClass',
   'separatorClass',
   'separatorStyle',
   'dark',
-  'reverse',
-  'unit',
 ] as const;
 
 /**

@@ -2,7 +2,15 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useQuasarRules } from 'src/composables/useQuasarRules';
 import { validate } from 'src/services/linidEntityService';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
 
 const FIXED_NOW = new Date('2026-06-15T12:00:00.000Z');
 
@@ -33,7 +41,7 @@ describe('Test composable: useQuasarRules', () => {
     vi.clearAllMocks();
   });
 
-  it('should return empty array when hasValidations is false', () => {
+  it('should return empty array when hasValidations is false, required is false, and no validators are specified', () => {
     const attributeConfig = {
       name: 'email',
       hasValidations: false,
@@ -235,7 +243,9 @@ function expectIsPatternRule(rule, patternStr) {
 
 function expectIsValidDateRule(rule, format) {
   const result = rule('not-a-date');
-  expect(result).toBe(`translated.validation.invalidDate.{"format":"${format}"}`);
+  expect(result).toBe(
+    `translated.validation.invalidDate.{"format":"${format}"}`
+  );
   expect(mockT).toHaveBeenCalledWith('validation.invalidDate', { format });
 }
 

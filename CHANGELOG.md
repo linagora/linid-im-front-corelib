@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.64](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.63...v0.0.64) (2026-05-13)
+
+
+### Features
+
+* add qsplitter ui design ([dc818cc](https://github.com/linagora/linid-im-front-corelib/commit/dc818cc1ce26e0af0ba87e2335089abb79dad876))
+
 ### [0.0.63](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.62...v0.0.63) (2026-05-12)
 
 ### [0.0.62](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.61...v0.0.62) (2026-05-12)

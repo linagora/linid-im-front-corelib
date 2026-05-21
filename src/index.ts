@@ -31,6 +31,7 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 export { useDialog } from './composables/useDialog';
 export { useFieldValidation } from './composables/useFieldValidation';
 export { useNotify } from './composables/useNotify';
+export { useNunjucks } from './composables/useNunjucks';
 export { usePagination } from './composables/usePagination';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
 export { useQuasarRules } from './composables/useQuasarRules';

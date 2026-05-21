@@ -956,6 +956,7 @@ The following props are officially supported and design-validated in our system:
 ```
 horizontal,
 limits,
+modelValue,
 reverse,
 unit,
 disable,

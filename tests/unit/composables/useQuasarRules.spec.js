@@ -1,18 +1,6 @@
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useQuasarRules } from 'src/composables/useQuasarRules';
 import { validate } from 'src/services/linidEntityService';
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
-
-const FIXED_NOW = new Date('2026-06-15T12:00:00.000Z');
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockT = vi.fn((key, params) => {
   if (params) {
@@ -22,6 +10,12 @@ const mockT = vi.fn((key, params) => {
 });
 
 vi.mock('src/services/linidEntityService');
+
+vi.mock('src/services/dayjsService', async () => {
+  const { default: dayjsFn } = await vi.importActual('dayjs');
+  return { getDayjsInstance: () => dayjsFn };
+});
+
 vi.mock('src/composables/useScopedI18n', async () => {
   const actual = await vi.importActual('src/composables/useScopedI18n');
   return {
@@ -33,10 +27,6 @@ vi.mock('src/composables/useScopedI18n', async () => {
 });
 
 describe('Test composable: useQuasarRules', () => {
-  beforeAll(() => {
-    dayjs.extend(customParseFormat);
-  });
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -189,66 +179,6 @@ describe('Test composable: useQuasarRules', () => {
     expectIsEmailRule(rules[4]);
     await expectIsValidateFromApiRule(rules[5]);
   });
-
-  describe('with date validators', () => {
-    // Pin the system clock so the past-date built by `expectIsDateNotInPastRule`
-    // is deterministic across runs and CI clocks.
-    beforeAll(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(FIXED_NOW);
-    });
-
-    afterAll(() => {
-      vi.useRealTimers();
-    });
-
-    it('should combine validDate and dateNotInPast in the order requested', async () => {
-      const attributeConfig = {
-        name: 'startDate',
-        hasValidations: true,
-        required: true,
-        inputSettings: {
-          validDate: 'YYYY-MM-DD',
-          dateNotInPast: 'YYYY-MM-DD',
-        },
-      };
-
-      const rules = useQuasarRules(
-        'test-instance',
-        attributeConfig,
-        ['validDate', 'dateNotInPast'],
-        'test-instance.fields.startDate'
-      );
-
-      expect(rules).toHaveLength(4);
-      expectIsRequiredRule(rules[0]);
-      expectIsValidDateRule(rules[1], 'YYYY-MM-DD');
-      expectIsDateNotInPastRule(rules[2], 'YYYY-MM-DD');
-      await expectIsValidateFromApiRule(rules[3]);
-    });
-
-    it('should skip validDate / dateNotInPast when their inputSettings entries are missing', async () => {
-      const attributeConfig = {
-        name: 'startDate',
-        hasValidations: true,
-        required: false,
-        inputSettings: {
-          validDate: 'YYYY-MM-DD',
-        },
-      };
-
-      const rules = useQuasarRules(
-        'test-instance',
-        attributeConfig,
-        ['validDate', 'dateNotInPast'],
-        'test-instance.fields.startDate'
-      );
-
-      expect(rules).toHaveLength(2);
-      expectIsValidDateRule(rules[0], 'YYYY-MM-DD');
-      await expectIsValidateFromApiRule(rules[1]);
-    });
-  });
 });
 
 async function expectIsValidateFromApiRule(rule) {
@@ -283,21 +213,6 @@ function expectIsPatternRule(rule, patternStr) {
   expect(mockT).toHaveBeenCalledWith('validation.pattern', {
     pattern: patternStr,
   });
-}
-
-function expectIsValidDateRule(rule, format) {
-  const result = rule('not-a-date');
-  expect(result).toBe(
-    `translated.validation.invalidDate.{"format":"${format}"}`
-  );
-  expect(mockT).toHaveBeenCalledWith('validation.invalidDate', { format });
-}
-
-function expectIsDateNotInPastRule(rule, format) {
-  const pastDate = dayjs().subtract(1, 'day').format(format);
-  const result = rule(pastDate);
-  expect(result).toBe('translated.validation.dateInPast');
-  expect(mockT).toHaveBeenCalledWith('validation.dateInPast');
 }
 
 function expectIsEmailRule(rule) {

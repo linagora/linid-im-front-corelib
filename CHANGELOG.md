@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.65](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.64...v0.0.65) (2026-05-21)
+
+
+### Features
+
+* add date range validators (afterDate, beforeDate, fromDate, upToDate) ([a5448d0](https://github.com/linagora/linid-im-front-corelib/commit/a5448d019c65981d412e1e280ca9a8f04fca4a56))
+* add dayjsService to let consumers inject their configured dayjs instance ([427dbcf](https://github.com/linagora/linid-im-front-corelib/commit/427dbcfa47f89fe1e4554c46b3ef3b990c9c9337))
+* add TextArea as input type ([55433b2](https://github.com/linagora/linid-im-front-corelib/commit/55433b2c050767517edb1cbe70c4fb9c4db14b31))
+* add useDayjs composable with strict date parsing and min/max helpers ([cc176a2](https://github.com/linagora/linid-im-front-corelib/commit/cc176a2af729012cbdf9aac86d8d76a20d85fcc4))
+* add useNunjucks composable to recursively render string properties of objects ([5cab23c](https://github.com/linagora/linid-im-front-corelib/commit/5cab23c4107062f928dccff2d011ff9b86d42873))
+* add useQuasarDate composable with Quasar-compatible date formatting ([d8416c1](https://github.com/linagora/linid-im-front-corelib/commit/d8416c1fedf10c6d51a6a0b9317fe0f48116751e))
+
 ### [0.0.64](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.63...v0.0.64) (2026-05-13)
 
 

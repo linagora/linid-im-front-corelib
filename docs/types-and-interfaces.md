@@ -411,14 +411,12 @@ Most validators read their parameters from the `inputSettings` property of `Lini
 ```ts
 export type ValidatorName =
   | 'email'
-  | 'dateNotInPast'
   | 'min'
   | 'max'
   | 'minLength'
   | 'maxLength'
   | 'pattern'
-  | 'unique'
-  | 'validDate';
+  | 'unique';
 ```
 
 **Usage:**

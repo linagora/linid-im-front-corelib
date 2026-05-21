@@ -31,11 +31,9 @@
  */
 export type ValidatorName =
   | 'email'
-  | 'dateNotInPast'
   | 'min'
   | 'max'
   | 'minLength'
   | 'maxLength'
   | 'pattern'
-  | 'unique'
-  | 'validDate';
+  | 'unique';

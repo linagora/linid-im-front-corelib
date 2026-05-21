@@ -25,8 +25,7 @@
  */
 
 import { useFieldValidation } from './useFieldValidation';
-
-const QDATE_DEFAULT_MASK = 'YYYY/MM/DD';
+import { QDATE_DEFAULT_MASK } from './useQuasarDate';
 
 /**
  * Composable for field validation compatible with Quasar framework.
@@ -45,7 +44,10 @@ export function useQuasarFieldValidation(i18nScope: string) {
     pattern,
     unique,
     validDate,
-    dateNotInPast,
+    afterDate,
+    beforeDate,
+    fromDate,
+    upToDate,
   } = useFieldValidation(i18nScope);
 
   return {
@@ -68,7 +70,13 @@ export function useQuasarFieldValidation(i18nScope: string) {
     unique: (items: unknown[]) => (value: unknown) => unique(value, items),
     validDate: (format?: string) => (value: unknown) =>
       validDate(value, format || QDATE_DEFAULT_MASK),
-    dateNotInPast: (format?: string) => (value: unknown) =>
-      dateNotInPast(value, format || QDATE_DEFAULT_MASK),
+    afterDate: (compareTo: string, format?: string) => (value: unknown) =>
+      afterDate(value, compareTo, format || QDATE_DEFAULT_MASK),
+    beforeDate: (compareTo: string, format?: string) => (value: unknown) =>
+      beforeDate(value, compareTo, format || QDATE_DEFAULT_MASK),
+    fromDate: (compareTo: string, format?: string) => (value: unknown) =>
+      fromDate(value, compareTo, format || QDATE_DEFAULT_MASK),
+    upToDate: (compareTo: string, format?: string) => (value: unknown) =>
+      upToDate(value, compareTo, format || QDATE_DEFAULT_MASK),
   };
 }

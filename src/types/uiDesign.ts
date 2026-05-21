@@ -631,6 +631,7 @@ const Q_TREE_PROPS = [
 const Q_SPLITTER_PROPS = [
   'horizontal',
   'limits',
+  'modelValue',
   'reverse',
   'unit',
   'disable',

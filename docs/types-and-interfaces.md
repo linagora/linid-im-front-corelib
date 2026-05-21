@@ -324,14 +324,15 @@ customized by consumers.
 
 #### Supported Input Types
 
-| Input Type    | Description                          |
-| ------------- | ------------------------------------ |
-| `Text`        | Text-based inputs (QInput)           |
-| `Number`      | Numeric inputs (QInput number)       |
-| `Boolean`     | Toggle/checkbox (QToggle)            |
-| `Date`        | Date picker (QDate)                  |
-| `List`        | Select with static values (QSelect)  |
-| `DynamicList` | Select with dynamic values (QSelect) |
+| Input Type    | Description                             |
+| ------------- | --------------------------------------- |
+| `Text`        | Text-based inputs (QInput)              |
+| `Number`      | Numeric inputs (QInput number)          |
+| `Boolean`     | Toggle/checkbox (QToggle)               |
+| `Date`        | Date picker (QDate)                     |
+| `List`        | Select with static values (QSelect)     |
+| `DynamicList` | Select with dynamic values (QSelect)    |
+| `Textarea`    | Multi-line text input (QInput textarea) |
 
 > **Note:** The available input types depend on the inputs defined in `linid-im-front-community-plugins`. Custom plugins
 > can extend these types.
@@ -347,7 +348,14 @@ interface LinidAttributeConfiguration<T = Record<string, unknown>> {
   type: string;
   required: boolean;
   hasValidations: boolean;
-  input: 'Text' | 'Number' | 'Boolean' | 'Date' | 'List' | 'DynamicList';
+  input:
+    | 'Text'
+    | 'Number'
+    | 'Boolean'
+    | 'Date'
+    | 'List'
+    | 'DynamicList'
+    | 'Textarea';
   inputSettings: T;
 }
 ```

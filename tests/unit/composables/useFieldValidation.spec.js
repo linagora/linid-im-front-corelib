@@ -1,10 +1,6 @@
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useFieldValidation } from 'src/composables/useFieldValidation';
 import { validate } from 'src/services/linidEntityService';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-
-const FIXED_NOW = new Date('2026-06-15T12:00:00.000Z');
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockT = vi.fn((key, params) => {
   if (params) {
@@ -14,6 +10,26 @@ const mockT = vi.fn((key, params) => {
 });
 
 vi.mock('src/services/linidEntityService');
+
+vi.mock('src/composables/useDayjs', async () => {
+  const { default: dayjsFn } = await vi.importActual('dayjs');
+  const { default: customParseFormat } = await vi.importActual(
+    'dayjs/plugin/customParseFormat'
+  );
+  dayjsFn.extend(customParseFormat);
+  return {
+    DEFAULT_DATE_FORMAT: 'YYYY-MM-DD',
+    useDayjs: () => ({
+      toDayjs: (value, format) =>
+        typeof value === 'string'
+          ? dayjsFn(value, format || 'YYYY-MM-DD', true)
+          : dayjsFn(value),
+      maxDate: () => null,
+      minDate: () => null,
+    }),
+  };
+});
+
 vi.mock('src/composables/useScopedI18n', async () => {
   const actual = await vi.importActual('src/composables/useScopedI18n');
   return {
@@ -25,10 +41,6 @@ vi.mock('src/composables/useScopedI18n', async () => {
 });
 
 describe('Test composable: useFieldValidation', () => {
-  beforeAll(() => {
-    dayjs.extend(customParseFormat);
-  });
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -419,129 +431,267 @@ describe('Test composable: useFieldValidation', () => {
     });
   });
 
-  describe('Test function: dateNotInPast', () => {
-    // Pin the system clock so "today / tomorrow / yesterday" are deterministic
-    // and the tests cannot flake around midnight or month boundaries.
-    beforeAll(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(FIXED_NOW);
+  describe('Test function: afterDate', () => {
+    it('should return true when value is strictly after compareTo', () => {
+      const { afterDate } = useFieldValidation('test-instance.date');
+
+      expect(afterDate('2026-06-16', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
     });
 
-    afterAll(() => {
-      vi.useRealTimers();
-    });
+    it('should return error message when value equals compareTo', () => {
+      const { afterDate } = useFieldValidation('test-instance.date');
 
-    it("should return true for today's date", () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
-
-      expect(dateNotInPast(dayjs().format('YYYY-MM-DD'), 'YYYY-MM-DD')).toBe(
-        true
+      const result = afterDate('2026-06-15', '2026-06-15', 'YYYY-MM-DD');
+      expect(result).toBe(
+        'translated.validation.afterDate.{"compareTo":"2026-06-15"}'
       );
+      expect(mockT).toHaveBeenCalledWith('validation.afterDate', {
+        compareTo: '2026-06-15',
+      });
     });
 
-    it('should return true for a future date', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
+    it('should return error message when value is before compareTo', () => {
+      const { afterDate } = useFieldValidation('test-instance.date');
 
-      expect(
-        dateNotInPast(dayjs().add(1, 'day').format('YYYY-MM-DD'), 'YYYY-MM-DD')
-      ).toBe(true);
-    });
-
-    it('should return error message for a past date', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
-
-      const result = dateNotInPast(
-        dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
-        'YYYY-MM-DD'
+      expect(afterDate('2026-06-14', '2026-06-15', 'YYYY-MM-DD')).toBe(
+        'translated.validation.afterDate.{"compareTo":"2026-06-15"}'
       );
-      expect(result).toBe('translated.validation.dateInPast');
-      expect(mockT).toHaveBeenCalledWith('validation.dateInPast');
     });
 
     it('should return true for null, undefined or empty string', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
+      const { afterDate } = useFieldValidation('test-instance.date');
 
-      expect(dateNotInPast(null)).toBe(true);
-      expect(dateNotInPast(undefined)).toBe(true);
-      expect(dateNotInPast('')).toBe(true);
+      expect(afterDate(null, '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+      expect(afterDate(undefined, '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+      expect(afterDate('', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
     });
 
-    it('should return true for a Date object representing today', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
+    it('should return true when value is unparseable', () => {
+      const { afterDate } = useFieldValidation('test-instance.date');
 
-      expect(dateNotInPast(new Date())).toBe(true);
+      expect(afterDate('not-a-date', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
     });
 
-    it('should return error message for a Date object in the past', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
+    it('should return true when compareTo is unparseable', () => {
+      const { afterDate } = useFieldValidation('test-instance.date');
 
-      expect(dateNotInPast(new Date('2000-01-01'))).toBe(
-        'translated.validation.dateInPast'
-      );
-    });
-
-    it('should return true for a timestamp number representing today', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
-
-      expect(dateNotInPast(Date.now())).toBe(true);
-    });
-
-    it('should return error message for a timestamp number in the past', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
-
-      expect(dateNotInPast(new Date('2000-01-01').getTime())).toBe(
-        'translated.validation.dateInPast'
-      );
-    });
-
-    it('should return true for a Dayjs object representing today', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
-
-      expect(dateNotInPast(dayjs())).toBe(true);
-    });
-
-    it('should return error message for a Dayjs object in the past', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
-
-      expect(dateNotInPast(dayjs().subtract(1, 'day'))).toBe(
-        'translated.validation.dateInPast'
-      );
+      expect(afterDate('2026-06-16', 'not-a-date', 'YYYY-MM-DD')).toBe(true);
     });
 
     it('should use the default format when no format is provided', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
+      const { afterDate } = useFieldValidation('test-instance.date');
 
-      expect(dateNotInPast('2099-04-30')).toBe(true);
-      expect(dateNotInPast('2000-01-01')).toBe(
-        'translated.validation.dateInPast'
+      expect(afterDate('2026-06-16', '2026-06-15')).toBe(true);
+      expect(afterDate('2026-06-14', '2026-06-15')).toBe(
+        'translated.validation.afterDate.{"compareTo":"2026-06-15"}'
       );
     });
 
-    it('should fall back to the default format when format is an empty string', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
+    it('should accept a Date object as compareTo and format the date in error message', () => {
+      const { afterDate } = useFieldValidation('test-instance.date');
+      const compareToDate = new Date(2026, 5, 15, 12);
 
-      expect(dateNotInPast('2099-04-30', '')).toBe(true);
-      expect(dateNotInPast('2000-01-01', '')).toBe(
-        'translated.validation.dateInPast'
+      expect(afterDate('2026-06-16', compareToDate, 'YYYY-MM-DD')).toBe(true);
+      expect(afterDate('2026-06-14', compareToDate, 'YYYY-MM-DD')).toBe(
+        'translated.validation.afterDate.{"compareTo":"2026-06-15"}'
+      );
+    });
+  });
+
+  describe('Test function: beforeDate', () => {
+    it('should return true when value is strictly before compareTo', () => {
+      const { beforeDate } = useFieldValidation('test-instance.date');
+
+      expect(beforeDate('2026-06-14', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return error message when value equals compareTo', () => {
+      const { beforeDate } = useFieldValidation('test-instance.date');
+
+      const result = beforeDate('2026-06-15', '2026-06-15', 'YYYY-MM-DD');
+      expect(result).toBe(
+        'translated.validation.beforeDate.{"compareTo":"2026-06-15"}'
+      );
+      expect(mockT).toHaveBeenCalledWith('validation.beforeDate', {
+        compareTo: '2026-06-15',
+      });
+    });
+
+    it('should return error message when value is after compareTo', () => {
+      const { beforeDate } = useFieldValidation('test-instance.date');
+
+      expect(beforeDate('2026-06-16', '2026-06-15', 'YYYY-MM-DD')).toBe(
+        'translated.validation.beforeDate.{"compareTo":"2026-06-15"}'
       );
     });
 
-    it('should return true for a string that cannot be parsed against the format', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
+    it('should return true for null, undefined or empty string', () => {
+      const { beforeDate } = useFieldValidation('test-instance.date');
 
-      // Unparseable strings produce an Invalid Dayjs whose `.isBefore()` returns
-      // false, so the validator silently passes. This is documented behaviour:
-      // pair `dateNotInPast` with `validDate` to catch unparseable strings first.
-      expect(dateNotInPast('not-a-date', 'YYYY-MM-DD')).toBe(true);
-      expect(dateNotInPast('30/04/2026', 'YYYY-MM-DD')).toBe(true);
+      expect(beforeDate(null, '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+      expect(beforeDate(undefined, '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+      expect(beforeDate('', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
     });
 
-    it('should return true for a calendrically invalid date string', () => {
-      const { dateNotInPast } = useFieldValidation('test-instance.date');
+    it('should return true when value is unparseable', () => {
+      const { beforeDate } = useFieldValidation('test-instance.date');
 
-      // Same contract as unparseable strings: invalid Dayjs ⇒ no comparison ⇒ pass.
-      expect(dateNotInPast('2026-13-99', 'YYYY-MM-DD')).toBe(true);
-      expect(dateNotInPast('2026-02-30', 'YYYY-MM-DD')).toBe(true);
+      expect(beforeDate('not-a-date', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return true when compareTo is unparseable', () => {
+      const { beforeDate } = useFieldValidation('test-instance.date');
+
+      expect(beforeDate('2026-06-14', 'not-a-date', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should use the default format when no format is provided', () => {
+      const { beforeDate } = useFieldValidation('test-instance.date');
+
+      expect(beforeDate('2026-06-14', '2026-06-15')).toBe(true);
+      expect(beforeDate('2026-06-16', '2026-06-15')).toBe(
+        'translated.validation.beforeDate.{"compareTo":"2026-06-15"}'
+      );
+    });
+
+    it('should accept a Date object as compareTo and format the date in error message', () => {
+      const { beforeDate } = useFieldValidation('test-instance.date');
+      const compareToDate = new Date(2026, 5, 15, 12);
+
+      expect(beforeDate('2026-06-14', compareToDate, 'YYYY-MM-DD')).toBe(true);
+      expect(beforeDate('2026-06-16', compareToDate, 'YYYY-MM-DD')).toBe(
+        'translated.validation.beforeDate.{"compareTo":"2026-06-15"}'
+      );
+    });
+  });
+
+  describe('Test function: fromDate', () => {
+    it('should return true when value is on the same day as compareTo', () => {
+      const { fromDate } = useFieldValidation('test-instance.date');
+
+      expect(fromDate('2026-06-15', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return true when value is after compareTo', () => {
+      const { fromDate } = useFieldValidation('test-instance.date');
+
+      expect(fromDate('2026-06-16', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return error message when value is before compareTo', () => {
+      const { fromDate } = useFieldValidation('test-instance.date');
+
+      const result = fromDate('2026-06-14', '2026-06-15', 'YYYY-MM-DD');
+      expect(result).toBe(
+        'translated.validation.fromDate.{"compareTo":"2026-06-15"}'
+      );
+      expect(mockT).toHaveBeenCalledWith('validation.fromDate', {
+        compareTo: '2026-06-15',
+      });
+    });
+
+    it('should return true for null, undefined or empty string', () => {
+      const { fromDate } = useFieldValidation('test-instance.date');
+
+      expect(fromDate(null, '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+      expect(fromDate(undefined, '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+      expect(fromDate('', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return true when value is unparseable', () => {
+      const { fromDate } = useFieldValidation('test-instance.date');
+
+      expect(fromDate('not-a-date', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return true when compareTo is unparseable', () => {
+      const { fromDate } = useFieldValidation('test-instance.date');
+
+      expect(fromDate('2026-06-16', 'not-a-date', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should use the default format when no format is provided', () => {
+      const { fromDate } = useFieldValidation('test-instance.date');
+
+      expect(fromDate('2026-06-15', '2026-06-15')).toBe(true);
+      expect(fromDate('2026-06-14', '2026-06-15')).toBe(
+        'translated.validation.fromDate.{"compareTo":"2026-06-15"}'
+      );
+    });
+
+    it('should accept a Date object as compareTo and format the date in error message', () => {
+      const { fromDate } = useFieldValidation('test-instance.date');
+      const compareToDate = new Date(2026, 5, 15, 12);
+
+      expect(fromDate('2026-06-15', compareToDate, 'YYYY-MM-DD')).toBe(true);
+      expect(fromDate('2026-06-14', compareToDate, 'YYYY-MM-DD')).toBe(
+        'translated.validation.fromDate.{"compareTo":"2026-06-15"}'
+      );
+    });
+  });
+
+  describe('Test function: upToDate', () => {
+    it('should return true when value is on the same day as compareTo', () => {
+      const { upToDate } = useFieldValidation('test-instance.date');
+
+      expect(upToDate('2026-06-15', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return true when value is before compareTo', () => {
+      const { upToDate } = useFieldValidation('test-instance.date');
+
+      expect(upToDate('2026-06-14', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return error message when value is after compareTo', () => {
+      const { upToDate } = useFieldValidation('test-instance.date');
+
+      const result = upToDate('2026-06-16', '2026-06-15', 'YYYY-MM-DD');
+      expect(result).toBe(
+        'translated.validation.upToDate.{"compareTo":"2026-06-15"}'
+      );
+      expect(mockT).toHaveBeenCalledWith('validation.upToDate', {
+        compareTo: '2026-06-15',
+      });
+    });
+
+    it('should return true for null, undefined or empty string', () => {
+      const { upToDate } = useFieldValidation('test-instance.date');
+
+      expect(upToDate(null, '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+      expect(upToDate(undefined, '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+      expect(upToDate('', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return true when value is unparseable', () => {
+      const { upToDate } = useFieldValidation('test-instance.date');
+
+      expect(upToDate('not-a-date', '2026-06-15', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should return true when compareTo is unparseable', () => {
+      const { upToDate } = useFieldValidation('test-instance.date');
+
+      expect(upToDate('2026-06-14', 'not-a-date', 'YYYY-MM-DD')).toBe(true);
+    });
+
+    it('should use the default format when no format is provided', () => {
+      const { upToDate } = useFieldValidation('test-instance.date');
+
+      expect(upToDate('2026-06-15', '2026-06-15')).toBe(true);
+      expect(upToDate('2026-06-16', '2026-06-15')).toBe(
+        'translated.validation.upToDate.{"compareTo":"2026-06-15"}'
+      );
+    });
+
+    it('should accept a Date object as compareTo and format the date in error message', () => {
+      const { upToDate } = useFieldValidation('test-instance.date');
+      const compareToDate = new Date(2026, 5, 15, 12);
+
+      expect(upToDate('2026-06-15', compareToDate, 'YYYY-MM-DD')).toBe(true);
+      expect(upToDate('2026-06-16', compareToDate, 'YYYY-MM-DD')).toBe(
+        'translated.validation.upToDate.{"compareTo":"2026-06-15"}'
+      );
     });
   });
 });

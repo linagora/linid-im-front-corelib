@@ -26,19 +26,16 @@
 
 import type { AxiosError } from 'axios';
 import axios, { HttpStatusCode } from 'axios';
-import type { ConfigType } from 'dayjs';
-import dayjs from 'dayjs';
 import { validate } from '../services/linidEntityService';
 import { deepEqualUnordered } from '../services/objectService';
 import type { LinidApiErrorResponseBody } from '../types/linidApi';
+import { DEFAULT_DATE_FORMAT, useDayjs } from './useDayjs';
 import { useScopedI18n } from './useScopedI18n';
 
 const TRANSLATED_ERROR_STATUSES = new Set([
   HttpStatusCode.BadRequest,
   HttpStatusCode.NotFound,
 ]);
-
-const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
 
 /**
  * Checks if the given status code corresponds to an error that has a translated message.
@@ -54,21 +51,6 @@ function hasTranslatedError(error: unknown): error is AxiosError {
 }
 
 /**
- * Parses an arbitrary value into a Dayjs instance.
- * - Strings are parsed with strict mode against `format`; a value that does not match exactly produces an invalid Dayjs.
- * - Non-string values (`number`, `Date`, `Dayjs`, `null`, `undefined`) are passed to dayjs as-is and `format` is ignored.
- * The returned Dayjs may be invalid; callers must check `.isValid()` before using it.
- * @param value - The value to parse.
- * @param format - The date format used for strict parsing of string values. Optional; falls back to `'YYYY-MM-DD'` when omitted or empty. Ignored for non-string values.
- * @returns A Dayjs instance, possibly invalid.
- */
-function toDayJs(value: unknown, format?: string) {
-  return typeof value === 'string'
-    ? dayjs(value, format || DEFAULT_DATE_FORMAT, true)
-    : dayjs(value as ConfigType);
-}
-
-/**
  * Composable for field validation. It exposes various validation methods
  * that can be used to validate form fields.
  * @param i18nScope - I18n scope for localizing the validators.
@@ -76,6 +58,7 @@ function toDayJs(value: unknown, format?: string) {
  */
 export function useFieldValidation(i18nScope: string) {
   const { t } = useScopedI18n(i18nScope);
+  const { toDayjs } = useDayjs();
 
   /**
    * Validates a field value using the backend API.
@@ -239,7 +222,7 @@ export function useFieldValidation(i18nScope: string) {
       return true;
     }
 
-    if (!toDayJs(value, format).isValid()) {
+    if (!toDayjs(value, format).isValid()) {
       return t('validation.invalidDate', {
         format: format || DEFAULT_DATE_FORMAT,
       });
@@ -249,24 +232,134 @@ export function useFieldValidation(i18nScope: string) {
   }
 
   /**
-   * Validates that a date value is not strictly before today (day granularity).
-   * - Strings are parsed against `format` with strict parsing; non-string values (`number`, `Date`, `Dayjs`) are passed to dayjs as-is and `format` is ignored.
-   * - Empty values (`null`, `undefined`, `''`) are skipped and return `true`, so this rule can be combined with `required` without producing duplicate errors.
-   * - Values that cannot be parsed into a valid date also return `true`; pair with `validDate` to enforce format validity first.
-   * - **Comparison is performed in the browser's local timezone.** A string parsed against `'YYYY-MM-DD'` is treated as local midnight, and "today" is the local current date. For values that carry an absolute moment (ISO strings with an explicit offset, `Date` instances, timestamps), the verdict can differ across timezones — a moment that is "yesterday" in one timezone may be "today" in another. If you need timezone-independent comparison, normalize `value` to UTC before passing it in.
+   * Validates that a date value is strictly after another date.
+   * Comparison is performed at **day granularity** in the **local timezone**.
+   * For string values this is timezone-neutral (no offset is applied); for non-string values (`Date`, timestamp, `Dayjs`), the local-timezone calendar day is used.
    * @param value - The value to validate.
+   * @param compareTo - The date to compare to. Parsing rules are the same as for `value`.
    * @param format - The date format string (e.g. `'YYYY-MM-DD'`). Optional; falls back to `'YYYY-MM-DD'` when omitted or empty. Only applied to string values.
-   * @returns `true` if the date is today, in the future, empty, or unparseable; an error message string if it is strictly before today.
+   * @returns `true` if the date is strictly after `compareTo`, empty, or unparseable; an error message string if it is the same or before `compareTo`.
    */
-  function dateNotInPast(value: unknown, format?: string): true | string {
+  function afterDate(
+    value: unknown,
+    compareTo: unknown,
+    format?: string
+  ): true | string {
     if (value == null || value === '') {
       return true;
     }
 
-    if (toDayJs(value, format).isBefore(dayjs(), 'day')) {
-      return t('validation.dateInPast');
+    const valueDate = toDayjs(value, format);
+    const compareToDate = toDayjs(compareTo, format);
+
+    if (!valueDate.isValid() || !compareToDate.isValid()) {
+      return true;
     }
 
+    if (!valueDate.isAfter(compareToDate, 'day')) {
+      return t('validation.afterDate', {
+        compareTo: compareToDate.format(format || DEFAULT_DATE_FORMAT),
+      });
+    }
+    return true;
+  }
+
+  /**
+   * Validates that a date value is strictly before another date.
+   * Comparison is performed at **day granularity** in the **local timezone**.
+   * For string values this is timezone-neutral (no offset is applied); for non-string values (`Date`, timestamp, `Dayjs`), the local-timezone calendar day is used.
+   * @param value - The value to validate.
+   * @param compareTo - The date to compare to. Parsing rules are the same as for `value`.
+   * @param format - The date format string (e.g. `'YYYY-MM-DD'`). Optional; falls back to `'YYYY-MM-DD'` when omitted or empty. Only applied to string values.
+   * @returns `true` if the date is strictly before `compareTo`, empty, or unparseable; an error message string if it is the same or after `compareTo`.
+   */
+  function beforeDate(
+    value: unknown,
+    compareTo: unknown,
+    format?: string
+  ): true | string {
+    if (value == null || value === '') {
+      return true;
+    }
+
+    const valueDate = toDayjs(value, format);
+    const compareToDate = toDayjs(compareTo, format);
+
+    if (!valueDate.isValid() || !compareToDate.isValid()) {
+      return true;
+    }
+
+    if (!valueDate.isBefore(compareToDate, 'day')) {
+      return t('validation.beforeDate', {
+        compareTo: compareToDate.format(format || DEFAULT_DATE_FORMAT),
+      });
+    }
+    return true;
+  }
+
+  /**
+   * Validates that a date value is on or after another date (inclusive lower bound).
+   * Comparison is performed at **day granularity** in the **local timezone**.
+   * For string values this is timezone-neutral (no offset is applied); for non-string values (`Date`, timestamp, `Dayjs`), the local-timezone calendar day is used.
+   * @param value - The value to validate.
+   * @param compareTo - The date to compare to. Parsing rules are the same as for `value`.
+   * @param format - The date format string (e.g. `'YYYY-MM-DD'`). Optional; falls back to `'YYYY-MM-DD'` when omitted or empty. Only applied to string values.
+   * @returns `true` if the date is the same or after `compareTo`, empty, or unparseable; an error message string if it is strictly before `compareTo`.
+   */
+  function fromDate(
+    value: unknown,
+    compareTo: unknown,
+    format?: string
+  ): true | string {
+    if (value == null || value === '') {
+      return true;
+    }
+
+    const valueDate = toDayjs(value, format);
+    const compareToDate = toDayjs(compareTo, format);
+
+    if (!valueDate.isValid() || !compareToDate.isValid()) {
+      return true;
+    }
+
+    if (valueDate.isBefore(compareToDate, 'day')) {
+      return t('validation.fromDate', {
+        compareTo: compareToDate.format(format || DEFAULT_DATE_FORMAT),
+      });
+    }
+    return true;
+  }
+
+  /**
+   * Validates that a date value is on or before another date (inclusive upper bound).
+   * Comparison is performed at **day granularity** in the **local timezone**.
+   * For string values this is timezone-neutral (no offset is applied); for non-string values (`Date`, timestamp, `Dayjs`), the local-timezone calendar day is used.
+   * @param value - The value to validate.
+   * @param compareTo - The date to compare to. Parsing rules are the same as for `value`.
+   * @param format - The date format string (e.g. `'YYYY-MM-DD'`). Optional; falls back to `'YYYY-MM-DD'` when omitted or empty. Only applied to string values.
+   * @returns `true` if the date is the same or before `compareTo`, empty, or unparseable; an error message string if it is strictly after `compareTo`.
+   */
+  function upToDate(
+    value: unknown,
+    compareTo: unknown,
+    format?: string
+  ): true | string {
+    if (value == null || value === '') {
+      return true;
+    }
+
+    const valueDate = toDayjs(value, format);
+    const compareToDate = toDayjs(compareTo, format);
+
+    if (!valueDate.isValid() || !compareToDate.isValid()) {
+      return true;
+    }
+
+    if (valueDate.isAfter(compareToDate, 'day')) {
+      return t('validation.upToDate', {
+        compareTo: compareToDate.format(format || DEFAULT_DATE_FORMAT),
+      });
+    }
     return true;
   }
 
@@ -281,6 +374,9 @@ export function useFieldValidation(i18nScope: string) {
     pattern,
     unique,
     validDate,
-    dateNotInPast,
+    afterDate,
+    beforeDate,
+    fromDate,
+    upToDate,
   };
 }

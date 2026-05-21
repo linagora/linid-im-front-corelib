@@ -34,6 +34,7 @@ export { useFieldValidation } from './composables/useFieldValidation';
 export { useNotify } from './composables/useNotify';
 export { useNunjucks } from './composables/useNunjucks';
 export { usePagination } from './composables/usePagination';
+export { QDATE_DEFAULT_MASK, useQuasarDate } from './composables/useQuasarDate';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
 export { useQuasarRules } from './composables/useQuasarRules';
 export { useScopedI18n } from './composables/useScopedI18n';

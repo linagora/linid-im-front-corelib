@@ -1275,4 +1275,121 @@ const env: Environment = getNunjucksEnv();
 
 ---
 
+## 📅 Dayjs Service
+
+Provides a singleton Dayjs instance shared across all modules.
+
+| Function                                | Description                                       |
+| --------------------------------------- | ------------------------------------------------- |
+| [`setDayjsInstance`](#setdayjsinstance) | Initializes the shared Dayjs instance (call once) |
+| [`getDayjsInstance`](#getdayjsinstance) | Returns the shared Dayjs instance                 |
+
+---
+
+### `setDayjsInstance`
+
+Initializes the shared Dayjs instance to be used by all modules. Should be called once during application bootstrapping, **after** loading all required Dayjs plugins (e.g. `customParseFormat`).
+
+```typescript
+import { setDayjsInstance } from '@linagora/linid-im-front-corelib';
+```
+
+#### Parameters
+
+| Parameter  | Type           | Description                      |
+| ---------- | -------------- | -------------------------------- |
+| `instance` | `typeof dayjs` | The Dayjs function to be shared. |
+
+#### Returns
+
+No return value.
+
+#### Behavior
+
+1. **Singleton:** Only the first call sets the instance; subsequent calls log a warning and do not overwrite the instance.
+2. **Required:** Must be called before any call to `getDayjsInstance()` (or any composable that uses it, such as `useDayjs`).
+
+---
+
+### `getDayjsInstance`
+
+Retrieves the shared Dayjs instance initialized by `setDayjsInstance`.
+
+```typescript
+import { getDayjsInstance } from '@linagora/linid-im-front-corelib';
+```
+
+#### Parameters
+
+None.
+
+#### Returns
+
+| Type           | Description                |
+| -------------- | -------------------------- |
+| `typeof dayjs` | The shared Dayjs instance. |
+
+#### Behavior
+
+1. **Singleton:** Always returns the same instance set by `setDayjsInstance`.
+2. **Error Handling:** Throws an error if called before initialization.
+
+---
+
+### Usage Examples
+
+#### Basic Usage
+
+```typescript
+import { setDayjsInstance } from '@linagora/linid-im-front-corelib';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+// Load required plugins before registering the instance
+dayjs.extend(customParseFormat);
+
+// Host application bootstrapping
+setDayjsInstance(dayjs);
+```
+
+---
+
+#### Error Handling
+
+##### Calling `getDayjsInstance` before initialization
+
+```typescript
+import { getDayjsInstance } from '@linagora/linid-im-front-corelib';
+
+try {
+  const dayjs = getDayjsInstance();
+  // Throws: [LinID CoreLib] Dayjs instance is not initialized. Call setDayjsInstance() first.
+} catch (error) {
+  // Handle error
+}
+```
+
+##### Attempting to re-initialize
+
+```typescript
+import { setDayjsInstance } from '@linagora/linid-im-front-corelib';
+import dayjs from 'dayjs';
+
+setDayjsInstance(dayjs);
+// Second call logs a warning and does not overwrite the instance
+setDayjsInstance(dayjs);
+// Logs: [LinID CoreLib] Dayjs instance has already been initialized. Re-initialization is ignored.
+```
+
+---
+
+### Rules
+
+- ✅ Host calls `setDayjsInstance()` once during boot, after extending dayjs with required plugins
+- ✅ Modules use `getDayjsInstance()` (or composables such as `useDayjs`) to access the same instance
+- ⚠️ Warning logged if re-initialization is attempted
+- ❌ Error thrown if `getDayjsInstance()` is called before initialization
+
+---
+
 > Additional services will be added as new features are implemented in the library.

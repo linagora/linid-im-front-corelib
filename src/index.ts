@@ -35,16 +35,17 @@ export { usePagination } from './composables/usePagination';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
 export { useQuasarRules } from './composables/useQuasarRules';
 export { useScopedI18n } from './composables/useScopedI18n';
-export { useUiDesign } from './composables/useUiDesign';
 export { useTree } from './composables/useTree';
+export { useUiDesign } from './composables/useUiDesign';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
 export { useLinidUiStore } from './stores/linidUiStore';
-export { useLinidZoneStore } from './stores/linidZoneStore';
 export { useLinidUserStore } from './stores/linidUserStore';
+export { useLinidZoneStore } from './stores/linidZoneStore';
 
 // Services
+export { getDayjsInstance, setDayjsInstance } from './services/dayjsService';
 export {
   getModuleFederation,
   loadAsyncComponent,

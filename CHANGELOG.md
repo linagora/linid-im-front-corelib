@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.66](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.65...v0.0.66) (2026-05-22)
+
+
+### Features
+
+* add modelValue to splitter design ([4b86943](https://github.com/linagora/linid-im-front-corelib/commit/4b869433774ce1143b6d210bbd6bea5defaf0b2c))
+
 ### [0.0.65](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.64...v0.0.65) (2026-05-21)
 
 

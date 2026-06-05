@@ -24,8 +24,18 @@
  * LinID Identity Manager software.
  */
 
+import type { Interactable } from '@interactjs/core/Interactable';
+import type { InteractEvent } from '@interactjs/core/InteractEvent';
+import type { Target } from '@interactjs/core/types';
+import interact from 'interactjs';
 import type { Subscription } from 'rxjs';
-import { onMounted, onUnmounted, ref } from 'vue';
+import {
+  type ComponentPublicInstance,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from 'vue';
 import { uiEventSubject } from '../services/uiEventService';
 import { type DialogEvent } from '../types/dialogType';
 import type { UiEvent } from '../types/uiEvent';
@@ -34,14 +44,18 @@ import type { UiEvent } from '../types/uiEvent';
  * Composable to manage the state of a dialog based on events emitted by the DialogSubject.
  * @param key - The key to filter dialog events, allowing multiple dialogs to be managed independently.
  * @param onOpen - Optional callback function to execute when the dialog is opened, receiving the dialog event as an argument.
- * @returns An object containing the reactive `show` property to control the dialog visibility.
+ * @returns An object containing the reactive `show` property to control the dialog visibility,
+ * and the `dialogRef` to be attached to the dialog component for interact.js functionality.
  */
 export function useDialog<T extends DialogEvent>(
   key: string,
   onOpen?: (event: T) => void
 ) {
   const show = ref<boolean>(false);
+  const dialogRef = ref<ComponentPublicInstance | null>(null);
   let dialogSubscription: Subscription;
+  let interactable: Interactable | null = null;
+
   /**
    * Handles dialog events emitted by the DialogSubject.
    * @param event - The dialog event to process.
@@ -63,13 +77,83 @@ export function useDialog<T extends DialogEvent>(
     onOpen?.(dialogEvent);
   }
 
+  watch(
+    dialogRef,
+    (newValue) => {
+      cleanupInteract();
+      if (newValue?.$el) {
+        initInteract(newValue.$el);
+      }
+    },
+    { flush: 'post' }
+  );
+
+  /**
+   * Initializes the interact.js draggable functionality on the dialog element,
+   * allowing it to be moved by dragging a handle.
+   * @param dialogRefEl - The target element to make draggable.
+   */
+  function initInteract(dialogRefEl: Target) {
+    interactable = interact(dialogRefEl).draggable({
+      allowFrom: '.drag-handle',
+
+      listeners: {
+        /**
+         * Handles the move event for the draggable dialog.
+         * @param event - The interact.js drag event.
+         */
+        move(event: InteractEvent) {
+          const target = event.target;
+          if (
+            !(target instanceof HTMLElement || target instanceof SVGElement)
+          ) {
+            return;
+          }
+
+          const x = parseCoord(target.getAttribute('data-x')) + event.dx;
+          const y = parseCoord(target.getAttribute('data-y')) + event.dy;
+
+          target.style.transform = `translate(${x}px, ${y}px)`;
+
+          target.setAttribute('data-x', String(x));
+          target.setAttribute('data-y', String(y));
+        },
+      },
+      modifiers: [
+        interact.modifiers.restrictRect({
+          restriction: 'parent',
+          endOnly: true,
+        }),
+      ],
+    });
+  }
+
+  /**
+   * Parses a coordinate value from a string, returning 0 if the value is not a valid number.
+   * @param val - The string value to parse.
+   * @returns The parsed coordinate as a number, or 0 if parsing fails.
+   */
+  function parseCoord(val: string | null): number {
+    const n = parseFloat(val ?? '');
+    return Number.isNaN(n) ? 0 : n;
+  }
+
+  /**
+   * Cleans up the interact.js instance by unsetting it and clearing the reference.
+   */
+  function cleanupInteract() {
+    interactable?.unset();
+    interactable = null;
+  }
+
   onMounted(() => {
     dialogSubscription = uiEventSubject.subscribe(onDialogEvent);
   });
 
   onUnmounted(() => {
+    cleanupInteract();
     dialogSubscription?.unsubscribe();
   });
 
-  return { show };
+  return { show, dialogRef };
 }

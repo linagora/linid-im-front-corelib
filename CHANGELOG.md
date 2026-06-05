@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.67](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.66...v0.0.67) (2026-06-05)
+
+
+### Features
+
+* **dialog:** make dialog draggable ([6844299](https://github.com/linagora/linid-im-front-corelib/commit/684429963085f81533b9dd186d26803544a282c5))
+
 ### [0.0.66](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.65...v0.0.66) (2026-05-22)
 
 

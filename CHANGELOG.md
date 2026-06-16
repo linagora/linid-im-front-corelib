@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.68](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.67...v0.0.68) (2026-06-16)
+
+
+### Features
+
+* add Email input type ([e4298b2](https://github.com/linagora/linid-im-front-corelib/commit/e4298b2b1b4f6f3089641bd491eb5de7f7649273))
+
+
+### Bug Fixes
+
+* rename TextArea input type to PascalCase ([31939cf](https://github.com/linagora/linid-im-front-corelib/commit/31939cf05fb2027692717bf57f81c9af06a784c9))
+
 ### [0.0.67](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.66...v0.0.67) (2026-06-05)
 
 

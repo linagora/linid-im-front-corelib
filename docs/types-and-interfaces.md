@@ -332,7 +332,7 @@ customized by consumers.
 | `Date`        | Date picker (QDate)                     |
 | `List`        | Select with static values (QSelect)     |
 | `DynamicList` | Select with dynamic values (QSelect)    |
-| `Textarea`    | Multi-line text input (QInput textarea) |
+| `TextArea`    | Multi-line text input (QInput textarea) |
 
 > **Note:** The available input types depend on the inputs defined in `linid-im-front-community-plugins`. Custom plugins
 > can extend these types.
@@ -355,7 +355,7 @@ interface LinidAttributeConfiguration<T = Record<string, unknown>> {
     | 'Date'
     | 'List'
     | 'DynamicList'
-    | 'Textarea';
+    | 'TextArea';
   inputSettings: T;
 }
 ```

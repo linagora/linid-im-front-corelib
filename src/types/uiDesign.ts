@@ -44,6 +44,7 @@ import type {
   QItemLabelProps,
   QItemProps,
   QItemSectionProps,
+  QLayoutProps,
   QListProps,
   QMenuProps,
   QRouteTabProps,
@@ -522,6 +523,11 @@ const Q_BTN_DROPDOWN_PROPS = [
 ] as const;
 
 /**
+ * List of QLayoutProps keys for type-safe UI design retrieval.
+ */
+const Q_LAYOUT_PROPS = ['view', 'container'] as const;
+
+/**
  * List of QListProps keys for type-safe UI design retrieval.
  */
 const Q_LIST_PROPS = [
@@ -664,6 +670,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-item': Q_ITEM_PROPS,
   'q-item-label': Q_ITEM_LABEL_PROPS,
   'q-item-section': Q_ITEM_SECTION_PROPS,
+  'q-layout': Q_LAYOUT_PROPS,
   'q-list': Q_LIST_PROPS,
   'q-menu': Q_MENU_PROPS,
   'q-route-tab': Q_ROUTE_TAB_PROPS,
@@ -831,6 +838,14 @@ export type LinidQBtnDropdownProps = Pick<
 >;
 
 /**
+ * Subset of QLayoutProps props supported in UI design configuration.
+ */
+export type LinidQLayoutProps = Pick<
+  QLayoutProps,
+  (typeof Q_LAYOUT_PROPS)[number]
+>;
+
+/**
  * Subset of QListProps props supported in UI design configuration.
  */
 export type LinidQListProps = Pick<QListProps, (typeof Q_LIST_PROPS)[number]>;
@@ -938,6 +953,7 @@ export type QComponentName =
   | 'q-item'
   | 'q-item-label'
   | 'q-item-section'
+  | 'q-layout'
   | 'q-list'
   | 'q-menu'
   | 'q-route-tab'

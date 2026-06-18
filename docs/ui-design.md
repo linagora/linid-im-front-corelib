@@ -231,6 +231,7 @@ export type QComponentName =
   | 'q-item'
   | 'q-item-label'
   | 'q-item-section'
+  | 'q-layout'
   | 'q-list'
   | 'q-menu'
   | 'q-route-tab'
@@ -823,6 +824,17 @@ transitionDuration
 ```
 
 For details, refer to the [Quasar QBtnDropdown API documentation](https://quasar.dev/vue-components/button-dropdown#qbtndropdown-api).
+
+### q-layout
+
+The following props are officially supported and design-validated in our system:
+
+```
+view
+container
+```
+
+For details, refer to the [Quasar QLayout API documentation](https://quasar.dev/layout/layout/).
 
 ### q-list
 

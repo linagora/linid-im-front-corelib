@@ -169,6 +169,30 @@ export interface ModuleHostConfig<T> {
   remoteName: string;
 
   /**
+   * Module Federation exposed module used to load the lifecycle implementation.
+   *
+   * This remote should expose a module implementing the module lifecycle hooks
+   * contract and is typically loaded during the module initialization phase.
+   */
+  lifecycleRemote: string;
+
+  /**
+   * Module Federation exposed module used to load the route definitions.
+   *
+   * This remote should expose the routes contributed by the module so they can
+   * be registered by the host application.
+   */
+  routesRemote: string;
+
+  /**
+   * Module Federation exposed module used to load internationalization resources.
+   *
+   * This remote should expose the module translations, locale definitions, or
+   * i18n registration logic consumed by the host application.
+   */
+  i18nRemote: string;
+
+  /**
    * Name of the entity used in the host configuration.
    * Allows the module to retrieve associated attributes and other information for this entity.
    */

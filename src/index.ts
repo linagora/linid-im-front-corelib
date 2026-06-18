@@ -139,6 +139,7 @@ export type {
   LinidQItemLabelProps,
   LinidQItemProps,
   LinidQItemSectionProps,
+  LinidQLayoutProps,
   LinidQListProps,
   LinidQMenuProps,
   LinidQRouteTabProps,

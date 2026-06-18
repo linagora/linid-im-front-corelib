@@ -1032,6 +1032,10 @@ See description in [Ui design documentation](./ui-design.md#q-spinner).
 
 See description in [Ui design documentation](./ui-design.md#q-btn-dropdown).
 
+### LinidQLayoutProps
+
+See description in [Ui design documentation](./ui-design.md#q-layout).
+
 ### LinidQListProps
 
 See description in [Ui design documentation](./ui-design.md#q-list).

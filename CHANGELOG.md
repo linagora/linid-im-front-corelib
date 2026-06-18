@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.69](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.68...v0.0.69) (2026-06-18)
+
+
+### Features
+
+* improve module configuration with lifecycle routes and i18N remote ([8aedcf3](https://github.com/linagora/linid-im-front-corelib/commit/8aedcf3860c308044eff8d348f18e0aaa2c805fd))
+
 ### [0.0.68](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.67...v0.0.68) (2026-06-16)
 
 

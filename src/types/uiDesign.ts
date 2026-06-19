@@ -951,6 +951,7 @@ export type LinidQComponentProps =
   | LinidQRouteTabProps
   | LinidQSelectProps
   | LinidQSpinnerProps
+  | LinidQSplitterProps
   | LinidQTableProps
   | LinidQTabsProps
   | LinidQToggleProps

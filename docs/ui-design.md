@@ -220,6 +220,7 @@ export type QComponentName =
   | 'q-btn-dropdown'
   | 'q-card'
   | 'q-card-actions'
+  | 'q-checkbox'
   | 'q-date'
   | 'q-dialog'
   | 'q-file'
@@ -503,6 +504,25 @@ vertical
 
 For details, refer to
 the [Quasar QCardActions API documentation](https://quasar.dev/vue-components/card#qcardactions-api).
+
+### q-checkbox
+
+The following props are officially supported and design-validated in our system:
+
+```
+toggleOrder
+toggleIndeterminate
+keepColor
+checkedIcon
+uncheckedIcon
+indeterminateIcon
+size
+color
+dark
+dense
+```
+
+For details, refer to the [Quasar QLayout API documentation](https://quasar.dev/vue-components/checkbox/).
 
 ### q-icon
 

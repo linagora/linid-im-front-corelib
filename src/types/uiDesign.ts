@@ -33,6 +33,7 @@ import type {
   QBtnProps,
   QCardActionsProps,
   QCardProps,
+  QCheckboxProps,
   QDateProps,
   QDialogProps,
   QFileProps,
@@ -280,6 +281,22 @@ const Q_TOGGLE_PROPS = [
   'dark',
   'dense',
   'iconColor',
+] as const;
+
+/**
+ * List of QToggleProps keys for type-safe UI design retrieval.
+ */
+const Q_CHECKBOX_PROPS = [
+  'toggleOrder',
+  'toggleIndeterminate',
+  'keepColor',
+  'checkedIcon',
+  'uncheckedIcon',
+  'indeterminateIcon',
+  'size',
+  'color',
+  'dark',
+  'dense',
 ] as const;
 
 /**
@@ -659,6 +676,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-btn-dropdown': Q_BTN_DROPDOWN_PROPS,
   'q-card': Q_CARD_PROPS,
   'q-card-actions': Q_CARD_ACTIONS_PROPS,
+  'q-checkbox': Q_CHECKBOX_PROPS,
   'q-date': Q_DATE_PROPS,
   'q-dialog': Q_DIALOG_PROPS,
   'q-file': Q_FILE_PROPS,
@@ -762,6 +780,14 @@ export type LinidQCardProps = Pick<QCardProps, (typeof Q_CARD_PROPS)[number]>;
 export type LinidQCardActionsProps = Pick<
   QCardActionsProps,
   (typeof Q_CARD_ACTIONS_PROPS)[number]
+>;
+
+/**
+ * Subset of QCheckboxProps props supported in UI design configuration.
+ */
+export type LinidQCheckboxProps = Pick<
+  QCheckboxProps,
+  (typeof Q_CHECKBOX_PROPS)[number]
 >;
 
 /**
@@ -908,6 +934,7 @@ export type LinidQComponentProps =
   | LinidQBtnProps
   | LinidQCardActionsProps
   | LinidQCardProps
+  | LinidQCheckboxProps
   | LinidQDateProps
   | LinidQDialogProps
   | LinidQFileProps
@@ -942,6 +969,7 @@ export type QComponentName =
   | 'q-btn-dropdown'
   | 'q-card'
   | 'q-card-actions'
+  | 'q-checkbox'
   | 'q-date'
   | 'q-dialog'
   | 'q-file'

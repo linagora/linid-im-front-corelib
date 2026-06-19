@@ -988,6 +988,10 @@ See description in [Ui design documentation](./ui-design.md#q-card).
 
 See description in [Ui design documentation](./ui-design.md#q-card-actions).
 
+### LinidQCheckboxProps
+
+See description in [Ui design documentation](./ui-design.md#q-checkbox).
+
 ### LinidQIconProps
 
 See description in [Ui design documentation](./ui-design.md#q-icon).

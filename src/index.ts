@@ -128,6 +128,7 @@ export type {
   LinidQBtnProps,
   LinidQCardActionsProps,
   LinidQCardProps,
+  LinidQCheckboxProps,
   LinidQDateProps,
   LinidQDialogProps,
   LinidQFileProps,

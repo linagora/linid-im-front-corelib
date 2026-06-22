@@ -34,6 +34,7 @@ import type {
   QCardActionsProps,
   QCardProps,
   QCheckboxProps,
+  QChipProps,
   QDateProps,
   QDialogProps,
   QFileProps,
@@ -263,6 +264,25 @@ const Q_CARD_ACTIONS_PROPS = ['align', 'vertical'] as const;
  * List of QIconProps keys for type-safe UI design retrieval.
  */
 const Q_ICON_PROPS = ['left', 'right', 'name', 'size', 'color'] as const;
+
+/**
+ * List of QChipProps keys for type-safe UI design retrieval.
+ */
+const Q_CHIP_PROPS = [
+  'removeAriaLabel',
+  'icon',
+  'iconRight',
+  'iconRemove',
+  'iconSelected',
+  'dense',
+  'size',
+  'dark',
+  'color',
+  'textColor',
+  'square',
+  'outline',
+  'ripple',
+] as const;
 
 /**
  * List of QToggleProps keys for type-safe UI design retrieval.
@@ -683,6 +703,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-form': Q_FORM_PROPS,
   'q-header': Q_HEADER_PROPS,
   'q-icon': Q_ICON_PROPS,
+  'q-chip': Q_CHIP_PROPS,
   'q-img': Q_IMG_PROPS,
   'q-input': Q_INPUT_PROPS,
   'q-item': Q_ITEM_PROPS,
@@ -794,6 +815,11 @@ export type LinidQCheckboxProps = Pick<
  * Subset of QIcon props supported in UI design configuration.
  */
 export type LinidQIconProps = Pick<QIconProps, (typeof Q_ICON_PROPS)[number]>;
+
+/**
+ * Subset of QChip props supported in UI design configuration.
+ */
+export type LinidQChipProps = Pick<QChipProps, (typeof Q_CHIP_PROPS)[number]>;
 
 /**
  * Subset of QToggle props supported in UI design configuration.
@@ -941,6 +967,7 @@ export type LinidQComponentProps =
   | LinidQFormProps
   | LinidQHeaderProps
   | LinidQIconProps
+  | LinidQChipProps
   | LinidQImgProps
   | LinidQInputProps
   | LinidQItemLabelProps
@@ -977,6 +1004,7 @@ export type QComponentName =
   | 'q-form'
   | 'q-header'
   | 'q-icon'
+  | 'q-chip'
   | 'q-img'
   | 'q-input'
   | 'q-item'

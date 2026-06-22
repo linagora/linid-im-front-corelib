@@ -227,6 +227,7 @@ export type QComponentName =
   | 'q-form'
   | 'q-header'
   | 'q-icon'
+  | 'q-chip'
   | 'q-img'
   | 'q-input'
   | 'q-item'
@@ -258,6 +259,8 @@ export type LinidQComponentProps =
   | LinidQCardProps
   | LinidQCardActionsProps
   | LinidQDateProps
+  | LinidQChipProps
+  | LinidQCheckboxProps
   | LinidQDialogProps
   | LinidQFileProps
   | LinidQFormProps
@@ -538,6 +541,29 @@ color
 
 For details, refer to
 the [Quasar QIcon API documentation](https://quasar.dev/vue-components/icon#qicon-api).
+
+### q-chip
+
+The following props are officially supported and design-validated in our system:
+
+```
+removeAriaLabel
+icon
+iconRight
+iconRemove
+iconSelected
+dense
+size
+dark
+color
+textColor
+square
+outline
+ripple
+```
+
+For details, refer to
+the [Quasar QChip API documentation](https://quasar.dev/vue-components/chip#qchip-api).
 
 ### q-toggle
 

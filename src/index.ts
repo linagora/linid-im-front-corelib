@@ -85,6 +85,14 @@ export { getPiniaStore, setPiniaStore } from './services/piniaStoreService';
 export { getUiDesign, setUiDesign } from './services/uiDesignService';
 export { uiEventSubject } from './services/uiEventService';
 
+// Filters
+export { LinidFilter } from './filters/linidFilter';
+export { LinidFilterValue } from './filters/linidFilterValue';
+export {
+  LINID_FILTER_NEGATION_PREFIX,
+  LINID_FILTER_OR_SEPARATOR,
+} from './types/linidFilter';
+
 // Types - Zones
 export type { LinidZoneEntry } from './types/linidZone';
 
@@ -186,3 +194,6 @@ export type { TreeNode, TreeNodeType } from './types/linidTree';
 
 // Types - Dropdown
 export type { DropdownClickPayload, MenuItem } from './types/dropdownButton';
+
+// Types - Filter
+export type { LinidFilterOperator, LinidFilterType } from './types/linidFilter';

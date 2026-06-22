@@ -40,6 +40,7 @@ export { useQuasarRules } from './composables/useQuasarRules';
 export { useScopedI18n } from './composables/useScopedI18n';
 export { useTree } from './composables/useTree';
 export { useUiDesign } from './composables/useUiDesign';
+export { useLinidFilterUrl } from './composables/useLinidFilterUrl';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';

@@ -31,7 +31,7 @@ structures for identity management features such as CRUD operations on persons, 
 ## **Tech Stack 🛠️**
 
 | Area            | Technology               |
-| --------------- | ------------------------ |
+|-----------------|--------------------------|
 | Language        | TypeScript               |
 | Framework       | Vue.js (Composition API) |
 | UI Toolkit      | Quasar Framework         |
@@ -100,6 +100,11 @@ A full technical documentation is available in the `docs/` directory:
   Learn how to initialize and use the `UiDesign` singleton and the `useUiDesign` composable for dynamic UI
   personalization.
   → [`docs/ui-design.md`](docs/ui-design.md)
+
+- 🔗 **URL Filter Sync (`useLinidFilterUrl`)**
+  Learn how to use the `useLinidFilterUrl` composable to synchronize `LinidFilter` instances with the URL
+  query params.
+  → [`docs/use-linid-filter-url.md`](docs/use-linid-filter-url.md)
 
 - 🎨 **I18n Configuration (`i18n`)**
   Learn how to initialize and use the `i18n` singleton and the `useScopedI18n` composable for internationalization.

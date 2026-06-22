@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.73](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.72...v0.0.73) (2026-06-22)
+
+
+### Features
+
+* add composable to manage filters in url ([2a1f752](https://github.com/linagora/linid-im-front-corelib/commit/2a1f752db91dcc03d96a54d1a004b96c7386d933))
+
+
+### Bug Fixes
+
+* toString of LinidFilter to return value of query-parameter ([0a04e80](https://github.com/linagora/linid-im-front-corelib/commit/0a04e80be0952f306e95ea5db9c2a0d06cbbe2cf))
+
 ### [0.0.72](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.71...v0.0.72) (2026-06-22)
 
 

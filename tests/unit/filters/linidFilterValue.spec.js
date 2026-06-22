@@ -66,6 +66,16 @@ describe('Test class: LinidFilterValue', () => {
       expect(result.operator).toBe('');
       expect(result.value).toBe('paris_lk_paris');
     });
+
+    it('returns a neutral value when input is not a string', () => {
+      [null, undefined, 42, false, {}, []].forEach((input) => {
+        const result = LinidFilterValue.fromString(input);
+
+        expect(result.isNegation).toBe(false);
+        expect(result.operator).toBe('');
+        expect(result.value).toBe('');
+      });
+    });
   });
 
   describe('test method: toString', () => {

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.74](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.73...v0.0.74) (2026-06-22)
+
+
+### Features
+
+* add q-chip design ([9e964e3](https://github.com/linagora/linid-im-front-corelib/commit/9e964e36726b545368c24ead5b375b823957d8ba))
+
 ### [0.0.73](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.72...v0.0.73) (2026-06-22)
 
 

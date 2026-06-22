@@ -19,7 +19,7 @@ currently applied to it. Each applied value is converted to a single string expr
 `LinidFilterValue` is the class responsible for parsing such an expression into a structured object, and for
 reconstructing the expression back from that object. `LinidFilter` does the same at the filter level: it parses
 a `|`-separated list of value expressions into `LinidFilterValue` instances, and reconstructs the filter as an
-HTTP query parameter pair (`name=value`), compatible with APIs powered by
+HTTP query parameter value, compatible with APIs powered by
 [`spring-query-filter`](https://github.com/Zorin95670/spring-query-filter).
 
 Both are defined as regular (value) exports — not type-only exports — since consumers need to call their
@@ -236,8 +236,8 @@ parsed.type; // 'text' — placeholder, not derived from input
 toString(): string;
 ```
 
-Reconstructs the filter as an HTTP query parameter pair (`name=value`), with multiple values OR'd by `|`.
+Reconstructs the filter as an HTTP query parameter value, with multiple values OR'd by `|`.
 
 ```ts
-parsed.toString(); // 'city=paris|not_lk_lyon'
+parsed.toString(); // 'paris|not_lk_lyon'
 ```

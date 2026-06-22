@@ -1,9 +1,9 @@
-# 🔍 Filters (`LinidFilter` & `LinidFilterValue`)
+# 🔍 Filters (`LinidFilter`, `LinidFilterSet` & `LinidFilterValue`)
 
 This document explains how to use the `LinidFilter` and `LinidFilterValue` classes to build filters and to
-convert/parse the filter value expressions applied to them (see
-[`docs/types-and-interfaces.md`](types-and-interfaces.md) for the `LinidFilterType` and `LinidFilterOperator`
-type definitions).
+convert/parse the filter value expressions applied to them, and how `LinidFilterSet` groups filters into a
+saved favorite search (see [`docs/types-and-interfaces.md`](types-and-interfaces.md) for the `LinidFilterType`
+and `LinidFilterOperator` type definitions).
 
 ---
 
@@ -165,7 +165,7 @@ fixed format string, adding an operator does not break expressions converted wit
 ## 6. `LinidFilter` class
 
 `LinidFilter<T>` represents a filterable attribute together with the list of values currently applied to it. Its
-`toString()` reconstructs the filter as an HTTP query parameter pair (`name=value`, values OR'd with `|`), ready
+`toString()` reconstructs the filter as an HTTP query parameter pair (`name=value`, values combined with OR via `|`), ready
 to use with APIs powered by [`spring-query-filter`](https://github.com/Zorin95670/spring-query-filter).
 
 ### 6.1 Properties
@@ -236,8 +236,99 @@ parsed.type; // 'text' — placeholder, not derived from input
 toString(): string;
 ```
 
-Reconstructs the filter as an HTTP query parameter value, with multiple values OR'd by `|`.
+Reconstructs the filter as an HTTP query parameter value, with multiple values combined with OR via `|`.
 
 ```ts
 parsed.toString(); // 'paris|not_lk_lyon'
 ```
+
+---
+
+## 7. `LinidFilterSet` class
+
+`LinidFilterSet` represents a **saved filter set** (favorite search): a user-defined `label` paired with the
+collection of `LinidFilter` it is made of. Its primary purpose is to save and restore a complete filter
+configuration from user preferences.
+
+It reuses the exact same URL filter representation as `LinidFilter`/`LinidFilterValue` — a `&`-separated list of
+`name=value` pairs, each value itself optionally `|`-separated for values combined with OR — so a saved favorite is a
+ready-to-use query string for APIs powered by
+[`spring-query-filter`](https://github.com/Zorin95670/spring-query-filter), and a compact string suitable for
+storage in user preferences.
+
+### 7.1 Properties
+
+```ts
+class LinidFilterSet {
+  label: string;
+  filters: LinidFilter[];
+}
+```
+
+| Property  | Type            | Description                                         |
+| --------- | --------------- | --------------------------------------------------- |
+| `label`   | `string`        | User-friendly name of the favorite search           |
+| `filters` | `LinidFilter[]` | Collection of filters composing the favorite search |
+
+### 7.2 constructor
+
+```ts
+new LinidFilterSet(label: string, filters: LinidFilter[]);
+```
+
+Builds a `LinidFilterSet` directly from its label and filters.
+
+### 7.3 fromString (static)
+
+```ts
+static fromString(label: string, value: string | null | undefined): LinidFilterSet;
+```
+
+Parses a `&`-separated string of `name=value` pairs, as produced by `toString()`, into a **new**
+`LinidFilterSet`. Each `=`-containing segment is turned into a `LinidFilter` via `LinidFilter.fromString`
+(which in turn parses each `|`-separated value with `LinidFilterValue.fromString`); segments missing `=` are
+silently dropped instead of producing a filter with a guessed name. Since `type`/`options` aren't derivable
+from the string, parsed filters carry placeholder values (see [section 6.3](#63-fromstring-static)) — match
+them back to known definitions by `name`.
+
+`value` tolerates `null`/`undefined`/any non-string at runtime (e.g. `localStorage.getItem(...)`, or across a
+Module Federation boundary): like an empty string, it produces an empty `filters` array instead of throwing —
+the expected case for a user with no favorite saved yet.
+
+### 7.4 toString
+
+```ts
+toString(): string;
+```
+
+Reconstructs the filter set as a `&`-separated string of each filter's own `name=value` representation.
+`fromString` and `toString` round-trip for well-formed input:
+`LinidFilterSet.fromString(label, value).toString() === value`.
+
+### 7.5 Usage
+
+```ts
+import { LinidFilter, LinidFilterSet } from '@linagora/linid-im-front-corelib';
+
+// Save a favorite search
+const favorite = new LinidFilterSet('My Active Projects', [
+  LinidFilter.fromString('status', 'active|pending'),
+  LinidFilter.fromString('createdAt', 'gt_2026-01-01'),
+]);
+
+const serialized = favorite.toString();
+// 'status=active|pending&createdAt=gt_2026-01-01'
+
+savePreference(serialized);
+
+// Restore it later
+const restored = LinidFilterSet.fromString('My Active Projects', storedValue);
+
+restored.filters.map((filter) => filter.name);
+// ['status', 'createdAt']
+```
+
+`LinidFilterSet.toString()` builds the same `name=value` query parameter representation expected by APIs powered
+by `spring-query-filter`, so a restored filter set's string can be appended to a request URL as a query string.
+Note that no URL-encoding is performed: if a filter value itself contains reserved URL characters (`&`, `=`, a
+space, etc.), the caller is responsible for encoding it before doing so.

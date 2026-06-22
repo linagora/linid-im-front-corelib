@@ -1299,10 +1299,10 @@ export const LINID_FILTER_OR_SEPARATOR = '|';
 export const LINID_FILTER_NEGATION_PREFIX = 'not_';
 ```
 
-| Constant                       | Value    | Meaning                                                   |
-| ------------------------------ | -------- | --------------------------------------------------------- |
-| `LINID_FILTER_OR_SEPARATOR`    | `'\|'`   | Separates OR'd value expressions within a `LinidFilter`   |
-| `LINID_FILTER_NEGATION_PREFIX` | `'not_'` | Prefix marking a `LinidFilterValue` expression as negated |
+| Constant                       | Value    | Meaning                                                             |
+| ------------------------------ | -------- | ------------------------------------------------------------------- |
+| `LINID_FILTER_OR_SEPARATOR`    | `'\|'`   | Separates value expressions combined with OR within a `LinidFilter` |
+| `LINID_FILTER_NEGATION_PREFIX` | `'not_'` | Prefix marking a `LinidFilterValue` expression as negated           |
 
 ### LinidFilterType
 
@@ -1379,6 +1379,48 @@ cityFilter.toString();
 
 LinidFilter.fromString('city', 'lk_paris|not_toto');
 // LinidFilter { name: 'city', type: 'text', options: {}, values: [...] }
+```
+
+### LinidFilterSet
+
+Class representing a saved filter set (favorite search): a user-defined `label` paired with the collection of
+`LinidFilter` it is made of. Its `fromString`/`toString` build/parse `name=value` query parameter pairs — one
+per filter, joined with `&` — by combining each filter's `name` with its own `LinidFilter.toString()` value, so
+a favorite can be stored as-is in user preferences and reused directly as a query string. `fromString` accepts
+`null`/`undefined` for `value` (e.g. directly from `localStorage.getItem(...)`), tolerates any other non-string
+value the same way, and silently ignores malformed `name=value` pairs. See
+[`docs/filters.md`](./filters.md#7-linidfilterset-class) for the full API.
+
+```ts
+export class LinidFilterSet {
+  label: string;
+  filters: LinidFilter[];
+
+  constructor(label: string, filters: LinidFilter[]);
+
+  static fromString(
+    label: string,
+    value: string | null | undefined
+  ): LinidFilterSet;
+
+  toString(): string;
+}
+```
+
+**Example:**
+
+```ts
+import { LinidFilter, LinidFilterSet } from '@linagora/linid-im-front-corelib';
+
+const favorite = new LinidFilterSet('My Active Projects', [
+  LinidFilter.fromString('status', 'active|pending'),
+]);
+
+favorite.toString();
+// 'status=active|pending'
+
+LinidFilterSet.fromString('My Active Projects', 'status=active|pending');
+// LinidFilterSet { label: 'My Active Projects', filters: [...] }
 ```
 
 ---
@@ -1458,9 +1500,10 @@ LinidFilter.fromString('city', 'lk_paris|not_toto');
 | `NavigationMenuItem`            | Describes a main navigation menu item                                                       |
 | `LinidFilterType`               | Union type for filter categories: date, text, number, list, tree                            |
 | `LinidFilterOperator`           | Union type for filter value comparison operators                                            |
-| `LINID_FILTER_OR_SEPARATOR`     | Runtime constant (`'\|'`) separating OR'd values in a filter expression                     |
+| `LINID_FILTER_OR_SEPARATOR`     | Runtime constant (`'\|'`) separating values combined with OR in a filter expression         |
 | `LINID_FILTER_NEGATION_PREFIX`  | Runtime constant (`'not_'`) marking a filter value expression as negated                    |
 | `LinidFilter<T>`                | Generic class representing a filter, converted to a `value` query parameter pair            |
+| `LinidFilterSet`                | Class representing a saved filter set (favorite search): a label and its `LinidFilter[]`    |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

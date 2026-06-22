@@ -88,6 +88,7 @@ export { uiEventSubject } from './services/uiEventService';
 
 // Filters
 export { LinidFilter } from './filters/linidFilter';
+export { LinidFilterSet } from './filters/linidFilterSet';
 export { LinidFilterValue } from './filters/linidFilterValue';
 export {
   LINID_FILTER_NEGATION_PREFIX,

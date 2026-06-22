@@ -25,7 +25,7 @@
  */
 
 /**
- * Separator used between OR'd value expressions in a filter's string representation.
+ * Separator used between value expressions combined with OR in a filter's string representation.
  */
 export const LINID_FILTER_OR_SEPARATOR = '|';
 

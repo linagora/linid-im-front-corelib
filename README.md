@@ -126,8 +126,8 @@ A full technical documentation is available in the `docs/` directory:
   Learn how to convert between LinID tree models and Quasar QTree component formats.
   → [`docs/useTree.md`](docs/useTree.md)
 
-- 🔍 **Filters (`LinidFilterValue`)**
-  Learn how to encode and decode filter value expressions applied to a `LinidFilter`.
+- 🔍 **Filters (`LinidFilter`, `LinidFilterSet` & `LinidFilterValue`)**
+  Learn how to build filters, save them as favorite searches, and convert/parse filter value expressions.
   → [`docs/filters.md`](docs/filters.md)
 
 More documents will be added as the library evolves.

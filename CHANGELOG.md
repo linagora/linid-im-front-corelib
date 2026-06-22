@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.72](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.71...v0.0.72) (2026-06-22)
+
+
+### Features
+
+* add LinidFilter type and LinidFilterValue parsing class ([0f70b08](https://github.com/linagora/linid-im-front-corelib/commit/0f70b08c151e5a11916a08dfda603f8e19a6df90)), closes [#102](https://github.com/linagora/linid-im-front-corelib/issues/102)
+
 ### [0.0.71](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.70...v0.0.71) (2026-06-19)
 
 

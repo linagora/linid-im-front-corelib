@@ -96,6 +96,10 @@ static fromString(input: string): LinidFilterValue;
 
 Parses a filter value expression into a `LinidFilterValue` instance.
 
+If `input` is not actually a string at runtime — this class is exported across Module Federation
+boundaries, where TypeScript cannot enforce the contract on a remote module — `fromString` does not throw.
+It returns the same neutral result as for an empty string: `{ isNegation: false, operator: '', value: '' }`.
+
 ### 3.4 toString
 
 ```ts
@@ -145,11 +149,14 @@ const cityFilter = new LinidFilter<{ placeholder: string }>(
   'city',
   'text',
   { placeholder: 'City' },
-  [LinidFilterValue.fromString('lk_paris')]
+  [
+    LinidFilterValue.fromString('lk_paris'),
+    LinidFilterValue.fromString('not_lk_lyon'),
+  ]
 );
 
 cityFilter.toString();
-// 'city=lk_paris'
+// 'lk_paris|not_lk_lyon'
 ```
 
 ---
@@ -165,8 +172,10 @@ fixed format string, adding an operator does not break expressions converted wit
 ## 6. `LinidFilter` class
 
 `LinidFilter<T>` represents a filterable attribute together with the list of values currently applied to it. Its
-`toString()` reconstructs the filter as an HTTP query parameter pair (`name=value`, values combined with OR via `|`), ready
-to use with APIs powered by [`spring-query-filter`](https://github.com/Zorin95670/spring-query-filter).
+`toString()` reconstructs the filter as a query parameter value (values combined with OR via `|`); it does not
+include the `name=` prefix — see [`LinidFilterSet`](#7-linidfilterset-class) for the `name=value` HTTP query
+parameter pair representation, ready to use with APIs powered by
+[`spring-query-filter`](https://github.com/Zorin95670/spring-query-filter).
 
 ### 6.1 Properties
 
@@ -213,7 +222,9 @@ static fromString<T = Record<string, unknown>>(
 
 Parses a bare value expression (e.g. `paris|not_lk_lyon`, as produced by `LinidFilterValue.toString`) into a
 **new** `LinidFilter<T>` instance carrying the parsed `values`. `input` never carries the `name=` query
-parameter prefix produced by `toString()` — it is the value expression only.
+parameter prefix produced by `toString()` — it is the value expression only. An empty string produces an empty
+`values` array — as does any non-string `input` received at runtime despite the `string` type (e.g. across a
+Module Federation boundary), rather than throwing.
 
 `type` and `options` are not derivable from `input`: the returned filter gets a placeholder `'text'` `type` and
 empty `options`. Callers that already track a `LinidFilter` definition should only use the parsed `values`.

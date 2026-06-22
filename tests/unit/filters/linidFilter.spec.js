@@ -44,6 +44,20 @@ describe('Test class: LinidFilter', () => {
 
       expect(result.name).toBe('city');
     });
+
+    it('returns an empty values array for an empty string', () => {
+      const result = LinidFilter.fromString('city', '');
+
+      expect(result.values).toEqual([]);
+    });
+
+    it('returns an empty values array for any non-string input', () => {
+      [null, undefined, 42, false, {}, []].forEach((input) => {
+        const result = LinidFilter.fromString('city', input);
+
+        expect(result.values).toEqual([]);
+      });
+    });
   });
 
   describe('test method: toString', () => {

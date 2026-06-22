@@ -75,10 +75,19 @@ export class LinidFilterValue {
 
   /**
    * Parses a filter value expression (e.g. `not_lk_paris`) into a {@link LinidFilterValue}.
+   *
+   * If `input` is not actually a string at runtime (this class is exported across Module
+   * Federation boundaries, where TypeScript cannot enforce the contract), the negation marker and
+   * operator prefix can't be looked up, so this returns the same neutral result as for an empty
+   * string: no negation, no operator, empty value.
    * @param input - The filter value expression to parse.
    * @returns The parsed filter value.
    */
   static fromString(input: string): LinidFilterValue {
+    if (typeof input !== 'string' || input === '') {
+      return new LinidFilterValue(false, '', '');
+    }
+
     let remaining = input;
     let isNegation = false;
 

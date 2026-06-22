@@ -47,10 +47,10 @@ describe('Test class: LinidFilter', () => {
   });
 
   describe('test method: toString', () => {
-    it('reconstructs the query parameter pair when there are no values', () => {
+    it('reconstructs the query parameter value when there are no values', () => {
       const filter = new LinidFilter('city', 'text', {}, []);
 
-      expect(filter.toString()).toBe('city=');
+      expect(filter.toString()).toBe('');
     });
 
     it('reconstructs a single value as a query parameter pair', () => {
@@ -58,7 +58,7 @@ describe('Test class: LinidFilter', () => {
         new LinidFilterValue(false, '', 'paris'),
       ]);
 
-      expect(filter.toString()).toBe('city=paris');
+      expect(filter.toString()).toBe('paris');
     });
 
     it('reconstructs multiple values joined by the OR separator', () => {
@@ -67,7 +67,7 @@ describe('Test class: LinidFilter', () => {
         new LinidFilterValue(true, 'lk_', 'lyon'),
       ]);
 
-      expect(filter.toString()).toBe('city=paris|not_lk_lyon');
+      expect(filter.toString()).toBe('paris|not_lk_lyon');
     });
   });
 });

@@ -109,15 +109,13 @@ export class LinidFilter<T = Record<string, unknown>> {
   }
 
   /**
-   * Reconstructs the filter as an HTTP query parameter pair (`name=value`), ready to use with
+   * Reconstructs the filter as an HTTP query parameter value, ready to use with
    * APIs powered by `spring-query-filter`.
-   * @returns The query parameter string representation of the filter, e.g. `city=paris|not_lk_lyon`.
+   * @returns The query parameter string representation of the filter, e.g. `paris|not_lk_lyon`.
    */
   toString(): string {
-    const expression = this.values
+    return this.values
       .map((value) => value.toString())
       .join(LINID_FILTER_OR_SEPARATOR);
-
-    return `${this.name}=${expression}`;
   }
 }

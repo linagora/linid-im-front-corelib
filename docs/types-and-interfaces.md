@@ -996,6 +996,10 @@ See description in [Ui design documentation](./ui-design.md#q-checkbox).
 
 See description in [Ui design documentation](./ui-design.md#q-icon).
 
+### LinidQChipProps
+
+See description in [Ui design documentation](./ui-design.md#q-chip).
+
 ### LinidQToggleProps
 
 See description in [Ui design documentation](./ui-design.md#q-toggle).
@@ -1414,6 +1418,8 @@ LinidFilter.fromString('city', 'lk_paris|not_toto');
 | `LinidQCardProps`               | QCard component properties supported by Ui Design                                           |
 | `LinidQCardActionsProps`        | QCardActions component properties supported by Ui                                           |
 | `LinidQIconProps`               | QIcon component properties supported by Ui Design                                           |
+| `LinidQChipProps`               | QChip component properties supported by Ui Design                                           |
+| `LinidQCheckboxProps`           | QCheckbox component properties supported by Ui Design                                       |
 | `LinidQToggleProps`             | QToggle component properties supported by Ui Design                                         |
 | `LinidQInputProps`              | QInput component properties supported by Ui Design                                          |
 | `LinidQDateProps`               | QDate component properties supported by Ui Design                                           |

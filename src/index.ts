@@ -144,6 +144,7 @@ export type {
   LinidQFormProps,
   LinidQHeaderProps,
   LinidQIconProps,
+  LinidQChipProps,
   LinidQImgProps,
   LinidQInputProps,
   LinidQItemLabelProps,

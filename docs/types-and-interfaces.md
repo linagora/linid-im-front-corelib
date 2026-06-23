@@ -1078,7 +1078,11 @@ See description in [Ui design documentation](./ui-design.md#q-tree).
 
 ### LinidQSplitterProps
 
-See description in [Ui design documentation](./ui-design.md#q-btn).
+See description in [Ui design documentation](./ui-design.md#q-splitter).
+
+## LinidQSeparatorProps
+
+See description in [Ui design documentation](./ui-design.md#q-separator).
 
 ---
 
@@ -1382,7 +1386,7 @@ LinidFilter.fromString('city', 'lk_paris|not_toto');
 ## 🧰 Summary
 
 | Type / Interface                | Purpose                                                                                     |
-|---------------------------------|---------------------------------------------------------------------------------------------|
+| ------------------------------- | ------------------------------------------------------------------------------------------- |
 | `LinidZoneEntry`                | Defines the contract for a plugin component                                                 |
 | `LinidZoneState`                | Defines the structure of the zone store                                                     |
 | `FederatedModule`               | Defines the structure of a federated component module                                       |
@@ -1432,6 +1436,7 @@ LinidFilter.fromString('city', 'lk_paris|not_toto');
 | `LinidQFileProps`               | QFile component properties supported by Ui Design                                           |
 | `LinidQFormProps`               | QForm component properties supported by Ui Design                                           |
 | `LinidQSelectProps`             | QSelect component properties supported by Ui Design                                         |
+| `LinidQSeparatorProps`          | QSeparator component properties supported by Ui Design                                      |
 | `LinidQSpinnerProps`            | QSpinner component properties supported by Ui Design                                        |
 | `LinidQBtnDropdownProps`        | QBtnDropdown component properties supported by Ui Design                                    |
 | `LinidQListProps`               | QList component properties supported by Ui Design                                           |

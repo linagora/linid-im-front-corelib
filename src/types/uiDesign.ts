@@ -52,6 +52,7 @@ import type {
   QMenuProps,
   QRouteTabProps,
   QSelectProps,
+  QSeparatorProps,
   QSpinnerProps,
   QSplitterProps,
   QTableProps,
@@ -712,6 +713,15 @@ const Q_SPLITTER_PROPS = [
   'dark',
 ] as const;
 
+const Q_SEPARATOR_PROPS = [
+  'spaced',
+  'inset',
+  'vertical',
+  'dark',
+  'size',
+  'color',
+] as const;
+
 /**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
@@ -742,14 +752,15 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-menu': Q_MENU_PROPS,
   'q-route-tab': Q_ROUTE_TAB_PROPS,
   'q-select': Q_SELECT_PROPS,
+  'q-separator': Q_SEPARATOR_PROPS,
   'q-spinner': Q_SPINNER_PROPS,
+  'q-splitter': Q_SPLITTER_PROPS,
   'q-table': Q_TABLE_PROPS,
   'q-tabs': Q_TABS_PROPS,
   'q-toggle': Q_TOGGLE_PROPS,
   'q-toolbar': Q_TOOLBAR_PROPS,
   'q-toolbar-title': Q_TOOLBAR_TITLE_PROPS,
   'q-tree': Q_TREE_PROPS,
-  'q-splitter': Q_SPLITTER_PROPS,
 } as const;
 
 /**
@@ -986,6 +997,14 @@ export type LinidQSplitterProps = Pick<
 >;
 
 /**
+ * Subset of QSeparator props supported in UI design configuration.
+ */
+export type LinidQSeparatorProps = Pick<
+  QSeparatorProps,
+  (typeof Q_SEPARATOR_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -1014,6 +1033,7 @@ export type LinidQComponentProps =
   | LinidQMenuProps
   | LinidQRouteTabProps
   | LinidQSelectProps
+  | LinidQSeparatorProps
   | LinidQSpinnerProps
   | LinidQSplitterProps
   | LinidQTableProps
@@ -1053,11 +1073,12 @@ export type QComponentName =
   | 'q-menu'
   | 'q-route-tab'
   | 'q-select'
+  | 'q-separator'
   | 'q-spinner'
+  | 'q-splitter'
   | 'q-table'
   | 'q-tabs'
   | 'q-toggle'
   | 'q-toolbar'
   | 'q-toolbar-title'
-  | 'q-tree'
-  | 'q-splitter';
+  | 'q-tree';

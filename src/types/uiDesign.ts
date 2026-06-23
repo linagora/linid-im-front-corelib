@@ -37,6 +37,7 @@ import type {
   QChipProps,
   QDateProps,
   QDialogProps,
+  QFieldProps,
   QFileProps,
   QFormProps,
   QHeaderProps,
@@ -395,6 +396,32 @@ const Q_IMG_PROPS = [
 ] as const;
 
 /**
+ * List of QFieldProps keys for type-safe UI design retrieval.
+ */
+const Q_FIELD_PROPS = [
+  'clearable',
+  'autofocus',
+  'stackLabel',
+  'hideHint',
+  'clearIcon',
+  'counter',
+  'labelColor',
+  'color',
+  'bgColor',
+  'dark',
+  'filled',
+  'outlined',
+  'borderless',
+  'standout',
+  'hideBottomSpace',
+  'rounded',
+  'square',
+  'dense',
+  'itemAligned',
+  'noErrorIcon',
+] as const;
+
+/**
  * List of QFileProps keys for type-safe UI design retrieval.
  */
 const Q_FILE_PROPS = [
@@ -699,6 +726,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-checkbox': Q_CHECKBOX_PROPS,
   'q-date': Q_DATE_PROPS,
   'q-dialog': Q_DIALOG_PROPS,
+  'q-field': Q_FIELD_PROPS,
   'q-file': Q_FILE_PROPS,
   'q-form': Q_FORM_PROPS,
   'q-header': Q_HEADER_PROPS,
@@ -848,6 +876,14 @@ export type LinidQDateProps = Pick<QDateProps, (typeof Q_DATE_PROPS)[number]>;
 export type LinidQImgProps = Pick<QImgProps, (typeof Q_IMG_PROPS)[number]>;
 
 /**
+ * Subset of QFieldProps props supported in UI design configuration.
+ */
+export type LinidQFieldProps = Pick<
+  QFieldProps,
+  (typeof Q_FIELD_PROPS)[number]
+>;
+
+/**
  * Subset of QFile props supported in UI design configuration.
  */
 export type LinidQFileProps = Pick<QFileProps, (typeof Q_FILE_PROPS)[number]>;
@@ -963,6 +999,7 @@ export type LinidQComponentProps =
   | LinidQCheckboxProps
   | LinidQDateProps
   | LinidQDialogProps
+  | LinidQFieldProps
   | LinidQFileProps
   | LinidQFormProps
   | LinidQHeaderProps
@@ -1000,6 +1037,7 @@ export type QComponentName =
   | 'q-checkbox'
   | 'q-date'
   | 'q-dialog'
+  | 'q-field'
   | 'q-file'
   | 'q-form'
   | 'q-header'

@@ -223,6 +223,7 @@ export type QComponentName =
   | 'q-checkbox'
   | 'q-date'
   | 'q-dialog'
+  | 'q-field'
   | 'q-file'
   | 'q-form'
   | 'q-header'
@@ -258,10 +259,11 @@ export type LinidQComponentProps =
   | LinidQBtnDropdownProps
   | LinidQCardProps
   | LinidQCardActionsProps
-  | LinidQDateProps
-  | LinidQChipProps
   | LinidQCheckboxProps
+  | LinidQChipProps
+  | LinidQDateProps
   | LinidQDialogProps
+  | LinidQFieldProps
   | LinidQFileProps
   | LinidQFormProps
   | LinidQHeaderProps
@@ -701,6 +703,35 @@ transitionDuration
 ```
 
 For details, refer to the [Quasar QDialog API documentation](https://quasar.dev/vue-components/dialog#dialog-api).
+
+### q-field
+
+The following props are officially supported and design-validated in our system:
+
+```
+clearable
+autofocus
+stackLabel
+hideHint
+clearIcon
+counter
+labelColor
+color
+bgColor
+dark
+filled
+outlined
+borderless
+standout
+hideBottomSpace
+rounded
+square
+dense
+itemAligned
+noErrorIcon
+```
+
+For details, refer to the [Quasar QFile API documentation](https://quasar.dev/vue-components/field/).
 
 ### q-file
 

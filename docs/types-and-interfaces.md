@@ -992,6 +992,10 @@ See description in [Ui design documentation](./ui-design.md#q-card-actions).
 
 See description in [Ui design documentation](./ui-design.md#q-checkbox).
 
+### LinidQFieldProps
+
+See description in [Ui design documentation](./ui-design.md#q-field).
+
 ### LinidQIconProps
 
 See description in [Ui design documentation](./ui-design.md#q-icon).
@@ -1424,6 +1428,7 @@ LinidFilter.fromString('city', 'lk_paris|not_toto');
 | `LinidQInputProps`              | QInput component properties supported by Ui Design                                          |
 | `LinidQDateProps`               | QDate component properties supported by Ui Design                                           |
 | `LinidQImgProps`                | QImg component properties supported by Ui Design                                            |
+| `LinidQFieldProps`              | QField component properties supported by Ui Design                                          |
 | `LinidQFileProps`               | QFile component properties supported by Ui Design                                           |
 | `LinidQFormProps`               | QForm component properties supported by Ui Design                                           |
 | `LinidQSelectProps`             | QSelect component properties supported by Ui Design                                         |

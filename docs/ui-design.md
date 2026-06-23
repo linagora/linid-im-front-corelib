@@ -66,21 +66,21 @@ components.
   <div>
     <!-- Quasar button using dynamic flat and color values from UiDesign -->
     <q-btn
-        v-bind="btnProps"
-        label="Click me"
+      v-bind="btnProps"
+      label="Click me"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { useUiDesign } from '@linagora/linid-im-front-corelib';
-  import { QBtnProps } from 'quasar';
+import { useUiDesign } from '@linagora/linid-im-front-corelib';
+import { QBtnProps } from 'quasar';
 
-  // Retrieve the getComponentProps() function from the composable
-  const { ui } = useUiDesign();
+// Retrieve the getComponentProps() function from the composable
+const { ui } = useUiDesign();
 
-  // Get typed props for the 'q-btn' component from the 'custom' namespace
-  const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
+// Get typed props for the 'q-btn' component from the 'custom' namespace
+const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
 </script>
 ```
 
@@ -239,14 +239,15 @@ export type QComponentName =
   | 'q-menu'
   | 'q-route-tab'
   | 'q-select'
+  | 'q-separator'
   | 'q-spinner'
+  | 'q-splitter'
   | 'q-table'
   | 'q-tabs'
   | 'q-toggle'
   | 'q-toolbar'
   | 'q-toolbar-title'
-  | 'q-tree'
-  | 'q-splitter';
+  | 'q-tree';
 
 /**
  * Union type of all supported Quasar component props subsets.
@@ -277,6 +278,7 @@ export type LinidQComponentProps =
   | LinidQMenuProps
   | LinidQRouteTabProps
   | LinidQSelectProps
+  | LinidQSeparatorProps
   | LinidQSpinnerProps
   | LinidQSplitterProps
   | LinidQTableProps
@@ -1057,6 +1059,21 @@ dark,
 ```
 
 For details, refer to the [Quasar QSplitter API documentation](https://quasar.dev/vue-components/splitter).
+
+## q-separator
+
+The following props are officially supported and design-validated in our system:
+
+```
+spaced,
+inset,
+vertical,
+dark,
+size,
+color,
+```
+
+For details, refer to the [Quasar QSeparator API documentation](https://quasar.dev/vue-components/separator#qseparator-api).
 
 More components can be added as needed.
 

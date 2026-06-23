@@ -140,6 +140,7 @@ export type {
   LinidQCheckboxProps,
   LinidQDateProps,
   LinidQDialogProps,
+  LinidQFieldProps,
   LinidQFileProps,
   LinidQFormProps,
   LinidQHeaderProps,

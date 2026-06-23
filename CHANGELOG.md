@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.75](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.74...v0.0.75) (2026-06-23)
+
+
+### Features
+
+* add qfield ui design ([359e878](https://github.com/linagora/linid-im-front-corelib/commit/359e878f13ab607cbabc783be0662a5f8c2fe4bb))
+
 ### [0.0.74](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.73...v0.0.74) (2026-06-22)
 
 

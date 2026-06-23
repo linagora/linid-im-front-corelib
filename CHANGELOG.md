@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.77](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.76...v0.0.77) (2026-06-23)
+
+
+### Features
+
+* add LinidFilterSet class for favorite search saving ([90aec91](https://github.com/linagora/linid-im-front-corelib/commit/90aec91da66080f0e246f9c672c030fceca247af)), closes [#105](https://github.com/linagora/linid-im-front-corelib/issues/105)
+
+
+### Bug Fixes
+
+* handle invalid input string for fromString method of LinidFilter and LinidFilterValue ([4b5083e](https://github.com/linagora/linid-im-front-corelib/commit/4b5083e45874be3fbc6dff656c3618b93371e965))
+
 ### [0.0.76](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.75...v0.0.76) (2026-06-23)
 
 

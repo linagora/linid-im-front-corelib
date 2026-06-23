@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.76](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.75...v0.0.76) (2026-06-23)
+
+
+### Features
+
+* add q-separator ui design ([0bd6933](https://github.com/linagora/linid-im-front-corelib/commit/0bd6933366b79460abd4528e31c0da0e11104d51))
+
 ### [0.0.75](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.74...v0.0.75) (2026-06-23)
 
 

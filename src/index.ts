@@ -155,6 +155,7 @@ export type {
   LinidQLayoutProps,
   LinidQListProps,
   LinidQMenuProps,
+  LinidQOptionGroupProps,
   LinidQRouteTabProps,
   LinidQSelectProps,
   LinidQSeparatorProps,

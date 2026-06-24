@@ -50,6 +50,7 @@ import type {
   QLayoutProps,
   QListProps,
   QMenuProps,
+  QOptionGroup,
   QRouteTabProps,
   QSelectProps,
   QSeparatorProps,
@@ -722,6 +723,17 @@ const Q_SEPARATOR_PROPS = [
   'color',
 ] as const;
 
+const Q_OPTION_GROUP_PROPS = [
+  'keepColor',
+  'type',
+  'leftLabel',
+  'inline',
+  'size',
+  'color',
+  'dark',
+  'dense',
+] as const;
+
 /**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
@@ -750,6 +762,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-layout': Q_LAYOUT_PROPS,
   'q-list': Q_LIST_PROPS,
   'q-menu': Q_MENU_PROPS,
+  'q-option-group': Q_OPTION_GROUP_PROPS,
   'q-route-tab': Q_ROUTE_TAB_PROPS,
   'q-select': Q_SELECT_PROPS,
   'q-separator': Q_SEPARATOR_PROPS,
@@ -1005,6 +1018,14 @@ export type LinidQSeparatorProps = Pick<
 >;
 
 /**
+ * Subset of QOptionGroup props supported in UI design configuration.
+ */
+export type LinidQOptionGroupProps = Pick<
+  QOptionGroup,
+  (typeof Q_OPTION_GROUP_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -1031,6 +1052,7 @@ export type LinidQComponentProps =
   | LinidQItemSectionProps
   | LinidQListProps
   | LinidQMenuProps
+  | LinidQOptionGroupProps
   | LinidQRouteTabProps
   | LinidQSelectProps
   | LinidQSeparatorProps
@@ -1071,6 +1093,7 @@ export type QComponentName =
   | 'q-layout'
   | 'q-list'
   | 'q-menu'
+  | 'q-option-group'
   | 'q-route-tab'
   | 'q-select'
   | 'q-separator'

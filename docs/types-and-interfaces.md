@@ -1084,6 +1084,10 @@ See description in [Ui design documentation](./ui-design.md#q-splitter).
 
 See description in [Ui design documentation](./ui-design.md#q-separator).
 
+## LinidQOptionGroupProps
+
+See description in [Ui design documentation](./ui-design.md#q-option-group).
+
 ---
 
 ## 🌳 Tree types
@@ -1491,6 +1495,7 @@ LinidFilterSet.fromString('My Active Projects', 'status=active|pending');
 | `LinidQMenuProps`               | QMenu component properties supported by Ui Design                                           |
 | `LinidQTreeProps`               | QTree component properties supported by Ui Design                                           |
 | `LinidQSplitterProps`           | QSplitter component properties supported by Ui Design                                       |
+| `LinidQOptionGroupProps`        | QOptionGroup component properties supported by Ui Design                                    |
 | `TreeNode`                      | Represents a node in the tree structure (recursive)                                         |
 | `TreeNodeType`                  | Describes a node type and its default actions                                               |
 | `MenuItem`                      | Generic menu entry consumed by the federated DropdownButton                                 |

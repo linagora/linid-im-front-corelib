@@ -237,6 +237,7 @@ export type QComponentName =
   | 'q-layout'
   | 'q-list'
   | 'q-menu'
+  | 'q-option-group'
   | 'q-route-tab'
   | 'q-select'
   | 'q-separator'
@@ -276,6 +277,7 @@ export type LinidQComponentProps =
   | LinidQItemSectionProps
   | LinidQListeProps
   | LinidQMenuProps
+  | LinidQOptionGroupProps
   | LinidQRouteTabProps
   | LinidQSelectProps
   | LinidQSeparatorProps
@@ -1074,6 +1076,23 @@ color,
 ```
 
 For details, refer to the [Quasar QSeparator API documentation](https://quasar.dev/vue-components/separator#qseparator-api).
+
+## q-option-group
+
+The following props are officially supported and design-validated in our system:
+
+```
+keepColor,
+type,
+leftLabel,
+inline,
+size,
+color,
+dark,
+dense,
+```
+
+For details, refer to the [Quasar QOptionGroup API documentation](https://quasar.dev/vue-components/option-group#qoptiongroup-api).
 
 More components can be added as needed.
 

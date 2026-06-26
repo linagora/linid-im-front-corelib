@@ -110,6 +110,11 @@ A full technical documentation is available in the `docs/` directory:
   Learn how to initialize and use the `i18n` singleton and the `useScopedI18n` composable for internationalization.
   → [`docs/i18n.md`](docs/i18n.md)
 
+- ⚙️ **User Preferences System (`useLinidUserPreference`)**
+  Learn how to manage user preferences using the `useLinidUserPreferenceStore` (Pinia state layer) and the
+  `useLinidUserPreference` composable (API synchronization layer with backend persistence).
+  → [`docs/user-preference-system.md`](docs/user-preference-system.md)
+
 - 🔔 **Notification System (`useNotify`)**
   Learn how to use the `useNotify` composable to display notifications within your application.
   → [`docs/notify.md`](docs/notify.md)

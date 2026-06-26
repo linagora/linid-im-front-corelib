@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.79](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.78...v0.0.79) (2026-06-26)
+
+
+### Features
+
+* add composable and store for user preference ([78d3ade](https://github.com/linagora/linid-im-front-corelib/commit/78d3adecc9e21e4bd35fe42c62a26096649a0ac4))
+* add id to LinidFilterSet ([480baeb](https://github.com/linagora/linid-im-front-corelib/commit/480baebb6bf6a20bb632cdd7f0793811626b4de5))
+
 ### [0.0.78](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.77...v0.0.78) (2026-06-24)
 
 

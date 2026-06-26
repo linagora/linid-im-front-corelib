@@ -41,12 +41,14 @@ export { useScopedI18n } from './composables/useScopedI18n';
 export { useTree } from './composables/useTree';
 export { useUiDesign } from './composables/useUiDesign';
 export { useLinidFilterUrl } from './composables/useLinidFilterUrl';
+export { useLinidUserPreference } from './composables/useLinidUserPreference';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
 export { useLinidUiStore } from './stores/linidUiStore';
 export { useLinidUserStore } from './stores/linidUserStore';
 export { useLinidZoneStore } from './stores/linidZoneStore';
+export { useLinidUserPreferenceStore } from './stores/linidUserPreferenceStore';
 
 // Services
 export { getDayjsInstance, setDayjsInstance } from './services/dayjsService';

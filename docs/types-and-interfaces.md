@@ -126,7 +126,7 @@ export interface FederatedModule<T> {
 </template>
 
 <script setup lang="ts">
-// Default export is automatic
+  // Default export is automatic
 </script>
 ```
 
@@ -228,7 +228,8 @@ export interface ModuleHostConfig<T> {
 **Usage:**
 
 - Passed to remote modules during their lifecycle `configure` phase.
-- The `zones` field allows modules to declare UI elements that should be rendered in zones exposed by other modules. It can be an empty array if no zones are needed.
+- The `zones` field allows modules to declare UI elements that should be rendered in zones exposed by other modules. It
+  can be an empty array if no zones are needed.
 
 ### RemoteModule
 
@@ -277,7 +278,8 @@ export interface RemoteModule<T> extends ModuleLifecycleHooks<T> {
 
 ### ModuleZoneDefinition
 
-Defines a UI zone injection, allowing a module to declare that one of its exposed elements should be rendered inside a named zone exposed by another module.
+Defines a UI zone injection, allowing a module to declare that one of its exposed elements should be rendered inside a
+named zone exposed by another module.
 
 ```ts
 /**
@@ -349,7 +351,7 @@ customized by consumers.
 #### Supported Input Types
 
 | Input Type    | Description                             |
-| ------------- | --------------------------------------- |
+|---------------|-----------------------------------------|
 | `Text`        | Text-based inputs (QInput)              |
 | `Number`      | Numeric inputs (QInput number)          |
 | `Boolean`     | Toggle/checkbox (QToggle)               |
@@ -432,7 +434,8 @@ const dateAttr: LinidAttributeConfiguration = {
 
 Represents the available validator names that can be used with `useQuasarRules`.
 
-Most validators read their parameters from the `inputSettings` property of `LinidAttributeConfiguration`. `'email'` is the exception: it takes no parameter and is applied directly.
+Most validators read their parameters from the `inputSettings` property of `LinidAttributeConfiguration`. `'email'` is
+the exception: it takes no parameter and is applied directly.
 
 ```ts
 export type ValidatorName =
@@ -584,7 +587,8 @@ export interface LinidRoute {
 
 - Used to describe both top-level and nested routes in the application.
 - Enables recursive route definitions for complex navigation structures.
-- The optional `name` field enables deterministic route overriding: if two routes share the same name, the latest one replaces the previous one via Vue Router's `addRoute` mechanism.
+- The optional `name` field enables deterministic route overriding: if two routes share the same name, the latest one
+  replaces the previous one via Vue Router's `addRoute` mechanism.
 
 ---
 
@@ -1173,7 +1177,9 @@ const nodes: TreeNode[] = [
 
 ## 🔽 Dropdown types
 
-Types describing the contract of the federated `DropdownButton` component, exposed by `linid-im-front-community-plugins`. They are kept in corelib so any host application can build typed menus and listen to typed click payloads without depending on the plugin internals.
+Types describing the contract of the federated `DropdownButton` component, exposed by
+`linid-im-front-community-plugins`. They are kept in corelib so any host application can build typed menus and listen to
+typed click payloads without depending on the plugin internals.
 
 Defined in `src/types/dropdownButton.ts`.
 
@@ -1194,7 +1200,9 @@ export interface MenuItem<TKey extends string = string> {
 }
 ```
 
-**Generic parameter:** `TKey` defaults to `string` for open-ended menus and can be narrowed to a finite union (typically derived from a `const`-tuple via `typeof X[number]`) so the entry key and any nested children share the same identifier domain.
+**Generic parameter:** `TKey` defaults to `string` for open-ended menus and can be narrowed to a finite union (typically
+derived from a `const`-tuple via `typeof X[number]`) so the entry key and any nested children share the same identifier
+domain.
 
 **Example:**
 
@@ -1237,7 +1245,8 @@ export interface DropdownClickPayload<TKey extends string = string> {
 - For a root entry, `key` equals the entry's own key (e.g. `'edit'`).
 - For a child entry, `key` is the dot-separated composite of the parent key and the child key (e.g. `'export.csv'`).
 
-**Generic parameter:** `TKey` lets consumers strongly type the keys they expect to receive. When left to the default `string`, the payload accepts any key emitted by the dropdown.
+**Generic parameter:** `TKey` lets consumers strongly type the keys they expect to receive. When left to the default
+`string`, the payload accepts any key emitted by the dropdown.
 
 **Example:**
 
@@ -1304,7 +1313,7 @@ export const LINID_FILTER_NEGATION_PREFIX = 'not_';
 ```
 
 | Constant                       | Value    | Meaning                                                             |
-| ------------------------------ | -------- | ------------------------------------------------------------------- |
+|--------------------------------|----------|---------------------------------------------------------------------|
 | `LINID_FILTER_OR_SEPARATOR`    | `'\|'`   | Separates value expressions combined with OR within a `LinidFilter` |
 | `LINID_FILTER_NEGATION_PREFIX` | `'not_'` | Prefix marking a `LinidFilterValue` expression as negated           |
 
@@ -1325,7 +1334,7 @@ export type LinidFilterOperator = 'lk_' | '' | 'gt_' | 'lt_';
 ```
 
 | Operator | Meaning         |
-| -------- | --------------- |
+|----------|-----------------|
 | `lk_`    | Like / contains |
 | `''`     | Equality        |
 | `gt_`    | Greater than    |
@@ -1398,12 +1407,14 @@ value the same way, and silently ignores malformed `name=value` pairs. See
 
 ```ts
 export class LinidFilterSet {
+  id: string;
   label: string;
   filters: LinidFilter[];
 
-  constructor(label: string, filters: LinidFilter[]);
+  constructor(id: string, label: string, filters: LinidFilter[]);
 
   static fromString(
+    id: string,
     label: string,
     value: string | null | undefined
   ): LinidFilterSet;
@@ -1433,7 +1444,7 @@ LinidFilterSet.fromString('My Active Projects', 'status=active|pending');
 ## 🧰 Summary
 
 | Type / Interface                | Purpose                                                                                     |
-| ------------------------------- | ------------------------------------------------------------------------------------------- |
+|---------------------------------|---------------------------------------------------------------------------------------------|
 | `LinidZoneEntry`                | Defines the contract for a plugin component                                                 |
 | `LinidZoneState`                | Defines the structure of the zone store                                                     |
 | `FederatedModule`               | Defines the structure of a federated component module                                       |

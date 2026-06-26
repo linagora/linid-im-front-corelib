@@ -46,6 +46,10 @@ const LINID_FILTER_SET_PAIR_SEPARATOR = '=';
  */
 export class LinidFilterSet {
   /**
+   * Unique identifier of the filter set.
+   */
+  id: string;
+  /**
    * User-friendly name of the favorite search (e.g. "My Active Projects").
    */
   label: string;
@@ -57,10 +61,12 @@ export class LinidFilterSet {
 
   /**
    * Creates a new filter set.
+   * @param id - Unique identifier of the filter set.
    * @param label - User-friendly name of the favorite search.
    * @param filters - Collection of filters composing the favorite search.
    */
-  constructor(label: string, filters: LinidFilter[]) {
+  constructor(id: string, label: string, filters: LinidFilter[]) {
+    this.id = id;
     this.label = label;
     this.filters = filters;
   }
@@ -78,11 +84,13 @@ export class LinidFilterSet {
    * `value` tolerates `null`/`undefined`/any non-string at runtime (e.g. `localStorage.getItem(...)`,
    * or across a Module Federation boundary): like an empty string, it produces an empty `filters`
    * array instead of throwing.
+   * @param id - Unique identifier of the filter set.
    * @param label - User-friendly name of the favorite search.
    * @param value - The `&`-separated string of `name=value` pairs, as produced by `toString()`.
    * @returns The parsed filter set.
    */
   static fromString(
+    id: string,
     label: string,
     value: string | null | undefined
   ): LinidFilterSet {
@@ -102,7 +110,7 @@ export class LinidFilterSet {
               return LinidFilter.fromString(name, input);
             });
 
-    return new LinidFilterSet(label, filters);
+    return new LinidFilterSet(id, label, filters);
   }
 
   /**

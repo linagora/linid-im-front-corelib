@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.80](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.79...v0.0.80) (2026-07-02)
+
+
+### Features
+
+* add type for favorite in user-preference ([86054a9](https://github.com/linagora/linid-im-front-corelib/commit/86054a93572eea18ea054159c724415499a52ed9))
+
 ### [0.0.79](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.78...v0.0.79) (2026-06-26)
 
 

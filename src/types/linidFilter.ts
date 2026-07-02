@@ -71,4 +71,5 @@ export interface LinidFilterSetUserPreference {
   /**
    * Serialized representation of the filter configuration.
    */
+  value: string;
 }

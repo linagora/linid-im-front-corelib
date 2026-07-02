@@ -343,3 +343,78 @@ restored.filters.map((filter) => filter.name);
 by `spring-query-filter`, so a restored filter set's string can be appended to a request URL as a query string.
 Note that no URL-encoding is performed: if a filter value itself contains reserved URL characters (`&`, `=`, a
 space, etc.), the caller is responsible for encoding it before doing so.
+
+---
+
+## 8. `LinidFilterSetUserPreference` type
+
+A `LinidFilterSetUserPreference` represents the **persisted form of a saved filter set in user preferences**.
+
+Unlike `LinidFilterSet`, which is a runtime structure used to manipulate filters in memory, this type is a
+**storage-oriented DTO** used to serialize and retrieve favorite filter sets from user preference systems
+(e.g. backend storage, local storage, or federated module configuration).
+
+It contains only the minimal metadata required to reconstruct a `LinidFilterSet`: a unique identifier, a display
+label, and a serialized filter value string that can be parsed back using `LinidFilterSet.fromString`.
+
+This format is typically used when storing favorites under keys such as
+`ui.<instanceId>.favorites.<favoriteId>`.
+
+---
+
+### 8.1 Structure
+
+```ts
+export interface LinidFilterSetUserPreference {
+  id: string;
+  label: string;
+  value: string;
+}
+```
+
+| Property | Type     | Description                                                       |
+| -------- | -------- | ----------------------------------------------------------------- |
+| `id`     | `string` | Unique identifier of the saved favorite filter set                |
+| `label`  | `string` | Human-readable name of the favorite                               |
+| `value`  | `string` | Serialized filter expression (`LinidFilterSet.toString()` format) |
+
+---
+
+### 8.2 Semantics
+
+* `id` is used to uniquely identify the preference entry in the user preference store.
+* `label` is purely presentational and used in UI contexts (e.g. dropdown of saved searches).
+* `value` is the canonical serialized form of a filter set and can be parsed back via:
+
+```ts
+LinidFilterSet.fromString(label, value);
+```
+
+---
+
+### 8.3 Example
+
+```ts
+const preference: LinidFilterSetUserPreference = {
+  id: 'fav-123',
+  label: 'My active projects',
+  value: 'status=active|pending&createdAt=gt_2026-01-01',
+};
+
+const filterSet = LinidFilterSet.fromString(
+  preference.label,
+  preference.value
+);
+```
+
+---
+
+### 8.4 Relationship with `LinidFilterSet`
+
+| Concept                        | Role                                                        |
+| ------------------------------ | ----------------------------------------------------------- |
+| `LinidFilterSet`               | Runtime model used in the application to manipulate filters |
+| `LinidFilterSetUserPreference` | Persisted DTO used to store/retrieve saved filter sets      |
+
+In summary, `LinidFilterSetUserPreference` is a **serialization boundary type**, while `LinidFilterSet` is the
+**domain/runtime representation** used for filtering logic.

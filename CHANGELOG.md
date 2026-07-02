@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.81](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.80...v0.0.81) (2026-07-02)
+
+
+### Bug Fixes
+
+* missing value property on linid filter set type ([c843138](https://github.com/linagora/linid-im-front-corelib/commit/c843138e3f351a0a89b5220fc89d10830ddb6d92))
+
 ### [0.0.80](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.79...v0.0.80) (2026-07-02)
 
 

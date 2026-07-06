@@ -104,9 +104,9 @@ export function useDialog<T extends DialogEvent>(
          */
         move(event: InteractEvent) {
           const target = event.target;
-          if (
-            !(target instanceof HTMLElement || target instanceof SVGElement)
-          ) {
+          if (!(
+            target instanceof HTMLElement || target instanceof SVGElement
+          )) {
             return;
           }
 

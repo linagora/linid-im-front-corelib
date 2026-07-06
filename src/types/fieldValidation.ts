@@ -30,10 +30,4 @@
  * of `LinidAttributeConfiguration`.
  */
 export type ValidatorName =
-  | 'email'
-  | 'min'
-  | 'max'
-  | 'minLength'
-  | 'maxLength'
-  | 'pattern'
-  | 'unique';
+  'email' | 'min' | 'max' | 'minLength' | 'maxLength' | 'pattern' | 'unique';

@@ -28,13 +28,6 @@ import { type ComposerTranslation, useI18n } from 'vue-i18n';
 import { getI18nInstance } from '../services/i18nService';
 
 /**
- * Alias for the `ComposerTranslation` type from vue-i18n.
- * Represents all overloads of the `t` function, including
- * key-only, plural, named interpolation, and options.
- */
-type TOverloads = ComposerTranslation;
-
-/**
  * Creates a scoped i18n translator bound to a specific translation namespace.
  *
  * The provided `scope` is automatically prefixed to all translation keys, allowing the same module to be reused in
@@ -55,7 +48,7 @@ export function useScopedI18n(scope: string): {
    * @param key - Translation key (string or number) relative to the scoped namespace.
    * @returns `true` if the key exists, `false` otherwise.
    */
-  te: (key: string | number) => boolean;
+  te: (key: string, locale?: string | undefined) => boolean;
   /**
    * Retrieves the raw translation message for a scoped key without formatting.
    * @param key - Translation key (string or number) relative to the scoped namespace.
@@ -79,6 +72,29 @@ export function useScopedI18n(scope: string): {
   });
 
   /**
+   * Type definition for the scoped translation function returned by vue-i18n.
+   *
+   * This type preserves all overloads supported by the original `t` function,
+   * including simple key lookup, pluralization, named interpolation, and options.
+   */
+  type TFunction = typeof t;
+
+  /**
+   * Type definition for the translation existence checker returned by vue-i18n.
+   *
+   * This function checks whether a translation key exists in the current locale.
+   */
+  type TeFunction = typeof te;
+
+  /**
+   * Type definition for the raw translation message resolver returned by vue-i18n.
+   *
+   * This function retrieves untranslated message values without applying
+   * formatting or interpolation.
+   */
+  type TmFunction = typeof tm;
+
+  /**
    * Scoped translation function that automatically prefixes the key with the given `scope`.
    *
    * This function mirrors all overloads of the original `t` function from vue-i18n, including key only, pluralization,
@@ -89,32 +105,34 @@ export function useScopedI18n(scope: string): {
    *   - args[2]: optional number for plural OR options object.
    * @returns The translated string.
    */
-  function _t(...args: Parameters<TOverloads>): ReturnType<TOverloads> {
+  function _t(...args: Parameters<TFunction>): ReturnType<TFunction> {
     const [key, a, b] = args;
 
-    if (typeof a === 'number') {
-      return t(`${scope}.${key}`, a, b);
-    } else {
-      return t(`${scope}.${key}`, a, b);
-    }
+    return t(`${scope}.${key}`, a, b);
   }
 
   /**
    * Checks whether a scoped translation key exists.
-   * @param key - Translation key (string or number).
+   * @param args - Arguments matching one of the overloads of `ComposerTranslation`.
+   *   - args[0]: translation key (string)
+   *   - args[1]: optional number for pluralization OR object for named interpolation.
+   *   - args[2]: optional number for plural OR options object.
    * @returns `true` if the key exists, `false` otherwise.
    */
-  function _te(key: string | number): boolean {
-    return te(`${scope}.${key}`);
+  function _te(...args: Parameters<TeFunction>): ReturnType<TeFunction> {
+    return te(`${scope}.${args[0]}`, args[1]);
   }
 
   /**
    * Retrieves the raw message for a scoped translation key.
-   * @param key - Translation key (string or number).
+   * @param args - Arguments matching one of the overloads of `ComposerTranslation`.
+   *   - args[0]: translation key (string)
+   *   - args[1]: optional number for pluralization OR object for named interpolation.
+   *   - args[2]: optional number for plural OR options object.
    * @returns The raw translation message, or `undefined` if the key does not exist.
    */
-  function _tm(key: string | number): ReturnType<TOverloads> {
-    return tm(`${scope}.${key}`);
+  function _tm(...args: Parameters<TmFunction>): ReturnType<TmFunction> {
+    return tm(`${scope}.${args[0]}`);
   }
 
   /**
@@ -126,9 +144,9 @@ export function useScopedI18n(scope: string): {
   function translateOrDefault(
     defaultValue: string,
     ...args: unknown[]
-  ): ReturnType<TOverloads> {
+  ): string {
     if (_te(args[0] as string)) {
-      return _t(...(args as Parameters<TOverloads>));
+      return _t(...(args as Parameters<TFunction>));
     }
     return defaultValue;
   }

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.82](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.81...v0.0.82) (2026-07-08)
+
+
+### Features
+
+* update dependencies ([7e8f346](https://github.com/linagora/linid-im-front-corelib/commit/7e8f346c3678ef64f90b7fe81888a5f17a385ffc))
+
+
+### Bug Fixes
+
+* fix i18n type due to update ([d2f6f78](https://github.com/linagora/linid-im-front-corelib/commit/d2f6f787f1a0b2550359d275eef4ae3060d9797b))
+
 ### [0.0.81](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.80...v0.0.81) (2026-07-02)
 
 

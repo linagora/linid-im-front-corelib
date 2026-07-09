@@ -37,7 +37,12 @@ export { usePagination } from './composables/usePagination';
 export { QDATE_DEFAULT_MASK, useQuasarDate } from './composables/useQuasarDate';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
 export { useQuasarRules } from './composables/useQuasarRules';
-export { useScopedI18n } from './composables/useScopedI18n';
+export {
+  changeLocale,
+  resolveLocale,
+  syncLocale,
+  useScopedI18n,
+} from './composables/useScopedI18n';
 export { useTree } from './composables/useTree';
 export { useUiDesign } from './composables/useUiDesign';
 export { useLinidFilterUrl } from './composables/useLinidFilterUrl';

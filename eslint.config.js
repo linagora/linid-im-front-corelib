@@ -152,6 +152,11 @@ export default defineConfigWithVueTs(
       '**/__tests__/**',
       '**/*.config.*',
     ],
+    languageOptions: {
+      globals: {
+        localStorage: 'readonly',
+      },
+    },
     rules: {
       'jsdoc/require-jsdoc': 'off',
       'headers/header-format': 'off',

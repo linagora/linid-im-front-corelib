@@ -24,8 +24,11 @@
  * LinID Identity Manager software.
  */
 
+import type { WritableComputedRef } from 'vue';
 import { type ComposerTranslation, useI18n } from 'vue-i18n';
 import { getI18nInstance } from '../services/i18nService';
+import { useLinidUiStore } from '../stores/linidUiStore';
+import { useLinidUserPreference } from './useLinidUserPreference';
 
 /**
  * Creates a scoped i18n translator bound to a specific translation namespace.
@@ -157,4 +160,74 @@ export function useScopedI18n(scope: string): {
     tm: _tm as ComposerTranslation,
     translateOrDefault,
   };
+}
+
+const LOCALE_STORAGE_KEY = 'language';
+
+/**
+ * Tells whether a language candidate is defined and part of the supported languages.
+ * @param lang - The language candidate to check.
+ * @returns `true` when the candidate is a non-empty, supported language.
+ */
+function isSupportedLanguage(lang?: string | null): lang is string {
+  const uiStore = useLinidUiStore();
+  return !!lang && uiStore.i18n.languages.includes(lang);
+}
+
+/**
+ * Resolves the effective locale to apply, without any side effect.
+ *
+ * The locale is resolved by priority: the stored user preference first, then the locally persisted language.
+ * If neither the stored preference nor the localStorage value is a supported language, the UI store locale is used as the fallback.
+ * @returns The locale code the caller should apply to its i18n target.
+ */
+export function resolveLocale(): string {
+  const { userPreferenceStore } = useLinidUserPreference();
+  const uiStore = useLinidUiStore();
+  const storedPreference =
+    userPreferenceStore.userPreferences?.[LOCALE_STORAGE_KEY];
+
+  return (
+    [storedPreference, localStorage.getItem(LOCALE_STORAGE_KEY)].find(
+      isSupportedLanguage
+    ) ?? uiStore.i18n.locale
+  );
+}
+
+/**
+ * Synchronises the persisted state with the given locale.
+ *
+ * The locale is always written to localStorage. The server-side user preference is updated only when it differs from
+ * the currently stored one.
+ * @param locale - The locale to persist.
+ * @returns A promise that resolves once the persisted state has been synchronised.
+ */
+export async function syncLocale(locale: string): Promise<void> {
+  const { userPreferenceStore, saveUserPreference } = useLinidUserPreference();
+  const storedPreference =
+    userPreferenceStore.userPreferences?.[LOCALE_STORAGE_KEY];
+
+  localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+
+  if (locale !== storedPreference) {
+    await saveUserPreference(LOCALE_STORAGE_KEY, locale);
+  }
+}
+
+/**
+ * Applies the given locale to the application and persists the choice.
+ *
+ * Updates the active i18n locale, reflects it in the UI store, and synchronises the persisted state. This assumes the
+ * shared i18n instance runs in Composition mode (legacy: false), as guaranteed by the corelib LinidI18n convention;
+ * on a legacy instance the locale assignment would be a silent no-op at runtime.
+ * @param locale - The locale code to apply (e.g. "fr-FR").
+ * @returns A promise that resolves once the locale has been applied and persisted.
+ */
+export async function changeLocale(locale: string): Promise<void> {
+  const uiStore = useLinidUiStore();
+  const i18n = getI18nInstance();
+
+  (i18n.global.locale as WritableComputedRef<string>).value = locale;
+  uiStore.setLocale(locale);
+  await syncLocale(locale);
 }

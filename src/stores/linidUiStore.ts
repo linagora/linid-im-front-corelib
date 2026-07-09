@@ -34,6 +34,13 @@ import type { NavigationMenuItem } from '../types/linidUi';
 interface LinidUiState {
   /** List of main navigation menu items. */
   mainNavigationItems: NavigationMenuItem[];
+  /** Internationalization state: active locale and available languages. */
+  i18n: {
+    /** Currently active locale code (e.g. "fr-FR"). */
+    locale: string;
+    /** List of available locale codes declared in the configuration. */
+    languages: string[];
+  };
 }
 
 /**
@@ -50,6 +57,10 @@ export const useLinidUiStore = () => _useLinidUiStore(getPiniaStore());
 const _useLinidUiStore = defineStore('LinidUiStore', {
   state: (): LinidUiState => ({
     mainNavigationItems: [],
+    i18n: {
+      locale: '',
+      languages: [],
+    },
   }),
 
   actions: {
@@ -59,6 +70,22 @@ const _useLinidUiStore = defineStore('LinidUiStore', {
      */
     addMainNavigationMenuItems(...items: NavigationMenuItem[]): void {
       this.mainNavigationItems.push(...items);
+    },
+
+    /**
+     * Sets the list of available locale codes.
+     * @param languages - The available locale codes (e.g. ["fr-FR", "en-US"]).
+     */
+    setAvailableLanguages(languages: string[]): void {
+      this.i18n.languages = languages;
+    },
+
+    /**
+     * Sets the active locale code.
+     * @param locale - The locale code to activate (e.g. "fr-FR").
+     */
+    setLocale(locale: string): void {
+      this.i18n.locale = locale;
     },
   },
 });

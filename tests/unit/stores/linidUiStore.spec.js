@@ -23,6 +23,7 @@ describe('Test store: linidUiStore', () => {
   describe('Test initial state', () => {
     it('should have empty initial state', () => {
       expect(store.mainNavigationItems).toEqual([]);
+      expect(store.i18n).toEqual({ locale: '', languages: [] });
     });
   });
 
@@ -34,6 +35,21 @@ describe('Test store: linidUiStore', () => {
       ];
       store.addMainNavigationMenuItems(...items);
       expect(store.mainNavigationItems).toEqual(items);
+    });
+  });
+
+  describe('Test action: setLocale', () => {
+    it('should set the active locale', () => {
+      store.setLocale('fr-FR');
+      expect(store.i18n.locale).toBe('fr-FR');
+    });
+  });
+
+  describe('Test action: setAvailableLanguages', () => {
+    it('should set the available languages', () => {
+      const languages = ['fr-FR', 'en-US'];
+      store.setAvailableLanguages(languages);
+      expect(store.i18n.languages).toEqual(languages);
     });
   });
 });

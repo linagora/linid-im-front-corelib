@@ -1272,6 +1272,13 @@ Represents the state of the Pinia store that manages UI-related configurations.
 interface LinidUiState {
   /** List of main navigation menu items. */
   mainNavigationItems: NavigationMenuItem[];
+  /** Internationalization state: active locale and available languages. */
+  i18n: {
+    /** Currently active locale code (e.g. "fr-FR"). */
+    locale: string;
+    /** List of available locale codes declared in the configuration. */
+    languages: string[];
+  };
 }
 ```
 

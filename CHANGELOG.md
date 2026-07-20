@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.83](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.82...v0.0.83) (2026-07-20)
+
+
+### Features
+
+* **core:** add i18n state and actions to UI store ([d967bcd](https://github.com/linagora/linid-im-front-corelib/commit/d967bcd5196ba3412b364c5f3e5457589847c44d))
+* **core:** move locale management into scoped i18n and configure eslint ([e3a048d](https://github.com/linagora/linid-im-front-corelib/commit/e3a048df3e6f60632c083987bed46ca419cdc26b))
+
 ### [0.0.82](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.81...v0.0.82) (2026-07-08)
 
 

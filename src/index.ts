@@ -29,6 +29,7 @@ export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue
 
 // Composables
 export { DEFAULT_DATE_FORMAT, useDayjs } from './composables/useDayjs';
+export { useCommonMapper } from './composables/useCommonMapper';
 export { useDialog } from './composables/useDialog';
 export { useFieldValidation } from './composables/useFieldValidation';
 export { useNotify } from './composables/useNotify';

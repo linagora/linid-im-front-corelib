@@ -135,6 +135,10 @@ A full technical documentation is available in the `docs/` directory:
   Learn how to build filters, save them as favorite searches, and convert/parse filter value expressions.
   → [`docs/filters.md`](docs/filters.md)
 
+- 🔄 **Common Mapper (`useCommonMapper`)**
+  Learn how to convert between data formats (ISO dates, locale formats, empty records, and Dayjs objects).
+  → [`docs/commonMapper.md`](docs/commonMapper.md)
+
 More documents will be added as the library evolves.
 
 ---

@@ -6,21 +6,39 @@ This document explains the **types and interfaces** used in `linid-im-front-core
 
 ## 🔌 LinidZoneEntry
 
-Represents a plugin entry that can be rendered inside a zone.
+Represents an entry that can be rendered inside a zone. The model is a discriminated union: an entry provides its
+component either through a federated plugin identifier (`FederatedLinidZoneEntry`) or as a Vue component given
+directly (`ComponentLinidZoneEntry`).
 
 ```ts
-export interface LinidZoneEntry {
-  /** Path or identifier of the plugin module */
-  plugin: string;
-
-  /** Props forwarded to the plugin component */
+export interface BaseLinidZoneEntry {
+  /** Props forwarded to the rendered component */
   props?: Record<string, unknown>;
 }
+
+export interface FederatedLinidZoneEntry extends BaseLinidZoneEntry {
+  type: 'federated';
+
+  /** Path or identifier of the plugin module */
+  plugin: string;
+}
+
+export interface ComponentLinidZoneEntry extends BaseLinidZoneEntry {
+  type: 'component';
+
+  /** The Vue component to render directly */
+  component: Component;
+}
+
+export type LinidZoneEntry = FederatedLinidZoneEntry | ComponentLinidZoneEntry;
 ```
 
 **Usage:**
 
-- All plugins registered to the `Linid Zone Store` must implement this interface.
+- Entries are created by the `Linid Zone Store` helpers (`registerPlugin`, `registerPluginOnce`,
+  `registerComponent`); consumers never build them manually.
+- The `type` discriminant removes any ambiguity on the available properties and keeps the model extensible for
+  future entry kinds.
 
 ---
 
@@ -30,13 +48,13 @@ Represents the state of the Pinia store that manages all plugin zones.
 
 ```ts
 interface LinidZoneState {
-  /** Map of zone names to their registered plugin entries */
+  /** Map of zone names to their registered entries */
   zones: Record<string, LinidZoneEntry[]>;
 }
 ```
 
 - `zones` is a reactive object.
-- Each key corresponds to a zone, each value is an array of plugins for that zone.
+- Each key corresponds to a zone, each value is an array of entries for that zone.
 
 ---
 

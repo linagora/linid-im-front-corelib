@@ -28,7 +28,7 @@
   <component
     :is="entry.component"
     v-for="(entry, index) in components"
-    :key="entry.plugin + index"
+    :key="index"
     v-bind="{ ...$attrs, ...entry.props }"
   />
   <slot v-if="components.length === 0" />
@@ -37,7 +37,7 @@
 <script lang="ts" setup>
 import { loadAsyncComponent } from '../services/federationService';
 import { useLinidZoneStore } from '../stores/linidZoneStore';
-import type { LinidZoneEntry } from '../types/linidZone';
+import type { LinidZoneResolvedEntry } from '../types/linidZone';
 
 defineOptions({
   inheritAttrs: false,
@@ -51,15 +51,13 @@ const props = defineProps<{
 }>();
 const linidZoneStore = useLinidZoneStore();
 
-const components: ({
-  /**
-   * The component to render.
-   */
-  component: unknown;
-} & LinidZoneEntry)[] = (linidZoneStore.zones[props.zone] || []).map(
-  (entry) => ({
-    ...entry,
-    component: loadAsyncComponent(entry.plugin),
-  })
-);
+const components: LinidZoneResolvedEntry[] = (
+  linidZoneStore.zones[props.zone] || []
+).map((entry) => ({
+  props: entry.props,
+  component:
+    entry.type === 'federated'
+      ? loadAsyncComponent(entry.plugin)
+      : entry.component,
+}));
 </script>

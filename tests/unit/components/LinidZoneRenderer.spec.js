@@ -39,17 +39,7 @@ describe('Test component: LinidZoneRenderer', () => {
       expect(wrapper.vm.components).toEqual([]);
     });
 
-    it('should not call loadAsyncComponent when the zone is registered has no entries', async () => {
-      wrapper = shallowMount(LinidZoneRenderer, {
-        props: { zone: 'empty-zone' },
-        global: { plugins: [pinia] },
-      });
-
-      expect(federationService.loadAsyncComponent).not.toHaveBeenCalled();
-      expect(wrapper.vm.components).toEqual([]);
-    });
-
-    it('should load components from store when zone is registered and has entries', async () => {
+    it('should load components from store when zone is registered and has federated entries', async () => {
       const MockComponentA = {
         name: 'MockComponent',
         template: '<div>Mock</div>',
@@ -62,15 +52,11 @@ describe('Test component: LinidZoneRenderer', () => {
         .mockReturnValueOnce(MockComponentA)
         .mockReturnValueOnce(MockComponentB);
 
-      store.register('test-zone', {
-        plugin: 'test-plugin/MockComponentA',
-        props: { title: 'Test' },
+      store.registerPlugin('test-zone', 'test-plugin/MockComponentA', {
+        title: 'Test',
       });
 
-      store.register('test-zone', {
-        plugin: 'test-plugin/MockComponentB',
-        props: {},
-      });
+      store.registerPlugin('test-zone', 'test-plugin/MockComponentB', {});
 
       wrapper = shallowMount(LinidZoneRenderer, {
         props: { zone: 'test-zone' },
@@ -87,21 +73,69 @@ describe('Test component: LinidZoneRenderer', () => {
 
       expect(wrapper.vm.components).toHaveLength(2);
 
-      expect(wrapper.vm.components[0].plugin).toBe(
-        'test-plugin/MockComponentA'
-      );
       expect(wrapper.vm.components[0].props).toEqual({ title: 'Test' });
       expect(JSON.stringify(wrapper.vm.components[0].component)).toEqual(
         JSON.stringify(MockComponentA)
       );
 
-      expect(wrapper.vm.components[1].plugin).toBe(
-        'test-plugin/MockComponentB'
-      );
       expect(wrapper.vm.components[1].props).toEqual({});
       expect(JSON.stringify(wrapper.vm.components[1].component)).toEqual(
         JSON.stringify(MockComponentB)
       );
+    });
+
+    it('should render a component entry without calling loadAsyncComponent', async () => {
+      const DirectComponent = {
+        name: 'DirectComponent',
+        template: '<div>Direct</div>',
+      };
+
+      store.registerComponent('test-zone', DirectComponent, {
+        title: 'Direct',
+      });
+
+      wrapper = shallowMount(LinidZoneRenderer, {
+        props: { zone: 'test-zone' },
+        global: { plugins: [pinia] },
+      });
+
+      expect(federationService.loadAsyncComponent).not.toHaveBeenCalled();
+
+      expect(wrapper.vm.components).toHaveLength(1);
+      expect(wrapper.vm.components[0].props).toEqual({ title: 'Direct' });
+      expect(wrapper.vm.components[0].component).toBe(DirectComponent);
+      expect(wrapper.findComponent(DirectComponent).exists()).toBe(true);
+    });
+
+    it('should render federated and component entries together', async () => {
+      const MockPluginComponent = {
+        name: 'MockPluginComponent',
+        template: '<div>Plugin</div>',
+      };
+      const DirectComponent = {
+        name: 'DirectComponent',
+        template: '<div>Direct</div>',
+      };
+      vi.mocked(federationService.loadAsyncComponent).mockReturnValueOnce(
+        MockPluginComponent
+      );
+
+      store.registerPlugin('test-zone', 'test-plugin/MockPluginComponent');
+      store.registerComponent('test-zone', DirectComponent);
+
+      wrapper = shallowMount(LinidZoneRenderer, {
+        props: { zone: 'test-zone' },
+        global: { plugins: [pinia] },
+      });
+
+      expect(federationService.loadAsyncComponent).toHaveBeenCalledTimes(1);
+      expect(federationService.loadAsyncComponent).toHaveBeenCalledWith(
+        'test-plugin/MockPluginComponent'
+      );
+
+      expect(wrapper.vm.components).toHaveLength(2);
+      expect(wrapper.vm.components[1].component).toBe(DirectComponent);
+      expect(wrapper.findComponent(DirectComponent).exists()).toBe(true);
     });
   });
 });

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.84](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.83...v0.0.84) (2026-07-24)
+
+
+### Features
+
+* support direct Vue components in zone entries ([2b074fb](https://github.com/linagora/linid-im-front-corelib/commit/2b074fb43fa91b319d160595741a433d92dc8fc5))
+
 ### [0.0.83](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.82...v0.0.83) (2026-07-20)
 
 

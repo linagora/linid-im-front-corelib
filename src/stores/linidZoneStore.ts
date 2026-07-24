@@ -25,6 +25,8 @@
  */
 
 import { defineStore } from 'pinia';
+import type { Component } from 'vue';
+import { markRaw } from 'vue';
 import { getPiniaStore } from '../services/piniaStoreService';
 import type { LinidZoneEntry } from '../types/linidZone';
 
@@ -55,11 +57,13 @@ const _useLinidZoneStore = defineStore('linidZoneStore', {
 
   actions: {
     /**
-     * Register a new entry in a specified zone.
+     * Append an entry to a specified zone, creating the zone if needed.
+     *
+     * Internal helper backing the public `register*` actions.
      * @param zone - The name of the zone.
-     * @param entry - The entry to register.
+     * @param entry - The entry to append.
      */
-    register(zone: string, entry: LinidZoneEntry): void {
+    appendEntry(zone: string, entry: LinidZoneEntry): void {
       if (!this.zones[zone]) {
         this.zones[zone] = [];
       }
@@ -67,15 +71,59 @@ const _useLinidZoneStore = defineStore('linidZoneStore', {
     },
 
     /**
-     * Register a new entry only if the plugin
+     * Register a federated plugin component in a specified zone.
+     * @param zone - The name of the zone.
+     * @param plugin - The plugin identifier of the remote component to load.
+     * @param props - Optional props passed to the rendered component.
+     */
+    registerPlugin(
+      zone: string,
+      plugin: string,
+      props?: Record<string, unknown>
+    ): void {
+      this.appendEntry(zone, { type: 'federated', plugin, props });
+    },
+
+    /**
+     * Register a federated plugin component only if the plugin
      * is not already registered in the zone.
      * @param zone - The name of the zone.
-     * @param entry - The entry to register.
+     * @param plugin - The plugin identifier of the remote component to load.
+     * @param props - Optional props passed to the rendered component.
      */
-    registerOnce(zone: string, entry: LinidZoneEntry): void {
-      if (!this.zones[zone]?.some(({ plugin }) => plugin === entry.plugin)) {
-        this.register(zone, entry);
+    registerPluginOnce(
+      zone: string,
+      plugin: string,
+      props?: Record<string, unknown>
+    ): void {
+      const isRegistered = this.zones[zone]?.some(
+        (entry) => entry.type === 'federated' && entry.plugin === plugin
+      );
+
+      if (!isRegistered) {
+        this.registerPlugin(zone, plugin, props);
       }
+    },
+
+    /**
+     * Register a Vue component directly in a specified zone.
+     *
+     * The component is stored with `markRaw` to keep it out of the
+     * reactivity system, as Vue components must not be reactive.
+     * @param zone - The name of the zone.
+     * @param component - The Vue component to render as-is.
+     * @param props - Optional props passed to the rendered component.
+     */
+    registerComponent(
+      zone: string,
+      component: Component,
+      props?: Record<string, unknown>
+    ): void {
+      this.appendEntry(zone, {
+        type: 'component',
+        component: markRaw(component),
+        props,
+      });
     },
   },
 });

@@ -104,7 +104,13 @@ export {
 export type { LinidFilterSetUserPreference } from './types/linidFilter';
 
 // Types - Zones
-export type { LinidZoneEntry } from './types/linidZone';
+export type {
+  BaseLinidZoneEntry,
+  ComponentLinidZoneEntry,
+  FederatedLinidZoneEntry,
+  LinidZoneEntry,
+  LinidZoneResolvedEntry,
+} from './types/linidZone';
 
 // Types - route
 export type { LinidRoute, LinidRoutes } from './types/linidRoute';

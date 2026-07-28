@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.85](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.84...v0.0.85) (2026-07-28)
+
+
+### Features
+
+* add common mapper functions ([5716e84](https://github.com/linagora/linid-im-front-corelib/commit/5716e849995aff6f7830198bd785f51e0a609785))
+
 ### [0.0.84](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.83...v0.0.84) (2026-07-24)
 
 

@@ -28,10 +28,12 @@
 export { default as LinidZoneRenderer } from './components/LinidZoneRenderer.vue';
 
 // Composables
-export { DEFAULT_DATE_FORMAT, useDayjs } from './composables/useDayjs';
 export { useCommonMapper } from './composables/useCommonMapper';
+export { DEFAULT_DATE_FORMAT, useDayjs } from './composables/useDayjs';
 export { useDialog } from './composables/useDialog';
 export { useFieldValidation } from './composables/useFieldValidation';
+export { useLinidFilterUrl } from './composables/useLinidFilterUrl';
+export { useLinidUserPreference } from './composables/useLinidUserPreference';
 export { useNotify } from './composables/useNotify';
 export { useNunjucks } from './composables/useNunjucks';
 export { usePagination } from './composables/usePagination';
@@ -46,15 +48,13 @@ export {
 } from './composables/useScopedI18n';
 export { useTree } from './composables/useTree';
 export { useUiDesign } from './composables/useUiDesign';
-export { useLinidFilterUrl } from './composables/useLinidFilterUrl';
-export { useLinidUserPreference } from './composables/useLinidUserPreference';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
 export { useLinidUiStore } from './stores/linidUiStore';
+export { useLinidUserPreferenceStore } from './stores/linidUserPreferenceStore';
 export { useLinidUserStore } from './stores/linidUserStore';
 export { useLinidZoneStore } from './stores/linidZoneStore';
-export { useLinidUserPreferenceStore } from './stores/linidUserPreferenceStore';
 
 // Services
 export { getDayjsInstance, setDayjsInstance } from './services/dayjsService';
@@ -154,6 +154,7 @@ export type {
   LinidQCardActionsProps,
   LinidQCardProps,
   LinidQCheckboxProps,
+  LinidQChipProps,
   LinidQDateProps,
   LinidQDialogProps,
   LinidQFieldProps,
@@ -161,7 +162,6 @@ export type {
   LinidQFormProps,
   LinidQHeaderProps,
   LinidQIconProps,
-  LinidQChipProps,
   LinidQImgProps,
   LinidQInputProps,
   LinidQItemLabelProps,

@@ -1102,11 +1102,11 @@ See description in [Ui design documentation](./ui-design.md#q-tree).
 
 See description in [Ui design documentation](./ui-design.md#q-splitter).
 
-## LinidQSeparatorProps
+### LinidQSeparatorProps
 
 See description in [Ui design documentation](./ui-design.md#q-separator).
 
-## LinidQOptionGroupProps
+### LinidQOptionGroupProps
 
 See description in [Ui design documentation](./ui-design.md#q-option-group).
 

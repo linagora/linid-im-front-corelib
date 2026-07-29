@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.86](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.85...v0.0.86) (2026-07-29)
+
+
+### Features
+
+* add draggable ui design ([4bae171](https://github.com/linagora/linid-im-front-corelib/commit/4bae171df7a533cee1c5f556c455244698251e20))
+* add q-scroll-area ui design ([890abda](https://github.com/linagora/linid-im-front-corelib/commit/890abda8a313eacc08c3759447c51f4ba024643d))
+
+
+### Bug Fixes
+
+* update QOptionGroup type to QOptionGroupProps in uiDesign.ts ([d672a0b](https://github.com/linagora/linid-im-front-corelib/commit/d672a0b6c4edc342a387cde7056d1ea73ff5a7d1))
+
 ### [0.0.85](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.84...v0.0.85) (2026-07-28)
 
 

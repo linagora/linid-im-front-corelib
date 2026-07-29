@@ -172,6 +172,7 @@ export type {
   LinidQMenuProps,
   LinidQOptionGroupProps,
   LinidQRouteTabProps,
+  LinidQScrollAreaProps,
   LinidQSelectProps,
   LinidQSeparatorProps,
   LinidQSpinnerProps,

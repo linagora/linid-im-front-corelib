@@ -239,6 +239,7 @@ export type QComponentName =
   | 'q-menu'
   | 'q-option-group'
   | 'q-route-tab'
+  | 'q-scroll-area'
   | 'q-select'
   | 'q-separator'
   | 'q-spinner'
@@ -279,6 +280,7 @@ export type LinidQComponentProps =
   | LinidQMenuProps
   | LinidQOptionGroupProps
   | LinidQRouteTabProps
+  | LinidQScrollAreaProps
   | LinidQSelectProps
   | LinidQSeparatorProps
   | LinidQSpinnerProps
@@ -1093,6 +1095,28 @@ dense,
 ```
 
 For details, refer to the [Quasar QOptionGroup API documentation](https://quasar.dev/vue-components/option-group#qoptiongroup-api).
+
+### q-scroll-area
+
+The following props are officially supported and design-validated in our system:
+
+```
+visible,
+delay,
+dark,
+verticalOffset,
+horizontalOffset,
+barStyle,
+verticalBarStyle,
+horizontalBarStyle,
+thumbStyle,
+verticalThumbStyle,
+horizontalThumbStyle,
+contentStyle,
+contentActiveStyle,
+```
+
+For details, refer to the [Quasar QScrollArea API documentation](https://quasar.dev/vue-components/scroll-area#qscrollarea-api).
 
 More components can be added as needed.
 

@@ -50,7 +50,7 @@ import type {
   QLayoutProps,
   QListProps,
   QMenuProps,
-  QOptionGroup,
+  QOptionGroupProps,
   QRouteTabProps,
   QScrollAreaProps,
   QSelectProps,
@@ -1039,7 +1039,7 @@ export type LinidQSeparatorProps = Pick<
  * Subset of QOptionGroup props supported in UI design configuration.
  */
 export type LinidQOptionGroupProps = Pick<
-  QOptionGroup,
+  QOptionGroupProps,
   (typeof Q_OPTION_GROUP_PROPS)[number]
 >;
 

@@ -751,6 +751,35 @@ const Q_SCROLL_AREA_PROPS = [
   'contentActiveStyle',
 ] as const;
 
+const DRAGGABLE_PROPS = [
+  'tag',
+  'sort',
+  'delay',
+  'delayOnTouchOnly',
+  'touchStartThreshold',
+  'disabled',
+  'animation',
+  'easing',
+  'handle',
+  'filter',
+  'draggable',
+  'ghostClass',
+  'chosenClass',
+  'dragClass',
+  'swapThreshold',
+  'invertSwap',
+  'invertedSwapThreshold',
+  'direction',
+  'forceFallback',
+  'fallbackClass',
+  'fallbackOnBody',
+  'fallbackTolerance',
+  'emptyInsertThreshold',
+  'scroll',
+  'scrollSensitivity',
+  'scrollSpeed',
+] as const;
+
 /**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
@@ -792,6 +821,16 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-toolbar': Q_TOOLBAR_PROPS,
   'q-toolbar-title': Q_TOOLBAR_TITLE_PROPS,
   'q-tree': Q_TREE_PROPS,
+} as const;
+
+/**
+ * Maps third-party component names to their respective props keys for UI design retrieval.
+ */
+export const THIRD_PARTY_COMPONENT_PROPS: Record<
+  ThirdPartyComponentName,
+  readonly string[]
+> = {
+  draggable: DRAGGABLE_PROPS,
 } as const;
 
 /**
@@ -1052,6 +1091,65 @@ export type LinidQScrollAreaProps = Pick<
 >;
 
 /**
+ * Subset of vue-draggable-next (SortableJS) props supported in UI design configuration.
+ * Covers style, display, and user interaction behavior — not internal SortableJS mechanics.
+ */
+export type LinidDraggableProps = {
+  /** HTML element or component used as the list wrapper. */
+  tag?: string;
+  /** Whether items in the list can be reordered by the user. */
+  sort?: boolean;
+  /** Delay in milliseconds before drag starts after mousedown/touchstart. */
+  delay?: number;
+  /** Apply the delay only on touch devices. */
+  delayOnTouchOnly?: boolean;
+  /** Minimum pointer movement (px) before a touch event is treated as a drag. */
+  touchStartThreshold?: number;
+  /** Disables all drag interaction when true. */
+  disabled?: boolean;
+  /** Duration (ms) of the reorder animation when items shift position. */
+  animation?: number;
+  /** CSS easing function applied to the reorder animation. */
+  easing?: string;
+  /** CSS selector for the drag handle element within each item. */
+  handle?: string;
+  /** CSS selector for elements within an item that should not trigger dragging. */
+  filter?: string;
+  /** CSS selector restricting which child elements are draggable. */
+  draggable?: string;
+  /** CSS class added to the placeholder element shown at the original position during drag. */
+  ghostClass?: string;
+  /** CSS class added to the item while it is selected (mousedown / touchstart). */
+  chosenClass?: string;
+  /** CSS class added to the item while it is being dragged. */
+  dragClass?: string;
+  /** Fraction of an item's surface that must overlap the target before a swap is triggered (0–1). */
+  swapThreshold?: number;
+  /** Inverts the swap detection so that the swap zone is at the edges rather than the center. */
+  invertSwap?: boolean;
+  /** Swap threshold used when invertSwap is active; falls back to swapThreshold when omitted. */
+  invertedSwapThreshold?: number;
+  /** Drag direction; defaults to automatic detection when omitted. */
+  direction?: 'horizontal' | 'vertical';
+  /** Forces use of the fallback drag implementation instead of the HTML5 Drag and Drop API. */
+  forceFallback?: boolean;
+  /** CSS class added to the clone used when the HTML5 drag API is unavailable. */
+  fallbackClass?: string;
+  /** Appends the fallback clone to document.body instead of the sortable container. */
+  fallbackOnBody?: boolean;
+  /** Minimum pointer movement (px) before the fallback drag clone starts moving. */
+  fallbackTolerance?: number;
+  /** Distance in pixels from the edges of an empty list within which a dragged item can be inserted. */
+  emptyInsertThreshold?: number;
+  /** Enable auto-scrolling during drag; can be a boolean or a specific scroll container element. */
+  scroll?: boolean;
+  /** Distance in pixels from the scroll container edge at which auto-scroll triggers. */
+  scrollSensitivity?: number;
+  /** Auto-scroll speed in pixels per frame. */
+  scrollSpeed?: number;
+};
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -1091,6 +1189,11 @@ export type LinidQComponentProps =
   | LinidQToolbarProps
   | LinidQToolbarTitleProps
   | LinidQTreeProps;
+
+/**
+ * Union type of all supported third-party component props subsets.
+ */
+export type LinidThirdPartyComponentProps = LinidDraggableProps;
 
 /**
  * Valid Quasar component names for type-safe UI design retrieval.
@@ -1133,3 +1236,8 @@ export type QComponentName =
   | 'q-toolbar'
   | 'q-toolbar-title'
   | 'q-tree';
+
+/**
+ * Valid third-party component names for type-safe UI design retrieval.
+ */
+export type ThirdPartyComponentName = 'draggable';

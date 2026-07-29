@@ -16,6 +16,10 @@ describe('Test composable: useUiDesign', () => {
           textColor: 'accent',
           color: 'primary',
         },
+        draggable: {
+          animation: 200,
+          ghostClass: 'sortable-ghost',
+        },
       },
       custom: {
         'q-btn': {
@@ -25,6 +29,9 @@ describe('Test composable: useUiDesign', () => {
           'q-btn': {
             color: 'secondary',
           },
+        },
+        draggable: {
+          animation: 300,
         },
       },
     };
@@ -116,6 +123,42 @@ describe('Test composable: useUiDesign', () => {
       expect(() => ui('custom', 'q-btn')).toThrowError(
         "[UiDesign] Value for 'custom.q-btn.flat' is a nested object or null, expected a primitive."
       );
+    });
+
+    it('should retrieve default value for a third-party component', () => {
+      const { ui } = useUiDesign();
+
+      expect(ui('unknown', 'draggable').ghostClass).toEqual('sortable-ghost');
+      expect(ui('custom', 'draggable').ghostClass).toEqual('sortable-ghost');
+    });
+
+    it('should retrieve overridden value for a third-party component', () => {
+      const { ui } = useUiDesign();
+
+      expect(ui('custom', 'draggable').animation).toEqual(300);
+    });
+
+    it('should retrieve value with override for a third-party component', () => {
+      const { ui } = useUiDesign();
+
+      const result = ui('custom', 'draggable', { animation: 500 });
+
+      expect(result.animation).toEqual(500);
+      expect(result.ghostClass).toEqual('sortable-ghost');
+    });
+
+    it('should ignore non-configurable properties for a third-party component', () => {
+      const { ui } = useUiDesign();
+      const result = ui('custom', 'draggable');
+
+      expect('dragoverBubble' in result).toBe(false);
+    });
+
+    it('should ignore configurable properties if no default fallback for a third-party component', () => {
+      const { ui } = useUiDesign();
+      const result = ui('custom', 'draggable');
+
+      expect('sort' in result).toBe(false);
     });
   });
 });

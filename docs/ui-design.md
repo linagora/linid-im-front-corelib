@@ -92,8 +92,9 @@ const btnProps = ui<LinidQBtnProps>('custom', 'q-btn');
 - If the value is `undefined` in the overrideProps and the specified namespace, it falls back to the `default`
   namespace.
 - `namespace` support **dot notation** for nested keys.
-- `component` must be a valid Quasar component name (e.g., `q-btn`, `q-tabs`) and supported by the `UiDesign`
-  system ([voir Section 6](#6-supported-quasar-components-and-props)).
+- `component` must be a valid Quasar component name (e.g., `q-btn`, `q-tabs`) or a supported third-party component
+  name (e.g., `draggable`). See [Section 6](#6-supported-quasar-components-and-props) for Quasar components and
+  [Section 7](#7-supported-third-party-components-and-props) for third-party components.
 
 ---
 
@@ -136,7 +137,29 @@ console.log(ui('unknown', 'q-btn'));
  */
 ```
 
-### 4.3 Overriding Specific Props
+### 4.3 Third-Party Component Configuration
+
+```ts
+console.log(ui('custom', 'draggable'));
+/**
+ * {
+ *   animation: 300,              // from custom
+ *   ghostClass: 'sortable-ghost' // from default
+ * }
+ */
+```
+
+```ts
+console.log(ui('custom', 'draggable', { animation: 500 }));
+/**
+ * {
+ *   animation: 500,              // overridden
+ *   ghostClass: 'sortable-ghost' // from default
+ * }
+ */
+```
+
+### 4.4 Overriding Specific Props
 
 ```ts
 console.log(ui('custom', 'q-btn', { color: 'negative', size: 'lg' }));
@@ -276,7 +299,7 @@ export type LinidQComponentProps =
   | LinidQItemProps
   | LinidQItemLabelProps
   | LinidQItemSectionProps
-  | LinidQListeProps
+  | LinidQListProps
   | LinidQMenuProps
   | LinidQOptionGroupProps
   | LinidQRouteTabProps
@@ -291,6 +314,16 @@ export type LinidQComponentProps =
   | LinidQToolbarProps
   | LinidQToolbarTitleProps
   | LinidQTreeProps;
+
+/**
+ * Valid third-party component names for type-safe UI design retrieval.
+ */
+export type ThirdPartyComponentName = 'draggable';
+
+/**
+ * Union type of all supported third-party component props subsets.
+ */
+export type LinidThirdPartyComponentProps = LinidDraggableProps;
 ```
 
 For `NamedColor`, refer to the Quasar documentation on [Color Palette](https://quasar.dev/style/color-palette).
@@ -1122,7 +1155,47 @@ More components can be added as needed.
 
 ---
 
-## 7. Best Practices
+## 7. Supported Third-Party Components and Props
+
+### draggable
+
+The following props are officially supported and design-validated in our system:
+
+```
+tag
+sort
+delay
+delayOnTouchOnly
+touchStartThreshold
+disabled
+animation
+easing
+handle
+filter
+draggable
+ghostClass
+chosenClass
+dragClass
+swapThreshold
+invertSwap
+invertedSwapThreshold
+direction
+forceFallback
+fallbackClass
+fallbackOnBody
+fallbackTolerance
+emptyInsertThreshold
+scroll
+scrollSensitivity
+scrollSpeed
+```
+
+For details, refer to the [SortableJS documentation](https://github.com/SortableJS/Sortable#options) and the
+[vue-draggable-next documentation](https://github.com/SortableJS/vue.draggable.next#props).
+
+---
+
+## 8. Best Practices
 
 - Always initialize `UiDesign` before using `useUiDesign`.
 - Keep `default` namespace comprehensive to ensure reliable fallback behavior.

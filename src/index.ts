@@ -146,6 +146,7 @@ export type {
 
 // Types - UI design
 export type {
+  LinidDraggableProps,
   LinidQAvatarProps,
   LinidQBadgeProps,
   LinidQBannerProps,

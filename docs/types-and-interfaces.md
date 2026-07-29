@@ -1110,6 +1110,10 @@ See description in [Ui design documentation](./ui-design.md#q-separator).
 
 See description in [Ui design documentation](./ui-design.md#q-option-group).
 
+### LinidQScrollAreaProps
+
+See description in [Ui design documentation](./ui-design.md#q-scroll-area).
+
 ---
 
 ## 🌳 Tree types
@@ -1575,6 +1579,7 @@ const filterSet = LinidFilterSet.fromString(
 | `LinidQTreeProps`                 | QTree component properties supported by Ui Design                                                |
 | `LinidQSplitterProps`             | QSplitter component properties supported by Ui Design                                            |
 | `LinidQOptionGroupProps`          | QOptionGroup component properties supported by Ui Design                                         |
+| `LinidQScrollAreaProps`           | QScrollArea component properties supported by Ui Design                                          |
 | `TreeNode`                        | Represents a node in the tree structure (recursive)                                              |
 | `TreeNodeType`                    | Describes a node type and its default actions                                                    |
 | `MenuItem`                        | Generic menu entry consumed by the federated DropdownButton                                      |

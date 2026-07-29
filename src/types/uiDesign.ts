@@ -52,6 +52,7 @@ import type {
   QMenuProps,
   QOptionGroup,
   QRouteTabProps,
+  QScrollAreaProps,
   QSelectProps,
   QSeparatorProps,
   QSpinnerProps,
@@ -734,6 +735,22 @@ const Q_OPTION_GROUP_PROPS = [
   'dense',
 ] as const;
 
+const Q_SCROLL_AREA_PROPS = [
+  'visible',
+  'delay',
+  'dark',
+  'verticalOffset',
+  'horizontalOffset',
+  'barStyle',
+  'verticalBarStyle',
+  'horizontalBarStyle',
+  'thumbStyle',
+  'verticalThumbStyle',
+  'horizontalThumbStyle',
+  'contentStyle',
+  'contentActiveStyle',
+] as const;
+
 /**
  * Maps Quasar component names to their respective props keys for UI design retrieval.
  */
@@ -764,6 +781,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-menu': Q_MENU_PROPS,
   'q-option-group': Q_OPTION_GROUP_PROPS,
   'q-route-tab': Q_ROUTE_TAB_PROPS,
+  'q-scroll-area': Q_SCROLL_AREA_PROPS,
   'q-select': Q_SELECT_PROPS,
   'q-separator': Q_SEPARATOR_PROPS,
   'q-spinner': Q_SPINNER_PROPS,
@@ -1026,6 +1044,14 @@ export type LinidQOptionGroupProps = Pick<
 >;
 
 /**
+ * Subset of QScrollArea props supported in UI design configuration.
+ */
+export type LinidQScrollAreaProps = Pick<
+  QScrollAreaProps,
+  (typeof Q_SCROLL_AREA_PROPS)[number]
+>;
+
+/**
  * Union type of all supported Quasar component props subsets.
  */
 export type LinidQComponentProps =
@@ -1054,6 +1080,7 @@ export type LinidQComponentProps =
   | LinidQMenuProps
   | LinidQOptionGroupProps
   | LinidQRouteTabProps
+  | LinidQScrollAreaProps
   | LinidQSelectProps
   | LinidQSeparatorProps
   | LinidQSpinnerProps
@@ -1095,6 +1122,7 @@ export type QComponentName =
   | 'q-menu'
   | 'q-option-group'
   | 'q-route-tab'
+  | 'q-scroll-area'
   | 'q-select'
   | 'q-separator'
   | 'q-spinner'

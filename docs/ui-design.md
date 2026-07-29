@@ -1064,7 +1064,7 @@ dark,
 
 For details, refer to the [Quasar QSplitter API documentation](https://quasar.dev/vue-components/splitter).
 
-## q-separator
+### q-separator
 
 The following props are officially supported and design-validated in our system:
 
@@ -1079,7 +1079,7 @@ color,
 
 For details, refer to the [Quasar QSeparator API documentation](https://quasar.dev/vue-components/separator#qseparator-api).
 
-## q-option-group
+### q-option-group
 
 The following props are officially supported and design-validated in our system:
 

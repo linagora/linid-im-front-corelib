@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import LinidZoneRenderer from 'src/components/LinidZoneRenderer.vue';
 import * as federationService from 'src/services/federationService';
+import * as localComponentService from 'src/services/localComponentService';
 import * as piniaStoreService from 'src/services/piniaStoreService.ts';
 import { useLinidZoneStore } from 'src/stores/linidZoneStore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -13,6 +14,10 @@ vi.mock('src/services/federationService', () => ({
 vi.mock('src/services/piniaStoreService', () => ({
   getPiniaStore: vi.fn(),
   setPiniaStore: vi.fn(),
+}));
+
+vi.mock('src/services/localComponentService', () => ({
+  resolveLocalComponent: vi.fn(),
 }));
 
 describe('Test component: LinidZoneRenderer', () => {
@@ -84,13 +89,16 @@ describe('Test component: LinidZoneRenderer', () => {
       );
     });
 
-    it('should render a component entry without calling loadAsyncComponent', async () => {
+    it('should resolve a component entry by name without calling loadAsyncComponent', async () => {
       const DirectComponent = {
         name: 'DirectComponent',
         template: '<div>Direct</div>',
       };
+      vi.mocked(localComponentService.resolveLocalComponent).mockReturnValue(
+        DirectComponent
+      );
 
-      store.registerComponent('test-zone', DirectComponent, {
+      store.registerComponent('test-zone', 'DirectComponent', {
         title: 'Direct',
       });
 
@@ -100,11 +108,30 @@ describe('Test component: LinidZoneRenderer', () => {
       });
 
       expect(federationService.loadAsyncComponent).not.toHaveBeenCalled();
+      expect(localComponentService.resolveLocalComponent).toHaveBeenCalledWith(
+        'DirectComponent'
+      );
 
       expect(wrapper.vm.components).toHaveLength(1);
       expect(wrapper.vm.components[0].props).toEqual({ title: 'Direct' });
       expect(wrapper.vm.components[0].component).toBe(DirectComponent);
       expect(wrapper.findComponent(DirectComponent).exists()).toBe(true);
+    });
+
+    it('should keep the name as component when it is not registered', async () => {
+      vi.mocked(localComponentService.resolveLocalComponent).mockReturnValue(
+        'UnknownComponent'
+      );
+
+      store.registerComponent('test-zone', 'UnknownComponent');
+
+      wrapper = shallowMount(LinidZoneRenderer, {
+        props: { zone: 'test-zone' },
+        global: { plugins: [pinia] },
+      });
+
+      expect(wrapper.vm.components).toHaveLength(1);
+      expect(wrapper.vm.components[0].component).toBe('UnknownComponent');
     });
 
     it('should render federated and component entries together', async () => {
@@ -119,9 +146,12 @@ describe('Test component: LinidZoneRenderer', () => {
       vi.mocked(federationService.loadAsyncComponent).mockReturnValueOnce(
         MockPluginComponent
       );
+      vi.mocked(localComponentService.resolveLocalComponent).mockReturnValue(
+        DirectComponent
+      );
 
       store.registerPlugin('test-zone', 'test-plugin/MockPluginComponent');
-      store.registerComponent('test-zone', DirectComponent);
+      store.registerComponent('test-zone', 'DirectComponent');
 
       wrapper = shallowMount(LinidZoneRenderer, {
         props: { zone: 'test-zone' },

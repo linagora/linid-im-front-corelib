@@ -93,10 +93,11 @@ export interface LinidZoneResolvedEntry {
   /**
    * The component to render.
    *
-   * Either the async component loaded from the federated plugin,
-   * or the Vue component provided directly by the entry.
+   * Either the async component loaded from the federated plugin, or the
+   * component resolved from the name carried by the entry. Unresolved names
+   * are kept as strings so that Vue resolves them globally.
    */
-  component: Component;
+  component: Component | string;
 
   /**
    * Optional props to be passed to the rendered component.

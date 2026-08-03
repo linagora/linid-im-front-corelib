@@ -204,10 +204,19 @@ async postInit(config: ModuleHostConfig<MyModuleOptions>): Promise<ModuleLifecyc
   if (config.zones.length > 0) {
     const zoneStore = useLinidZoneStore();
     config.zones.forEach((zoneDefinition) => {
-      zoneStore.registerOnce(zoneDefinition.zone, {
-        plugin: zoneDefinition.plugin,
-        props: zoneDefinition.props,
-      });
+      if ('component' in zoneDefinition && zoneDefinition.component) {
+        zoneStore.registerComponent(
+          zoneDefinition.zone,
+          zoneDefinition.component,
+          zoneDefinition.props
+        );
+      } else if ('plugin' in zoneDefinition && zoneDefinition.plugin) {
+        zoneStore.registerPluginOnce(
+          zoneDefinition.zone,
+          zoneDefinition.plugin,
+          zoneDefinition.props
+        );
+      }
     });
   }
   // Register module in main navigation items of Ui Store
@@ -375,10 +384,19 @@ class MyModule implements RemoteModule<MyModuleOptions> {
     if (config.zones.length > 0) {
       const zoneStore = useLinidZoneStore();
       config.zones.forEach((zoneDefinition) => {
-        zoneStore.registerOnce(zoneDefinition.zone, {
-          plugin: zoneDefinition.plugin,
-          props: zoneDefinition.props,
-        });
+        if ('component' in zoneDefinition && zoneDefinition.component) {
+          zoneStore.registerComponent(
+            zoneDefinition.zone,
+            zoneDefinition.component,
+            zoneDefinition.props
+          );
+        } else if ('plugin' in zoneDefinition && zoneDefinition.plugin) {
+          zoneStore.registerPluginOnce(
+            zoneDefinition.zone,
+            zoneDefinition.plugin,
+            zoneDefinition.props
+          );
+        }
       });
     }
 

@@ -1,8 +1,8 @@
 # LinidZoneRenderer Component 🔌
 
 The **LinidZoneRenderer** component is a core feature of `linid-im-front-corelib`.  
-It allows the host application to **dynamically render remote Vue components (plugins) or locally provided Vue
-components** inside predefined “zones” of the UI.
+It allows the host application to **dynamically render remote Vue components (plugins) or components referenced by
+name** inside predefined “zones” of the UI.
 
 This component works together with the **Linid Zone Store**, which manages plugin registration and provides reactive
 updates.
@@ -15,7 +15,7 @@ LinidZoneRenderer provides:
 
 - **Dynamic rendering:** Federated components are loaded asynchronously only when needed.
 - **Plugin-based architecture:** Plugins registered during initialization are rendered automatically.
-- **Direct components:** A zone entry can also provide a local Vue component, without module federation.
+- **Named components:** A zone entry can also reference a component by name, without module federation.
 - **Extensibility:** New features can be added via plugins without modifying the host app.
 - **Standardization:** All entries follow the `LinidZoneEntry` discriminated union.
 
@@ -116,16 +116,16 @@ You can provide your own fallback content using the default slot:
 
 ## 🔧 Configuring Zones in Module Configuration
 
-Modules can declare exposed elements, through module federation, that should be rendered in zones via their
-configuration file (`module-<name>.json`). This provides a **declarative, configuration-driven approach** to zone
-management.
+Modules can declare elements that should be rendered in zones via their configuration file (`module-<name>.json`). This
+provides a **declarative, configuration-driven approach** to zone management.
 
 ### ModuleZoneDefinition Interface
 
-The `ModuleZoneDefinition` interface standardizes how zones are declared in module configuration:
+The `ModuleZoneDefinition` interface standardizes how zones are declared in module configuration. An entry either
+references an element exposed through module federation with `plugin`, or a component by name with `component`:
 
 ```typescript
-interface ModuleZoneDefinition<T = Record<string, unknown>> {
+interface FederatedModuleZoneDefinition<T = Record<string, unknown>> {
   /** Name of the target zone */
   zone: string;
 
@@ -135,7 +135,25 @@ interface ModuleZoneDefinition<T = Record<string, unknown>> {
   /** Optional element props (can be strongly typed) */
   props?: T;
 }
+
+interface ComponentModuleZoneDefinition<T = Record<string, unknown>> {
+  /** Name of the target zone */
+  zone: string;
+
+  /** Name of the component to render (e.g. "QSeparator") */
+  component: string;
+
+  /** Optional element props (can be strongly typed) */
+  props?: T;
+}
+
+type ModuleZoneDefinition<T = Record<string, unknown>> =
+  | FederatedModuleZoneDefinition<T>
+  | ComponentModuleZoneDefinition<T>;
 ```
+
+The two fields are **mutually exclusive**: the variant is determined by whichever of `plugin` or `component` is set, so
+no extra discriminant is needed in the configuration file.
 
 ### Configuration Example
 
@@ -160,6 +178,10 @@ In your `module-<name>.json` file:
     {
       "zone": "sidebar",
       "plugin": "moduleRoles/QuickActionsPlugin"
+    },
+    {
+      "zone": "user-details",
+      "component": "QSeparator"
     }
   ],
   "options": {}
@@ -169,6 +191,9 @@ In your `module-<name>.json` file:
 In this example, the module declares that its `RoleCardPlugin` component should be rendered in the `user-details` zone,
 with a prop to show avatars. We suppose that `user-details` is a zone exposed by another module, for example the User
 Management module, allowing this Roles module to extend the user details view with role information.
+
+The last entry references `QSeparator` by name instead of a federated element, which requires it to have been made
+available to zones, see [Making Components Available to Zones](#-making-components-available-to-zones).
 
 ### Key Points
 
@@ -211,29 +236,66 @@ linidZoneStore.registerPlugin('user-details', '@/remote/UserCard', {
 - `plugin`: Path or identifier of the remote component to load.
 - `props`: Optional props passed to the plugin component.
 
-### Direct Component Entry (`registerComponent`)
+### Named Component Entry (`registerComponent`)
 
-A zone entry can also provide a Vue component directly, without going through module federation. This is typically
-used by the host application to inject its own local components into zones exposed by generic pages.
+A zone entry can also reference a component by name, without going through module federation. This is typically used by
+the host application to inject its own components into zones exposed by generic pages.
 
 ```ts
 import { useLinidZoneStore } from '@linagora/linid-im-front-corelib';
-import UserRolesCard from './components/UserRolesCard.vue';
 
 const linidZoneStore = useLinidZoneStore();
 
-linidZoneStore.registerComponent('user-details', UserRolesCard, {
+linidZoneStore.registerComponent('user-details', 'UserRolesCard', {
   userId: 42,
 });
 ```
 
-- `component`: The Vue component to render as-is (no asynchronous loading).
+- `component`: The name of the component to render (no asynchronous loading).
 - `props`: Optional props passed to the component.
 
-> The store wraps direct components with `markRaw` automatically, so they are kept out of the reactivity system.
+> The name must have been made available to zones beforehand, see
+> [Making Components Available to Zones](#-making-components-available-to-zones).
+
+> Because the component is referenced by name rather than by reference, this variant can also be declared from a module
+> configuration file.
 
 > Once registered **before the component mounts**, the `LinidZoneRenderer` component will render this entry in the
 > specified zone.
+
+---
+
+## 🧩 Making Components Available to Zones
+
+Component entries carry a name, not a component reference, so that name has to be resolved at render time. The
+`registerLocalComponent` and `registerLocalComponents` functions declare which components can be referenced this way.
+
+```ts
+import {
+  registerLocalComponent,
+  registerLocalComponents,
+} from '@linagora/linid-im-front-corelib';
+import { QSeparator } from 'quasar';
+import UserRolesCard from './components/UserRolesCard.vue';
+
+registerLocalComponent('UserRolesCard', UserRolesCard);
+
+registerLocalComponents({
+  QSeparator,
+});
+```
+
+This is typically done once during application bootstrap, before any zone is rendered.
+
+### 🔎 Behavior
+
+- Components are stored with `markRaw`, so they are kept out of the reactivity system.
+- Registering a name that is already known **overrides** the previous component.
+- Unknown names are **not** an error: `resolveLocalComponent` logs a warning and returns the name as-is, letting Vue
+  resolve it against globally registered components.
+
+> Declaring components explicitly gives the application control over its extension surface, and turns a typo in a
+> configuration file into an actionable warning rather than a silently empty zone.
 
 ---
 
@@ -296,7 +358,7 @@ linidZoneStore.registerPluginOnce('user-details', '@/remote/UserCard');
 - No duplicate entries are created.
 - Rendering remains reactive and unchanged.
 
-> There is no `Once` variant for direct component entries: the host controls its own bootstrap registrations.
+> There is no `Once` variant for named component entries: the host controls its own bootstrap registrations.
 
 ---
 
@@ -367,7 +429,7 @@ Use `registerPlugin` when:
 1. **At initialization time**, the component retrieves all entries for the given `zone` from the **Linid Zone Store**.
 2. Each **federated entry** (`type: 'federated'`) is wrapped as an **async component** retrieved from its remote
    module using the `loadAsyncComponent(entry.plugin)` method. **Component entries** (`type: 'component'`) are
-   rendered as-is, without any asynchronous loading.
+   resolved by name using `resolveLocalComponent(entry.component)`, without any asynchronous loading.
 3. The component sets `inheritAttrs: false` to take manual control over attribute forwarding. This is required because
    the template has multiple root nodes (a fragment), so Vue cannot automatically determine which node should receive
    the inherited attributes. Disabling automatic inheritance allows each plugin to receive `$attrs` explicitly via
@@ -443,8 +505,8 @@ export interface FederatedLinidZoneEntry extends BaseLinidZoneEntry {
 export interface ComponentLinidZoneEntry extends BaseLinidZoneEntry {
   type: 'component';
 
-  /** The Vue component to render directly */
-  component: Component;
+  /** Name of the component to render */
+  component: string;
 }
 
 export type LinidZoneEntry = FederatedLinidZoneEntry | ComponentLinidZoneEntry;
@@ -453,8 +515,8 @@ export type LinidZoneEntry = FederatedLinidZoneEntry | ComponentLinidZoneEntry;
 - Entries are built by the store helpers (`registerPlugin`, `registerPluginOnce`, `registerComponent`); consumers
   never construct them manually.
 - Props are automatically forwarded to the rendered component.
-- Federated entries are wrapped in `loadAsyncComponent` for asynchronous loading; component entries are rendered
-  as-is.
+- Federated entries are wrapped in `loadAsyncComponent` for asynchronous loading; component entries are resolved by
+  name with `resolveLocalComponent`.
 - The `type` discriminant makes the model extensible for future entry kinds.
 
 ---

@@ -1392,4 +1392,76 @@ setDayjsInstance(dayjs);
 
 ---
 
+## 🧩 Local Component Service
+
+Declares which components can be referenced **by name** by a zone entry, and resolves those names at render time.
+
+Zone entries of type `component` carry a name rather than a component reference, which allows them to be declared from a module configuration file. This service is what turns such a name back into a component.
+
+| Function                                              | Description                                             |
+| ----------------------------------------------------- | ------------------------------------------------------- |
+| [`registerLocalComponent`](#registerlocalcomponent)   | Makes a component available to zones under a given name |
+| [`registerLocalComponents`](#registerlocalcomponents) | Makes several components available to zones at once     |
+| [`resolveLocalComponent`](#resolvelocalcomponent)     | Resolves the component registered under a given name    |
+
+---
+
+### `registerLocalComponent`
+
+Makes a component available to zones under the given name.
+
+Components are stored with `markRaw`, so they are kept out of the reactivity system. Registering a name that is already known **overrides** the previous component.
+
+```ts
+import { registerLocalComponent } from '@linagora/linid-im-front-corelib';
+import UserRolesCard from './components/UserRolesCard.vue';
+
+registerLocalComponent('UserRolesCard', UserRolesCard);
+```
+
+---
+
+### `registerLocalComponents`
+
+Makes several components available to zones at once, typically to declare the whole zone surface of an application in a single call during bootstrap.
+
+```ts
+import { registerLocalComponents } from '@linagora/linid-im-front-corelib';
+import { QBanner, QSeparator } from 'quasar';
+
+registerLocalComponents({
+  QBanner,
+  QSeparator,
+});
+```
+
+---
+
+### `resolveLocalComponent`
+
+Resolves the component registered under the given name.
+
+Unknown names are **not** an error: a warning listing the registered names is logged, and the name is returned as-is so that Vue still attempts to resolve it against globally registered components.
+
+```ts
+import { resolveLocalComponent } from '@linagora/linid-im-front-corelib';
+
+// Returns the registered component
+resolveLocalComponent('UserRolesCard');
+
+// Logs a warning and returns 'UnknownCard'
+resolveLocalComponent('UnknownCard');
+```
+
+---
+
+### Rules
+
+- ✅ Host declares its zone components once during boot, before any zone is rendered
+- ✅ Zone entries and module configuration files reference those components by name
+- ⚠️ Warning logged when resolving an unknown name, which falls back to global resolution
+- ❌ Never called manually by consumers: `LinidZoneRenderer` resolves entries on its own
+
+---
+
 > Additional services will be added as new features are implemented in the library.

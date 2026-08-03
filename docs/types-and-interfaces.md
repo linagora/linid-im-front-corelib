@@ -55,6 +55,10 @@ interface LinidZoneState {
 
 - `zones` is a reactive object.
 - Each key corresponds to a zone, each value is an array of entries for that zone.
+- A zone key only exists once at least one entry has been registered for it: reading an unregistered zone yields
+  `undefined`, not an empty array. Use the store's `hasZoneEntries(zone)` getter rather than inspecting `zones`
+  directly to know whether a zone will render content — see
+  [Checking Whether a Zone Has Entries](./components-plugin-zones.md#-checking-whether-a-zone-has-entries-haszoneentries).
 
 ---
 

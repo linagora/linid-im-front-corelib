@@ -55,6 +55,18 @@ const _useLinidZoneStore = defineStore('linidZoneStore', {
     zones: {},
   }),
 
+  getters: {
+    /**
+     * Returns a function that checks whether a zone has at least one registered entry,
+     * meaning its renderer produces content.
+     * @param state - The store state.
+     * @returns A function accepting a zone name and returning true when the zone holds
+     *   at least one entry, false otherwise.
+     */
+    hasZoneEntries: (state) => (zone: string) =>
+      (state.zones[zone]?.length ?? 0) > 0,
+  },
+
   actions: {
     /**
      * Append an entry to a specified zone, creating the zone if needed.

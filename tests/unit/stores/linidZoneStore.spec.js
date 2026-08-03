@@ -218,4 +218,46 @@ describe('Test store: linidZoneStore', () => {
       expect(store.zones['list-page.sidebar'][1].type).toBe('component');
     });
   });
+
+  describe('Test getter: hasZoneEntries', () => {
+    it('should return false for an unknown zone', () => {
+      const store = useLinidZoneStore();
+
+      expect(store.hasZoneEntries('unknown-zone')).toBe(false);
+    });
+
+    it('should return true for a zone holding a federated entry', () => {
+      const store = useLinidZoneStore();
+
+      store.registerPlugin('list-page.sidebar', 'test-plugin/TestComponent');
+
+      expect(store.hasZoneEntries('list-page.sidebar')).toBe(true);
+    });
+
+    it('should return true for a zone holding a component entry', () => {
+      const store = useLinidZoneStore();
+
+      store.registerComponent('list-page.sidebar', DirectComponent);
+
+      expect(store.hasZoneEntries('list-page.sidebar')).toBe(true);
+    });
+
+    it('should return true for a zone holding multiple entries', () => {
+      const store = useLinidZoneStore();
+
+      store.registerPlugin('list-page.sidebar', 'test-plugin/TestComponent');
+      store.registerComponent('list-page.sidebar', DirectComponent);
+
+      expect(store.hasZoneEntries('list-page.sidebar')).toBe(true);
+    });
+
+    it('should evaluate each zone independently', () => {
+      const store = useLinidZoneStore();
+
+      store.registerPlugin('zone-a', 'test-plugin/TestComponent');
+
+      expect(store.hasZoneEntries('zone-a')).toBe(true);
+      expect(store.hasZoneEntries('zone-b')).toBe(false);
+    });
+  });
 });

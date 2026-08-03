@@ -31,7 +31,7 @@ structures for identity management features such as CRUD operations on persons, 
 ## **Tech Stack 🛠️**
 
 | Area            | Technology               |
-|-----------------|--------------------------|
+| --------------- | ------------------------ |
 | Language        | TypeScript               |
 | Framework       | Vue.js (Composition API) |
 | UI Toolkit      | Quasar Framework         |
@@ -138,6 +138,10 @@ A full technical documentation is available in the `docs/` directory:
 - 🔄 **Common Mapper (`useCommonMapper`)**
   Learn how to convert between data formats (ISO dates, locale formats, empty records, and Dayjs objects).
   → [`docs/commonMapper.md`](docs/commonMapper.md)
+
+- 🎯 **Value Formatting (`useValueFormatter`)**
+  Learn how to apply named formatters declared in configuration to raw values before display.
+  → [`docs/use-value-formatter.md`](docs/valueFormatter.md)
 
 More documents will be added as the library evolves.
 

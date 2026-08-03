@@ -48,6 +48,7 @@ export {
 } from './composables/useScopedI18n';
 export { useTree } from './composables/useTree';
 export { useUiDesign } from './composables/useUiDesign';
+export { useValueFormatter } from './composables/useValueFormatter';
 
 // Stores
 export { useLinidConfigurationStore } from './stores/linidConfigurationStore';
@@ -220,3 +221,6 @@ export type { DropdownClickPayload, MenuItem } from './types/dropdownButton';
 
 // Types - Filter
 export type { LinidFilterOperator, LinidFilterType } from './types/linidFilter';
+
+// Types - Formatter
+export type { FormatterConfiguration } from './types/formatter';

@@ -7,8 +7,8 @@ This document explains the **types and interfaces** used in `linid-im-front-core
 ## 🔌 LinidZoneEntry
 
 Represents an entry that can be rendered inside a zone. The model is a discriminated union: an entry provides its
-component either through a federated plugin identifier (`FederatedLinidZoneEntry`) or as a Vue component given
-directly (`ComponentLinidZoneEntry`).
+component either through a federated plugin identifier (`FederatedLinidZoneEntry`) or through a component name
+(`ComponentLinidZoneEntry`).
 
 ```ts
 export interface BaseLinidZoneEntry {
@@ -26,8 +26,8 @@ export interface FederatedLinidZoneEntry extends BaseLinidZoneEntry {
 export interface ComponentLinidZoneEntry extends BaseLinidZoneEntry {
   type: 'component';
 
-  /** The Vue component to render directly */
-  component: Component;
+  /** Name of the component to render */
+  component: string;
 }
 
 export type LinidZoneEntry = FederatedLinidZoneEntry | ComponentLinidZoneEntry;
@@ -300,33 +300,50 @@ export interface RemoteModule<T> extends ModuleLifecycleHooks<T> {
 
 ### ModuleZoneDefinition
 
-Defines a UI zone injection, allowing a module to declare that one of its exposed elements should be rendered inside a
-named zone exposed by another module.
+Defines a UI zone injection, allowing a module to declare that an element should be rendered inside a named zone
+exposed by another module. It is a union of two variants: the element is either exposed through module federation
+(`FederatedModuleZoneDefinition`) or referenced by component name (`ComponentModuleZoneDefinition`).
 
 ```ts
 /**
- * Definition of a UI zone injection.
- *
- * Allows a module to declare that one of its exposed elements through module
- * federation should be rendered inside a named zone exposed by another module,
- * optionally with props.
+ * Fields shared by all UI zone injection variants.
  * @template T Props type for the injected element.
  */
-export interface ModuleZoneDefinition<T = Record<string, unknown>> {
+export interface BaseModuleZoneDefinition<T = Record<string, unknown>> {
   /**
    * Name of the target zone exposed by another module where the element will be rendered.
    */
   zone: string;
-  /**
-   * Name of the exposed element to render in the zone.
-   */
-  plugin: string;
   /**
    * Optional props to pass to the exposed element rendered in this zone.
    * The module can define the structure of these props as needed.
    */
   props?: T;
 }
+
+export interface FederatedModuleZoneDefinition<T = Record<string, unknown>>
+  extends BaseModuleZoneDefinition<T> {
+  /**
+   * Name of the exposed element to render in the zone.
+   */
+  plugin: string;
+  /** Never set on this variant, which is identified by its `plugin` field. */
+  component?: never;
+}
+
+export interface ComponentModuleZoneDefinition<T = Record<string, unknown>>
+  extends BaseModuleZoneDefinition<T> {
+  /**
+   * Name of the component to render in the zone.
+   */
+  component: string;
+  /** Never set on this variant, which is identified by its `component` field. */
+  plugin?: never;
+}
+
+export type ModuleZoneDefinition<T = Record<string, unknown>> =
+  | FederatedModuleZoneDefinition<T>
+  | ComponentModuleZoneDefinition<T>;
 ```
 
 **Usage:**
@@ -335,6 +352,9 @@ export interface ModuleZoneDefinition<T = Record<string, unknown>> {
 - Allows modules to inject UI elements into predefined zones exposed by other modules.
 - The `zone` field identifies the target zone (e.g., "user-details", "sidebar").
 - The `plugin` field specifies which federated element to render.
+- The `component` field specifies which component to render by name, and requires that name to have been made
+  available to zones through `registerLocalComponent`.
+- `plugin` and `component` are mutually exclusive, and determine which variant an entry is.
 - The `props` field is optional and allows passing configuration to the element.
 
 **Example:**

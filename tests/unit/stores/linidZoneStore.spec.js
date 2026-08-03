@@ -8,10 +8,7 @@ vi.mock('src/services/piniaStoreService', () => ({
   setPiniaStore: vi.fn(),
 }));
 
-const DirectComponent = {
-  name: 'DirectComponent',
-  template: '<div>Direct</div>',
-};
+const DIRECT_COMPONENT = 'DirectComponent';
 
 describe('Test store: linidZoneStore', () => {
   let pinia;
@@ -161,7 +158,7 @@ describe('Test store: linidZoneStore', () => {
     it('should ignore component entries when checking plugin uniqueness', () => {
       const store = useLinidZoneStore();
 
-      store.registerComponent('list-page.sidebar', DirectComponent);
+      store.registerComponent('list-page.sidebar', DIRECT_COMPONENT);
       store.registerPluginOnce('list-page.sidebar', 'unique-plugin/Component');
 
       expect(store.zones['list-page.sidebar']).toHaveLength(2);
@@ -172,7 +169,7 @@ describe('Test store: linidZoneStore', () => {
     it('should register a component entry in a new zone', () => {
       const store = useLinidZoneStore();
 
-      store.registerComponent('list-page.sidebar', DirectComponent, {
+      store.registerComponent('list-page.sidebar', DIRECT_COMPONENT, {
         title: 'Direct',
       });
 
@@ -184,25 +181,21 @@ describe('Test store: linidZoneStore', () => {
       });
     });
 
-    it('should keep the component out of the reactivity system', () => {
+    it('should store the component name as provided', () => {
       const store = useLinidZoneStore();
 
-      store.registerComponent('list-page.sidebar', DirectComponent);
+      store.registerComponent('list-page.sidebar', DIRECT_COMPONENT);
 
       expect(store.zones['list-page.sidebar'][0].component).toBe(
-        DirectComponent
+        DIRECT_COMPONENT
       );
     });
 
     it('should register multiple component entries in the same zone', () => {
       const store = useLinidZoneStore();
-      const OtherComponent = {
-        name: 'OtherComponent',
-        template: '<div>Other</div>',
-      };
 
-      store.registerComponent('list-page.sidebar', DirectComponent);
-      store.registerComponent('list-page.sidebar', OtherComponent);
+      store.registerComponent('list-page.sidebar', DIRECT_COMPONENT);
+      store.registerComponent('list-page.sidebar', 'OtherComponent');
 
       expect(store.zones['list-page.sidebar']).toHaveLength(2);
     });
@@ -211,7 +204,7 @@ describe('Test store: linidZoneStore', () => {
       const store = useLinidZoneStore();
 
       store.registerPlugin('list-page.sidebar', 'test-plugin/Component');
-      store.registerComponent('list-page.sidebar', DirectComponent);
+      store.registerComponent('list-page.sidebar', DIRECT_COMPONENT);
 
       expect(store.zones['list-page.sidebar']).toHaveLength(2);
       expect(store.zones['list-page.sidebar'][0].type).toBe('federated');
@@ -237,7 +230,7 @@ describe('Test store: linidZoneStore', () => {
     it('should return true for a zone holding a component entry', () => {
       const store = useLinidZoneStore();
 
-      store.registerComponent('list-page.sidebar', DirectComponent);
+      store.registerComponent('list-page.sidebar', DIRECT_COMPONENT);
 
       expect(store.hasZoneEntries('list-page.sidebar')).toBe(true);
     });
@@ -246,7 +239,7 @@ describe('Test store: linidZoneStore', () => {
       const store = useLinidZoneStore();
 
       store.registerPlugin('list-page.sidebar', 'test-plugin/TestComponent');
-      store.registerComponent('list-page.sidebar', DirectComponent);
+      store.registerComponent('list-page.sidebar', DIRECT_COMPONENT);
 
       expect(store.hasZoneEntries('list-page.sidebar')).toBe(true);
     });

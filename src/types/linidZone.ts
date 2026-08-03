@@ -55,28 +55,31 @@ export interface FederatedLinidZoneEntry extends BaseLinidZoneEntry {
 }
 
 /**
- * Zone entry providing a Vue component directly.
+ * Zone entry referencing a component by name.
  *
  * Unlike federated entries, no module federation loading is involved:
- * the component is rendered as-is.
+ * the name is resolved against the components made available to zones.
  */
 export interface ComponentLinidZoneEntry extends BaseLinidZoneEntry {
   /** Discriminant of the component variant. */
   type: 'component';
 
   /**
-   * The Vue component to render directly.
+   * Name of the component to render.
+   *
+   * Being a plain string, this variant can be declared from a module
+   * configuration file, unlike a direct component reference.
    */
-  component: Component;
+  component: string;
 }
 
 /**
  * Represents a single entry registered within a Linid Zone.
  *
  * An entry provides its component either through a federated plugin
- * identifier ({@link FederatedLinidZoneEntry}) or as a Vue component
- * given directly ({@link ComponentLinidZoneEntry}), and can optionally
- * define props to configure that component.
+ * identifier ({@link FederatedLinidZoneEntry}) or through a component
+ * name ({@link ComponentLinidZoneEntry}), and can optionally define
+ * props to configure that component.
  */
 export type LinidZoneEntry = FederatedLinidZoneEntry | ComponentLinidZoneEntry;
 

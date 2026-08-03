@@ -25,8 +25,6 @@
  */
 
 import { defineStore } from 'pinia';
-import type { Component } from 'vue';
-import { markRaw } from 'vue';
 import { getPiniaStore } from '../services/piniaStoreService';
 import type { LinidZoneEntry } from '../types/linidZone';
 
@@ -118,24 +116,20 @@ const _useLinidZoneStore = defineStore('linidZoneStore', {
     },
 
     /**
-     * Register a Vue component directly in a specified zone.
+     * Register a component by name in a specified zone.
      *
-     * The component is stored with `markRaw` to keep it out of the
-     * reactivity system, as Vue components must not be reactive.
+     * The name is resolved at render time, which allows this variant to be
+     * declared from a module configuration file.
      * @param zone - The name of the zone.
-     * @param component - The Vue component to render as-is.
+     * @param component - The name of the component to render.
      * @param props - Optional props passed to the rendered component.
      */
     registerComponent(
       zone: string,
-      component: Component,
+      component: string,
       props?: Record<string, unknown>
     ): void {
-      this.appendEntry(zone, {
-        type: 'component',
-        component: markRaw(component),
-        props,
-      });
+      this.appendEntry(zone, { type: 'component', component, props });
     },
   },
 });

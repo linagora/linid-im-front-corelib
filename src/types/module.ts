@@ -158,25 +158,63 @@ export interface FederatedModule<T> {
 }
 
 /**
- * Definition of a UI zone injection.
- *
- * Allows a module to declare that one of its exposed elements through module
- * federation should be rendered inside a named zone exposed by another module,
- * optionally with props.
+ * Fields shared by all UI zone injection variants.
  * @template T Props type for the injected element.
  */
-export interface ModuleZoneDefinition<T = Record<string, unknown>> {
+export interface BaseModuleZoneDefinition<T = Record<string, unknown>> {
   /**
    * Name of the target zone exposed by another module where the element will be rendered.
    */
   zone: string;
-  /**
-   * Name of the exposed element to render in the zone.
-   */
-  plugin: string;
   /**
    * Optional props to pass to the exposed element rendered in this zone.
    * The module can define the structure of these props as needed.
    */
   props?: T;
 }
+
+/**
+ * Definition of a UI zone injection rendering an element exposed through module federation.
+ * @template T Props type for the injected element.
+ */
+export interface FederatedModuleZoneDefinition<
+  T = Record<string, unknown>,
+> extends BaseModuleZoneDefinition<T> {
+  /**
+   * Name of the exposed element to render in the zone.
+   */
+  plugin: string;
+  /** Never set on this variant, which is identified by its `plugin` field. */
+  component?: never;
+}
+
+/**
+ * Definition of a UI zone injection rendering a component by name.
+ *
+ * The name is resolved against the components made available to zones, so no
+ * module federation loading is involved.
+ * @template T Props type for the injected element.
+ */
+export interface ComponentModuleZoneDefinition<
+  T = Record<string, unknown>,
+> extends BaseModuleZoneDefinition<T> {
+  /**
+   * Name of the component to render in the zone.
+   */
+  component: string;
+  /** Never set on this variant, which is identified by its `component` field. */
+  plugin?: never;
+}
+
+/**
+ * Definition of a UI zone injection.
+ *
+ * Allows a module to declare that an element should be rendered inside a named
+ * zone exposed by another module, optionally with props. The element is either
+ * exposed through module federation ({@link FederatedModuleZoneDefinition}) or
+ * referenced by component name ({@link ComponentModuleZoneDefinition}); the
+ * variant is determined by which of the two fields is set.
+ * @template T Props type for the injected element.
+ */
+export type ModuleZoneDefinition<T = Record<string, unknown>> =
+  FederatedModuleZoneDefinition<T> | ComponentModuleZoneDefinition<T>;

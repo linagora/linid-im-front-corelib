@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.88](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.87...v0.0.88) (2026-08-03)
+
+
+### Features
+
+* implement value formatting composable ([07ea82f](https://github.com/linagora/linid-im-front-corelib/commit/07ea82fd742fa68fc4e3c1d477c814876e71c449))
+
 ### [0.0.87](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.86...v0.0.87) (2026-08-03)
 
 

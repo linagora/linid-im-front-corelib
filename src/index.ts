@@ -91,6 +91,11 @@ export {
   merge,
   renameKeys,
 } from './services/objectService';
+export {
+  registerLocalComponent,
+  registerLocalComponents,
+  resolveLocalComponent,
+} from './services/localComponentService';
 export { getPiniaStore, setPiniaStore } from './services/piniaStoreService';
 export { getUiDesign, setUiDesign } from './services/uiDesignService';
 export { uiEventSubject } from './services/uiEventService';

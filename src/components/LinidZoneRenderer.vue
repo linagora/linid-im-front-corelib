@@ -36,6 +36,7 @@
 
 <script lang="ts" setup>
 import { loadAsyncComponent } from '../services/federationService';
+import { resolveLocalComponent } from '../services/localComponentService';
 import { useLinidZoneStore } from '../stores/linidZoneStore';
 import type { LinidZoneResolvedEntry } from '../types/linidZone';
 
@@ -58,6 +59,6 @@ const components: LinidZoneResolvedEntry[] = (
   component:
     entry.type === 'federated'
       ? loadAsyncComponent(entry.plugin)
-      : entry.component,
+      : resolveLocalComponent(entry.component),
 }));
 </script>

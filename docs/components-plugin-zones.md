@@ -237,6 +237,29 @@ linidZoneStore.registerComponent('user-details', UserRolesCard, {
 
 ---
 
+## 🔍 Checking Whether a Zone Has Entries (`hasZoneEntries`)
+
+The **Linid Zone Store** exposes a `hasZoneEntries` getter to know whether a zone holds at least one registered entry,
+i.e. whether its `LinidZoneRenderer` will actually produce content.
+
+```ts
+import { useLinidZoneStore } from '@linagora/linid-im-front-corelib';
+
+const linidZoneStore = useLinidZoneStore();
+
+if (linidZoneStore.hasZoneEntries('user-details')) {
+  // The zone will render something
+}
+```
+
+### 🔎 Behavior
+
+- Returns `true` when the zone contains **at least one entry**, whatever its type (`federated` or `component`).
+- Returns `false` when the zone contains no entry, or when the zone has never been registered at all.
+- Unknown zones are handled safely: no error is thrown, `false` is returned.
+
+---
+
 ## 🔁 Registering a Plugin Only Once (`registerPluginOnce`)
 
 In some scenarios, a plugin must be registered **only once per zone**, even if the registration logic is executed
@@ -451,6 +474,7 @@ export type LinidZoneEntry = FederatedLinidZoneEntry | ComponentLinidZoneEntry;
 
 - Multiple entries can be registered for the same zone; they are rendered in registration order.
 - Entries must be registered **before the component is mounted** to be rendered.
+- Use `hasZoneEntries(zone)` to know whether a zone will render anything.
 - The component does not react to entries added after initialization.
 - Failed imports are handled automatically; you can provide a `fallback` component.
 - Designed for scalable front-end applications using Module Federation.

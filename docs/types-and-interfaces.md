@@ -1300,6 +1300,77 @@ function onClick(payload: DropdownClickPayload<AccountAction>): void {
 
 ---
 
+## 🎯 Formatter types
+
+Types describing how a raw value is formatted before display. Because field and column definitions must survive JSON
+serialization and a Module Federation boundary, a formatter is designated by **name**, never by function. The name is
+resolved at render time by the [`useValueFormatter`](./use-value-formatter.md) composable.
+
+Defined in `src/types/formatter.ts`.
+
+### ValueFormatter
+
+Contract every formatter implementation must satisfy.
+
+```ts
+export type ValueFormatter = (
+  value: unknown,
+  options?: Record<string, unknown>
+) => unknown;
+```
+
+**Usage:**
+
+- Internal to the library — this type is exported from `src/types/formatter.ts` but is **not** re-exported from the
+  package entry point, since consumers cannot register formatters.
+- A formatter must return the value **untouched** rather than throwing when it cannot handle the given input. That
+  contract is what allows a malformed configuration to degrade the display instead of breaking the page.
+
+### FormatterConfiguration
+
+Formatting properties mixed into the field and column definitions of generic components.
+
+```ts
+export interface FormatterConfiguration {
+  /** Formatter applied to the value before display. An unknown name displays the raw value. */
+  formatter?: string;
+
+  /** Options forwarded to the formatter. `toDate` requires a `formatKey` string. */
+  formatOptions?: Record<string, unknown>;
+}
+```
+
+**Usage:**
+
+- Extended by any configuration type describing a displayable field or column.
+- Both fields are optional: a definition without `formatter` displays the raw value.
+- `formatter` is typed `string`, not a union of the registered names: an unregistered name is **not** rejected at
+  compile time and surfaces only at runtime, as the raw value being displayed. The registry itself is closed — see
+  [Adding a formatter](./use-value-formatter.md#adding-a-formatter).
+- `formatOptions` is intentionally untyped (`Record<string, unknown>`), since the expected keys depend on the
+  formatter that is requested. The per-formatter requirements are documented in
+  [Available formatters](./use-value-formatter.md#available-formatters).
+
+**Example:**
+
+```ts
+import type { FormatterConfiguration } from '@linagora/linid-im-front-corelib';
+
+interface ColumnDefinition extends FormatterConfiguration {
+  name: string;
+  label: string;
+}
+
+const column: ColumnDefinition = {
+  name: 'createdAt',
+  label: 'columns.createdAt',
+  formatter: 'toDate',
+  formatOptions: { formatKey: 'application.dateFormat' },
+};
+```
+
+---
+
 ## 🖼️ Linid Ui Store types
 
 ### LinidUiState
@@ -1614,6 +1685,8 @@ const filterSet = LinidFilterSet.fromString(
 | `LinidFilter<T>`                | Generic class representing a filter, converted to a query parameter value                        |
 | `LinidFilterSet`                | Class representing a saved filter set (favorite search): a label and its `LinidFilter[]`         |
 | `LinidFilterSetUserPreference`  | Represents the persisted form of a saved filter set (favorite search) stored in user preferences |
+| `ValueFormatter`                | Contract every formatter implementation must satisfy (internal, not re-exported)                 |
+| `FormatterConfiguration`        | Formatting properties mixed into field and column definitions                                    |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

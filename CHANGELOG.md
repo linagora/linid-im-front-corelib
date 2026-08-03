@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.87](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.86...v0.0.87) (2026-08-03)
+
+
+### Features
+
+* add hasZoneEntries action to LinidZoneStore ([7739f77](https://github.com/linagora/linid-im-front-corelib/commit/7739f77ed2084b89d538468db5869d388d98502b))
+
 ### [0.0.86](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.85...v0.0.86) (2026-07-29)
 
 

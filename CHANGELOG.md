@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.89](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.88...v0.0.89) (2026-08-04)
+
+
+### Features
+
+* add zone component registry ([7840feb](https://github.com/linagora/linid-im-front-corelib/commit/7840feb4a7eaae67300d9ada7ae5d0416f5a96ce))
+* reference zone components by name ([b7c7675](https://github.com/linagora/linid-im-front-corelib/commit/b7c76752b63cc3f5fbd86e2e5a25454a1675e13b))
+
 ### [0.0.88](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.87...v0.0.88) (2026-08-03)
 
 

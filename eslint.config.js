@@ -55,7 +55,8 @@ export default defineConfigWithVueTs(
       ],
       '@typescript-eslint/consistent-type-imports': 'error',
 
-      // Import sorting
+      // Import rules
+      'import/no-duplicates': 'error',
       'import/order': [
         'error',
         {
@@ -107,6 +108,14 @@ export default defineConfigWithVueTs(
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
       curly: 'error',
       'arrow-body-style': ['error', 'as-needed'],
+      quotes: [
+        'error',
+        'single',
+        {
+          avoidEscape: true,
+          allowTemplateLiterals: false,
+        },
+      ],
     },
   },
   {

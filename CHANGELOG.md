@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.90](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.89...v0.0.90) (2026-08-05)
+
 ### [0.0.89](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.88...v0.0.89) (2026-08-04)
 
 

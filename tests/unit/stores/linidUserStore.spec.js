@@ -23,10 +23,10 @@ describe('Test store: linidUserStore', () => {
   describe('Test initial state', () => {
     it('should have empty user details and not be authenticated', () => {
       expect(store.user).toEqual({
-        email: "",
-        fullName: "",
+        email: '',
+        fullName: '',
         roles: [],
-        username: "",
+        username: '',
       });
       expect(store.isAuthenticated).toBe(false);
     });

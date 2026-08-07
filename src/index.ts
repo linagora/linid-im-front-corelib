@@ -87,9 +87,11 @@ export {
   deepEqual,
   deepEqualUnordered,
   fromDot,
+  getNestedValue,
   isObject,
   merge,
   renameKeys,
+  setNestedValue,
 } from './services/objectService';
 export {
   registerLocalComponent,

@@ -2,9 +2,11 @@ import {
   deepEqual,
   deepEqualUnordered,
   fromDot,
+  getNestedValue,
   isObject,
   merge,
   renameKeys,
+  setNestedValue,
 } from 'src/services/objectService.ts';
 import { describe, expect, it } from 'vitest';
 
@@ -427,6 +429,74 @@ describe('Test service: objectService', () => {
 
     it('returns false for array compared to object', () => {
       expect(deepEqualUnordered([1, 2], { 0: 1, 1: 2 })).toBe(false);
+    });
+  });
+
+  describe('Test function: getNestedValue', () => {
+    it('reads a direct property', () => {
+      expect(getNestedValue({ a: 1 }, 'a')).toBe(1);
+    });
+
+    it('reads a nested property', () => {
+      expect(getNestedValue({ a: { b: { c: 'x' } } }, 'a.b.c')).toBe('x');
+    });
+
+    it('returns undefined when the property is missing', () => {
+      expect(getNestedValue({ a: 1 }, 'b')).toBeUndefined();
+    });
+
+    it('returns undefined when an intermediate object is missing', () => {
+      expect(getNestedValue({ a: {} }, 'a.b.c')).toBeUndefined();
+    });
+
+    it('returns undefined when an intermediate value is not an object', () => {
+      expect(getNestedValue({ a: 'x' }, 'a.b')).toBeUndefined();
+    });
+
+    it('returns null when the nested value is null', () => {
+      expect(getNestedValue({ a: { b: null } }, 'a.b')).toBeNull();
+    });
+  });
+
+  describe('Test function: setNestedValue', () => {
+    it('sets a direct property', () => {
+      expect(setNestedValue({ a: 1 }, 'b', 2)).toEqual({ a: 1, b: 2 });
+    });
+
+    it('sets a nested property', () => {
+      expect(setNestedValue({ a: { b: 'x' } }, 'a.b', 'z')).toEqual({
+        a: { b: 'z' },
+      });
+    });
+
+    it('preserves sibling properties at every level', () => {
+      const result = setNestedValue(
+        { a: { b: 'old', c: 'keep' }, d: 'keep' },
+        'a.b',
+        'new'
+      );
+
+      expect(result).toEqual({ a: { b: 'new', c: 'keep' }, d: 'keep' });
+    });
+
+    it('creates missing intermediate objects', () => {
+      expect(setNestedValue({}, 'a.b.c', 'x')).toEqual({
+        a: { b: { c: 'x' } },
+      });
+    });
+
+    it('replaces non-object intermediate values with objects', () => {
+      expect(setNestedValue({ a: 'x' }, 'a.b', 'y')).toEqual({
+        a: { b: 'y' },
+      });
+    });
+
+    it('does not mutate the original object', () => {
+      const obj = { a: { b: 'x' } };
+
+      setNestedValue(obj, 'a.b', 'z');
+
+      expect(obj).toEqual({ a: { b: 'x' } });
     });
   });
 });

@@ -94,6 +94,61 @@ export function fromDot(obj: PlainObject): PlainObject {
 }
 
 /**
+ * Reads the value located at a dot-notation path inside an object.
+ *
+ * Each segment of the path is interpreted as a property name of a nested
+ * object. If any intermediate value is missing or is not an object, the
+ * function returns `undefined`.
+ *
+ * Example:
+ * `getNestedValue({ a: { b: { c: 'x' } } }, 'a.b.c')` returns `'x'`.
+ * @param obj - The object to read from.
+ * @param path - The dot-notation path of the value (e.g. `'a.b.c'`).
+ * @returns The value at the given path, or `undefined` if the path cannot be resolved.
+ */
+export function getNestedValue(obj: PlainObject, path: string): unknown {
+  return path
+    .split('.')
+    .reduce<unknown>(
+      (current, key) => (isObject(current) ? current[key] : undefined),
+      obj
+    );
+}
+
+/**
+ * Sets the value located at a dot-notation path inside an object.
+ *
+ * The original object is not mutated; a new object is returned where only the
+ * objects along the path are recreated, preserving the rest of the structure.
+ * Missing intermediate objects are created, and intermediate values that are
+ * not objects are replaced by objects.
+ *
+ * Example:
+ * `setNestedValue({ a: { b: 'x', d: 'y' } }, 'a.b', 'z')` returns `{ a: { b: 'z', d: 'y' } }`.
+ * @param obj - The object to update.
+ * @param path - The dot-notation path of the value (e.g. `'a.b.c'`).
+ * @param value - The value to set at the given path.
+ * @returns A new object with the value set at the given path.
+ */
+export function setNestedValue(
+  obj: PlainObject,
+  path: string,
+  value: unknown
+): PlainObject {
+  const [key, ...rest] = path.split('.');
+  const result: PlainObject = { ...obj };
+
+  if (rest.length === 0) {
+    result[key] = value;
+  } else {
+    const child = isObject(result[key]) ? (result[key] as PlainObject) : {};
+    result[key] = setNestedValue(child, rest.join('.'), value);
+  }
+
+  return result;
+}
+
+/**
  * Determines whether a value is a non-null plain object.
  * @param value - The value to test.
  * @returns `true` if the value is an object, otherwise `false`.

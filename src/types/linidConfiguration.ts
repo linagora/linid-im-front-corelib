@@ -46,7 +46,11 @@ export type AttributeInputType =
  * @template T - The type of inputSettings, defaults to Record<string, unknown>.
  */
 export interface LinidAttributeConfiguration<T = Record<string, unknown>> {
-  /** The name of the attribute (e.g., "email"). */
+  /**
+   * The name of the attribute (e.g., "email").
+   * Supports dot notation to target values nested inside sub-objects of the
+   * entity (e.g., "extraParameters.login").
+   */
   name: string;
   /** The backend type of the attribute (e.g., "string", "integer"). */
   type: string;

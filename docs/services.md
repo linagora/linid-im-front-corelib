@@ -812,6 +812,8 @@ This service focuses on **immutability**, **deep operations**, and **safe object
 | ------------------------------------------- | ------------------------------------------------------------------- |
 | [`merge`](#merge)                           | Performs an immutable deep merge of two plain objects               |
 | [`fromDot`](#fromdot)                       | Expands dot-notation keys into a nested object structure            |
+| [`getNestedValue`](#getnestedvalue)         | Reads the value located at a dot-notation path inside an object     |
+| [`setNestedValue`](#setnestedvalue)         | Immutably sets the value located at a dot-notation path             |
 | [`isObject`](#isobject)                     | Determines whether a value is a non-null plain object               |
 | [`renameKeys`](#renamekeys)                 | Recursively renames keys of an object using a provided key modifier |
 | [`deepEqual`](#deepequal)                   | Performs a deep equality check between two values                   |
@@ -821,6 +823,8 @@ This service focuses on **immutability**, **deep operations**, and **safe object
 import {
   merge,
   fromDot,
+  getNestedValue,
+  setNestedValue,
   isObject,
   renameKeys,
   deepEqual,
@@ -965,6 +969,90 @@ fromDot({
   }
 }
 */
+```
+
+---
+
+### `getNestedValue`
+
+Reads the value located at a **dot-notation path** inside an object.
+
+#### Signature
+
+```ts
+getNestedValue(obj: PlainObject, path: string): unknown;
+```
+
+#### Parameters
+
+| Parameter | Type          | Description                                     |
+| --------- | ------------- | ----------------------------------------------- |
+| `obj`     | `PlainObject` | The object to read from                         |
+| `path`    | `string`      | Dot-notation path of the value (e.g. `'a.b.c'`) |
+
+#### Returns
+
+| Type      | Description                                                       |
+| --------- | ----------------------------------------------------------------- |
+| `unknown` | The value at the given path, or `undefined` if it cannot be found |
+
+#### Behavior
+
+1. Splits the path using `.` as a delimiter
+2. Traverses nested objects segment by segment
+3. Returns `undefined` when an intermediate value is missing or is not an object
+4. Does **not mutate** the input object
+
+#### Example
+
+```ts
+getNestedValue({ a: { b: { c: 'x' } } }, 'a.b.c'); // 'x'
+getNestedValue({ a: { b: 'x' } }, 'a.b.c'); // undefined
+getNestedValue({ email: 'john@example.com' }, 'email'); // 'john@example.com'
+```
+
+---
+
+### `setNestedValue`
+
+Immutably sets the value located at a **dot-notation path** inside an object.
+
+#### Signature
+
+```ts
+setNestedValue(obj: PlainObject, path: string, value: unknown): PlainObject;
+```
+
+#### Parameters
+
+| Parameter | Type          | Description                                     |
+| --------- | ------------- | ----------------------------------------------- |
+| `obj`     | `PlainObject` | The object to update                            |
+| `path`    | `string`      | Dot-notation path of the value (e.g. `'a.b.c'`) |
+| `value`   | `unknown`     | The value to set at the given path              |
+
+#### Returns
+
+| Type          | Description                                    |
+| ------------- | ---------------------------------------------- |
+| `PlainObject` | A new object with the value set at the path    |
+
+#### Behavior
+
+1. Splits the path using `.` as a delimiter
+2. Recreates only the objects along the path, preserving the rest of the structure
+3. Creates missing intermediate objects
+4. Replaces intermediate values that are not objects with objects
+5. Does **not mutate** the input object
+
+#### Example
+
+```ts
+setNestedValue({ a: { b: 'old', c: 'keep' } }, 'a.b', 'new');
+// { a: { b: 'new', c: 'keep' } }
+
+setNestedValue({}, 'a.b.c', 'x');
+// { a: { b: { c: 'x' } } }
 ```
 
 ---

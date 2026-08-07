@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.91](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.90...v0.0.91) (2026-08-07)
+
+
+### Features
+
+* add nested value helpers to object service ([7027f1a](https://github.com/linagora/linid-im-front-corelib/commit/7027f1a29aba4e6506327c75d39f463cc190f2a5))
+
 ### [0.0.90](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.89...v0.0.90) (2026-08-05)
 
 ### [0.0.89](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.88...v0.0.89) (2026-08-04)

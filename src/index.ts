@@ -151,6 +151,10 @@ export type {
   ModuleLifecycleHooks,
   ModuleLifecycleResult,
 } from './types/moduleLifecycle';
+export type {
+  ModulePageLifecycleHostOptions,
+  ModulePageLifecycleOptions,
+} from './types/modulePageLifecycle';
 
 // Types - UI design
 export type {
@@ -204,6 +208,7 @@ export { ModuleLifecyclePhase } from './types/moduleLifecycle';
 
 // Lifecycle Base Class
 export { BasicRemoteModule } from './lifecycle/skeleton';
+export { createModulePageLifecycle } from './lifecycle/modulePageLifecycle';
 
 // Types - UIEvent
 export type { UiEvent } from './types/uiEvent';

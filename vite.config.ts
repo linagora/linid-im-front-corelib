@@ -26,10 +26,11 @@ export default defineConfig({
       fileName: (format) => `core-lib.${format}.js`,
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', '@module-federation/enhanced/runtime'],
       output: {
         globals: {
           vue: 'Vue',
+          '@module-federation/enhanced/runtime': 'ModuleFederationRuntime',
         },
       },
     },

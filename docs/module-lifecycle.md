@@ -287,7 +287,7 @@ return {
 For a standard page module, you do not need to write a lifecycle class at all. The corelib provides a `createModulePageLifecycle` factory that returns a ready-to-expose module instance with the default page integration behavior:
 
 - Optionally registers an entry in the host application's main navigation menu during `postInit`, when the host configuration sets `options.addNavigationMenu` to `true`. The menu item uses the module instance identifier as id, the localized label `<instanceId>.NavigationMenu.label`, and the configured base path as target.
-- Registers the given dialog components once in the host layout `base-layout.dialogComponent` zone during `postInit`.
+- Registers the given dialog components once in the host layout dialog zone during `postInit`. The zone is provided through the required `dialogZone` option (e.g. `base-layout.dialogComponent`).
 
 ```typescript
 // src/federation/module-page-lifecycle.ts
@@ -298,6 +298,7 @@ export default createModulePageLifecycle({
   name: 'Page module',
   version: '0.0.1',
   description: 'Module to manage page entity.',
+  dialogZone: 'base-layout.dialogComponent',
   dialogComponents: ['myRemote/ConfirmationDialog', 'myRemote/FormDialog'],
 });
 ```
@@ -311,6 +312,7 @@ export default createModulePageLifecycle({
   id: 'modulePage',
   name: 'Page module',
   version: '0.0.1',
+  dialogZone: 'base-layout.dialogComponent',
   hooks: {
     async configure(config) {
       if (!config.basePath) {
@@ -714,13 +716,80 @@ Host Application
 
 ### Host Responsibilities
 
-The host application is responsible for:
+The whole federation setup is provided by the corelib through `linidModuleFederation.init()`. The host application only declares its configuration (remotes, module configuration files, host-local components) and calls `init()` in a single boot file:
 
-1. ✅ Loading module configurations from `modules.json`
-2. ✅ Loading each module's configuration file (`module-<name>.json`)
-3. ✅ Loading modules via Module Federation
-4. ✅ Executing each lifecycle phase in sequence for all modules
-5. ✅ Handling errors and logging
+```typescript
+// src/boot/module-lifecycle.ts
+import { linidModuleFederation } from '@linagora/linid-im-front-corelib';
+import { defineBoot } from '@quasar/app-vite/wrappers';
+import MyLocalComponent from 'components/MyLocalComponent.vue';
+import { appConfig } from './config';
+
+export default defineBoot(async ({ router }) => {
+  await linidModuleFederation.init({
+    router,
+    remotes: appConfig.remotes,
+    modules: appConfig.modules,
+    localComponents: { MyLocalComponent },
+  });
+});
+```
+
+`init()` performs the complete setup, in order: it registers the given remotes and shares the Module Federation instance with the corelib, makes the given host-local components available to zones, loads each module configuration file in a fault-tolerant way (a broken entry is skipped), loads every module's lifecycle entry point through Module Federation (`lifecycleRemote`), then executes the five phases in sequence for all modules. During the CONFIGURE phase it registers the routes exposed by each module (`routesRemote`) on the provided router and merges the module i18n messages (`i18nRemote`); during the POST_INIT phase it registers the zones declared in each module configuration.
+
+Options:
+
+| Option            | Required | Description                                                                         |
+| ----------------- | -------- | ----------------------------------------------------------------------------------- |
+| `router`          | yes      | Host Vue Router instance, used to register module routes.                           |
+| `remotes`         | yes      | Module Federation remotes to register (`{ name, entry }` entries).                  |
+| `modules`         | yes      | URLs of the module configuration files to load (e.g. `/modules/AccountsPage.json`). |
+| `localComponents` | no       | Host-local components to make available to zones, indexed by name.                  |
+| `hooks`           | no       | Host-side overrides of the phase runners (see below).                               |
+
+Example with literal values:
+
+```typescript
+import ExportApplicationScriptBtn from 'components/btn/ExportApplicationScriptBtn.vue';
+
+await linidModuleFederation.init({
+  router,
+  remotes: [
+    {
+      name: 'catalogUI',
+      entry: 'http://localhost:5001/mf-manifest.json',
+    },
+  ],
+  modules: [
+    '/modules/AccountsPage.json',
+    '/modules/OrganizationalUnitPage.json',
+  ],
+  localComponents: { ExportApplicationScriptBtn },
+});
+```
+
+### Hooking into Host-Side Phases
+
+The host can extend how any lifecycle phase is orchestrated through the `hooks` option. Each hook has the
+`LinidModuleFederationPhaseRunner` signature (`(module, config, router) => Promise<ModuleLifecycleResult>`) and is
+executed after the default host-side runner of its phase (which already calls the module's own hook); phases without a
+hook keep the default behavior.
+
+```typescript
+export default defineBoot(async ({ router }) => {
+  await linidModuleFederation.init({
+    router,
+    remotes: appConfig.remotes,
+    modules: appConfig.modules,
+    hooks: {
+      configure: async (module, config) => {
+        // Additional host logic, executed after the default CONFIGURE runner.
+        return { success: true };
+      },
+    },
+  });
+});
+```
 
 ### Module Responsibilities
 

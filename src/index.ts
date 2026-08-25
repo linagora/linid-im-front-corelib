@@ -209,6 +209,12 @@ export { ModuleLifecyclePhase } from './types/moduleLifecycle';
 // Lifecycle Base Class
 export { BasicRemoteModule } from './lifecycle/skeleton';
 export { createModulePageLifecycle } from './lifecycle/modulePageLifecycle';
+export { linidModuleFederation } from './lifecycle/linidModuleFederation';
+export type {
+  LinidModuleFederationInitOptions,
+  LinidModuleFederationPhaseRunner,
+  LinidRemoteConfig,
+} from './types/linidModuleFederation';
 
 // Types - UIEvent
 export type { UiEvent } from './types/uiEvent';

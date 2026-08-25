@@ -6,14 +6,6 @@ The module lifecycle system provides a standardized way for business modules to 
 
 The lifecycle consists of five phases that are executed in sequence for all modules:
 
-# Module Lifecycle System
-
-The module lifecycle system provides a standardized way for business modules to initialize themselves in the host application.
-
-## Overview
-
-The lifecycle consists of five phases that are executed in sequence for all modules:
-
 ```
 Setup → Configure → Initialize → Ready → Post-Init
 ```
@@ -287,6 +279,62 @@ return {
   error: 'Missing required configuration',
 };
 ```
+
+---
+
+## Ready-Made Page Module Lifecycle
+
+For a standard page module, you do not need to write a lifecycle class at all. The corelib provides a `createModulePageLifecycle` factory that returns a ready-to-expose module instance with the default page integration behavior:
+
+- Optionally registers an entry in the host application's main navigation menu during `postInit`, when the host configuration sets `options.addNavigationMenu` to `true`. The menu item uses the module instance identifier as id, the localized label `<instanceId>.NavigationMenu.label`, and the configured base path as target.
+- Registers the given dialog components once in the host layout `base-layout.dialogComponent` zone during `postInit`.
+
+```typescript
+// src/federation/module-page-lifecycle.ts
+import { createModulePageLifecycle } from '@linagora/linid-im-front-corelib';
+
+export default createModulePageLifecycle({
+  id: 'modulePage',
+  name: 'Page module',
+  version: '0.0.1',
+  description: 'Module to manage page entity.',
+  dialogComponents: ['myRemote/ConfirmationDialog', 'myRemote/FormDialog'],
+});
+```
+
+### Overriding Phases
+
+Any lifecycle phase can be overridden through the `hooks` option. An overridden phase fully replaces the default behavior of that phase:
+
+```typescript
+export default createModulePageLifecycle({
+  id: 'modulePage',
+  name: 'Page module',
+  version: '0.0.1',
+  hooks: {
+    async configure(config) {
+      if (!config.basePath) {
+        return { success: false, error: 'Missing basePath' };
+      }
+      return { success: true };
+    },
+  },
+});
+```
+
+The module-specific options type can extend `ModulePageLifecycleHostOptions` so typed hooks keep access to the shared `addNavigationMenu` option.
+
+### Initialization
+
+There is nothing to call on the plugin side. Expose the created instance as the module's lifecycle entry in the federation configuration (`vite.config.ts`):
+
+```typescript
+exposes: {
+  './PageLifecycle': './src/federation/module-page-lifecycle.ts',
+},
+```
+
+The host application loads this entry during boot (`src/boot/module-lifecycle.ts` in the host) and drives all five phases automatically.
 
 ---
 

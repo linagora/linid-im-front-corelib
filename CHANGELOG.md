@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.92](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.91...v0.0.92) (2026-08-27)
+
+
+### Features
+
+* add createModulePageLifecycle factory ([fc5895a](https://github.com/linagora/linid-im-front-corelib/commit/fc5895a3649b5aa74248bb1e484c41722890553d))
+* add linidModuleFederation host orchestration ([4926d1a](https://github.com/linagora/linid-im-front-corelib/commit/4926d1a98a6bddc2e3feaa1f4f9bf95c76712db8))
+
 ### [0.0.91](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.90...v0.0.91) (2026-08-07)
 
 

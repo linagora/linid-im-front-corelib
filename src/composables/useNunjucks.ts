@@ -24,11 +24,115 @@
  * LinID Identity Manager software.
  */
 
+import { toRaw } from 'vue';
 import { getNunjucksEnv } from '../services/nunjucksService';
+
+/**
+ * Matches a template made of a single Nunjucks expression and captures that expression.
+ */
+const SINGLE_EXPRESSION = /^\s*\{\{\s*([^{}]+?)\s*\}\}\s*$/;
+
+/**
+ * Matches a path segment that is safe to resolve, that is a plain identifier.
+ */
+const SAFE_SEGMENT = /^[A-Za-z_$][\w$]*$/;
+
+/**
+ * Lists the path segments that must never be resolved, to avoid walking up the prototype chain.
+ */
+const FORBIDDEN_SEGMENTS = new Set(['__proto__', 'constructor', 'prototype']);
+
+/**
+ * Determines whether a value is a plain object, that is an object whose prototype is `Object.prototype`.
+ * @param value - The value to test.
+ * @returns `true` if the value is a plain object, otherwise `false`.
+ */
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (value === null || typeof value !== 'object') {
+    return false;
+  }
+  return Object.getPrototypeOf(toRaw(value as object)) === Object.prototype;
+}
+
+/**
+ * Extracts the path segments of a template made of a single property lookup (e.g. `{{ entity }}` or `{{ entity.details }}`).
+ * @param template - The template string to inspect.
+ * @returns The resolved path segments, or `null` when the template is not a plain property lookup.
+ */
+function toPathSegments(template: string): string[] | null {
+  const match = SINGLE_EXPRESSION.exec(template);
+  const expression = match?.[1];
+
+  if (expression === undefined) {
+    return null;
+  }
+
+  const segments = expression.split('.');
+
+  const isSafe = segments.every(
+    (segment) => SAFE_SEGMENT.test(segment) && !FORBIDDEN_SEGMENTS.has(segment)
+  );
+
+  return isSafe ? segments : null;
+}
+
+/**
+ * Resolves a single-expression template directly against the context, bypassing the Nunjucks render.
+ * @param template - The template string to resolve.
+ * @param context - The context object the path is resolved against.
+ * @returns A deep clone of the resolved plain object, or `null` when the template is not a plain property lookup or does not resolve to a plain object.
+ */
+function resolveObjectExpression(
+  template: string,
+  context: Record<string, unknown>
+): Record<string, unknown> | null {
+  const segments = toPathSegments(template);
+
+  if (segments === null) {
+    return null;
+  }
+
+  let current: unknown = context;
+
+  for (const segment of segments) {
+    if (!isPlainObject(current) || !Object.hasOwn(current, segment)) {
+      return null;
+    }
+    current = current[segment];
+  }
+  return isPlainObject(current) ? structuredClone(toRaw(current)) : null;
+}
+
+/** Result of rendering a string: either the Nunjucks output, or a plain object for a direct dotted lookup. */
+type StringRenderResult = string | Record<string, unknown>;
+
+/** Result of rendering an array: each element mapped through {@link RenderResult}. */
+type ArrayRenderResult<U> = RenderResult<U>[];
+
+/** Result of rendering a plain object: same shape with each property value mapped through {@link RenderResult}. */
+type ObjectRenderResult<T extends Record<string, unknown>> = {
+  [K in keyof T]: RenderResult<T[K]>;
+};
+
+/**
+ * The return type of {@link render}, computed recursively from the input type `T`.
+ * - `string`                   → `StringRenderResult` (rendered output or a plain object)
+ * - `ReadonlyArray<U>`         → `ArrayRenderResult<U>` (elements mapped recursively)
+ * - `Record<string, unknown>`  → `ObjectRenderResult<T>` (same shape, values mapped)
+ * - anything else              → `T` unchanged.
+ */
+export type RenderResult<T> = T extends string
+  ? StringRenderResult
+  : T extends ReadonlyArray<infer U>
+    ? ArrayRenderResult<U>
+    : T extends Record<string, unknown>
+      ? ObjectRenderResult<T>
+      : T;
 
 /**
  * Composable exposing utility functions for working with Nunjucks templates.
  * It provides a method to recursively render all string properties of an object as Nunjucks templates using a shared Nunjucks environment.
+ * A string that is a single dotted property lookup resolving to a plain object yields that object instead of a string.
  * The Nunjucks environment must be initialized and set in the `nunjucksService` before using this composable.
  *
  * **Security note:** XSS safety of the rendered output depends entirely on the Nunjucks environment
@@ -42,34 +146,33 @@ export function useNunjucks() {
   const nunjucksEnv = getNunjucksEnv();
 
   /**
-   * Recursively renders all string properties of an object using the Nunjucks environment and the provided context.
-   * If a property value is a string, it is rendered as a Nunjucks template with the given context.
-   * If a property value is an array, the function is applied recursively to each item in the array.
-   * If a property value is an object, the function is applied recursively to that object.
-   * Other types of values are returned as-is.
-   * @template T - The type of the input value, which can be a string, an array, an object, or any other type.
-   * @param value - The value to be processed, which can be a string, an array, an object, or any other type.
+   * Recursively renders all string properties of a value using the Nunjucks environment and the provided context.
+   * @template T - The type of the input value, which can be an array, an object, or any other type.
+   * @param value - The value to be processed.
    * @param context - The context object to be used when rendering string properties as Nunjucks templates.
-   * @returns The processed value with all string properties rendered as Nunjucks templates, while preserving the original structure of arrays and objects.
+   * @returns The rendered value; see {@link RenderResult} for how each type is mapped.
    */
-  function render<T>(value: T, context: Record<string, unknown>): T {
+  function render<T>(
+    value: T,
+    context: Record<string, unknown>
+  ): RenderResult<T>;
+  function render<T>(value: T, context: Record<string, unknown>): unknown {
     if (typeof value === 'string') {
-      return nunjucksEnv.renderString(value, context) as T;
+      const resolved = resolveObjectExpression(value, context);
+
+      if (resolved !== null) {
+        return resolved;
+      }
+
+      return nunjucksEnv.renderString(value, context);
     }
     if (Array.isArray(value)) {
-      return value.map((item) => render(item, context)) as T;
+      return value.map((item) => render(item, context));
     }
-    if (
-      value !== null &&
-      typeof value === 'object' &&
-      Object.getPrototypeOf(value) === Object.prototype
-    ) {
+    if (isPlainObject(value)) {
       return Object.fromEntries(
-        Object.entries(value as Record<string, unknown>).map(([k, v]) => [
-          k,
-          render(v, context),
-        ])
-      ) as T;
+        Object.entries(value).map(([k, v]) => [k, render(v, context)])
+      );
     }
     return value;
   }

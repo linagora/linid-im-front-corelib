@@ -36,6 +36,7 @@ export { useLinidFilterUrl } from './composables/useLinidFilterUrl';
 export { useLinidUserPreference } from './composables/useLinidUserPreference';
 export { useNotify } from './composables/useNotify';
 export { useNunjucks } from './composables/useNunjucks';
+export type { RenderResult } from './composables/useNunjucks';
 export { usePagination } from './composables/usePagination';
 export { QDATE_DEFAULT_MASK, useQuasarDate } from './composables/useQuasarDate';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';

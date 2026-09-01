@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.94](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.93...v0.0.94) (2026-09-01)
+
+
+### Features
+
+* add renderString function to useNunjucks for single template string rendering ([c33f287](https://github.com/linagora/linid-im-front-corelib/commit/c33f28711b4abc0fb93781e3e22bf9fea0e84760))
+
 ### [0.0.93](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.92...v0.0.93) (2026-09-01)
 
 

@@ -6,11 +6,12 @@ This document describes the `useNunjucks` composable, which exposes utility func
 
 ## Overview
 
-`useNunjucks` provides a single function:
+`useNunjucks` provides two functions:
 
-| Function            | Description                                                                |
-| ------------------- | -------------------------------------------------------------------------- |
-| [`render`](#render) | Recursively renders all string properties of a value as Nunjucks templates |
+| Function                        | Description                                                                |
+| ------------------------------- | -------------------------------------------------------------------------- |
+| [`render`](#render)             | Recursively renders all string properties of a value as Nunjucks templates |
+| [`renderString`](#renderstring) | Renders a single template string, always returning a string                |
 
 ### Prerequisites
 
@@ -41,7 +42,7 @@ XSS safety of the rendered output depends entirely on the Nunjucks environment p
 ```ts
 import { useNunjucks } from '@linagora/linid-im-front-corelib';
 
-const { render } = useNunjucks();
+const { render, renderString } = useNunjucks();
 ```
 
 ---
@@ -80,6 +81,8 @@ If the whole string is a single property lookup — `{{ entity }}`, `{{ entity.d
 
 Every segment in the path must be an own property of a plain object. Class instances and arrays are not traversed. Vue `reactive()` proxies over plain objects are treated as plain objects and are traversed. Everything else stays a string: templates with multiple expressions, filters, operators, function calls, bracket notation (`{{ entity['details'] }}`), lookups that resolve to a non-plain-object, and whitespace-control syntax (`{{- entity.details -}}`). Path segments named `__proto__`, `constructor` or `prototype` are never resolved.
 
+> Because a template can yield an object here, `render` is typed `string | Record<string, unknown>` for a string input. When a single value must be a string, use [`renderString`](#renderstring) instead.
+
 ### Examples
 
 ```ts
@@ -115,4 +118,54 @@ render(date, {}); // → the original Date instance, untouched
 
 // Null — returned as-is
 render(null, {}); // → null
+```
+
+---
+
+## `renderString`
+
+Renders a single template string, always returning a `string`. It is the plain Nunjucks behavior: unlike [`render`](#render), a single dotted lookup resolving to a plain object is **not** short-circuited — it goes through Nunjucks like any other expression and comes out stringified.
+
+```ts
+renderString(template: string, context: Record<string, unknown>): string
+```
+
+### Parameters
+
+| Parameter  | Type                      | Required | Description                                                                               |
+| ---------- | ------------------------- | -------- | ----------------------------------------------------------------------------------------- |
+| `template` | `string`                  | yes      | The template to render.                                                                   |
+| `context`  | `Record<string, unknown>` | yes      | The Nunjucks template context. Variables declared here are available inside the template. |
+
+### Returns
+
+The template rendered via `nunjucksEnv.renderString(template, context)` — always a `string`.
+
+### When to use it over `render`
+
+Use `render` to process a **configuration tree** whose values legitimately have mixed types — a request body where one property must stay an object, for instance. Use `renderString` for a **single value that must be a string**: a URL, an i18n key, a CSS class, any property typed `string` by the API you hand it to.
+
+The difference that matters is the return type. `render` on a string is typed `string | Record<string, unknown>`, so every caller that needs a string has to narrow or cast it, even when the object branch can never fire for that template. `renderString` returns `string` and removes that friction.
+
+> `renderString` performs **no validation**. A template that would have resolved to an object under `render` renders as `'[object Object]'` here, silently. Picking the right function is the whole contract.
+
+### Examples
+
+```ts
+const { render, renderString } = useNunjucks();
+
+const ctx = { entity: { id: 7, details: { a: 1 } } };
+
+// Identical to `render` for anything that is not a bare lookup
+renderString('/users/{{ entity.id }}', ctx);
+// → '/users/7'
+
+renderString('/users', ctx);
+// → '/users'
+
+// Here the two functions differ
+render('{{ entity.details }}', ctx);
+// → { a: 1 }        — the object itself
+renderString('{{ entity.details }}', ctx);
+// → '[object Object]' — stringified by Nunjucks
 ```

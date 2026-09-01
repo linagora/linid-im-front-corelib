@@ -177,7 +177,23 @@ export function useNunjucks() {
     return value;
   }
 
+  /**
+   * Renders a single template string, always returning a string.
+   * Unlike `render`, a single dotted lookup resolving to a plain object is not short-circuited: it goes through Nunjucks like any other expression.
+   * Use it for values that must stay strings, such as URLs or any typed string property.
+   * @param template - The template string to render.
+   * @param context - The context object to be used when rendering the template.
+   * @returns The rendered string.
+   */
+  function renderString(
+    template: string,
+    context: Record<string, unknown>
+  ): string {
+    return nunjucksEnv.renderString(template, context);
+  }
+
   return {
     render,
+    renderString,
   };
 }

@@ -207,4 +207,58 @@ describe('Test composable: useNunjucks', () => {
       }
     });
   });
+
+  describe('Test function: renderString', () => {
+    let renderString;
+
+    beforeEach(() => {
+      mockRenderString.mockClear();
+      renderString = useNunjucks().renderString;
+    });
+
+    const details = { a: 1, nested: { b: 2 } };
+    const context = { entity: { id: 7, details }, list: [1, 2], name: 'Alice' };
+
+    it('should render a string value as a Nunjucks template', () => {
+      expect(renderString('/users/{{ entity.id }}', context)).toBe(
+        'rendered:/users/{{ entity.id }}'
+      );
+    });
+
+    it('should pass the context to the Nunjucks environment', () => {
+      mockRenderString.mockImplementationOnce(
+        (str, ctx) => `${str}:${ctx.name}`
+      );
+
+      expect(renderString('hello', context)).toBe('hello:Alice');
+    });
+
+    it('should never short-circuit a shape that render resolves to an object', () => {
+      const { render } = useNunjucks();
+
+      for (const tpl of [
+        '{{ entity }}',
+        '{{ entity.details }}',
+        '{{ entity.details.nested }}',
+      ]) {
+        expect(render(tpl, context)).toBeTypeOf('object');
+        expect(renderString(tpl, context)).toBe(`rendered:${tpl}`);
+      }
+    });
+
+    it('should behave like render for any template that is not a bare lookup', () => {
+      const { render } = useNunjucks();
+
+      for (const tpl of [
+        '/users/{{ entity.id }}',
+        '/users',
+        '{{ entity.id }}',
+        '{{ 1 + 2 }}',
+        '{{ list }}',
+        '{{ entity.missing }}',
+      ]) {
+        expect(renderString(tpl, context)).toBe(render(tpl, context));
+      }
+    });
+  });
 });

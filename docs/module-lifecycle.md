@@ -716,7 +716,7 @@ Host Application
 
 ### Host Responsibilities
 
-The whole federation setup is provided by the corelib through `linidModuleFederation.init()`. The host application only declares its configuration (remotes, module configuration files, host-local components) and calls `init()` in a single boot file:
+The whole federation setup is provided by the corelib through `linidModuleFederation.init()`. The host application only declares its configuration (remotes, module configuration files, extra zone files, host-local components) and calls `init()` in a single boot file:
 
 ```typescript
 // src/boot/module-lifecycle.ts
@@ -730,12 +730,13 @@ export default defineBoot(async ({ router }) => {
     router,
     remotes: appConfig.remotes,
     modules: appConfig.modules,
+    extraZones: appConfig.extraZones,
     localComponents: { MyLocalComponent },
   });
 });
 ```
 
-`init()` performs the complete setup, in order: it registers the given remotes and shares the Module Federation instance with the corelib, makes the given host-local components available to zones, loads each module configuration file in a fault-tolerant way (a broken entry is skipped), loads every module's lifecycle entry point through Module Federation (`lifecycleRemote`), then executes the five phases in sequence for all modules. During the CONFIGURE phase it registers the routes exposed by each module (`routesRemote`) on the provided router and merges the module i18n messages (`i18nRemote`); during the POST_INIT phase it registers the zones declared in each module configuration.
+`init()` performs the complete setup, in order: it registers the given remotes and shares the Module Federation instance with the corelib, makes the given host-local components available to zones, loads each module configuration file and extra zone file in a fault-tolerant way (a broken entry is skipped), loads every module's lifecycle entry point through Module Federation (`lifecycleRemote`), then executes the five phases in sequence for all modules. During the CONFIGURE phase it registers the routes exposed by each module (`routesRemote`) on the provided router and merges the module i18n messages (`i18nRemote`); during the POST_INIT phase it registers the zones declared in each module configuration. Finally, it registers the zones of the extra zone files.
 
 Options:
 
@@ -744,6 +745,7 @@ Options:
 | `router`          | yes      | Host Vue Router instance, used to register module routes.                           |
 | `remotes`         | yes      | Module Federation remotes to register (`{ name, entry }` entries).                  |
 | `modules`         | yes      | URLs of the module configuration files to load (e.g. `/modules/AccountsPage.json`). |
+| `extraZones`      | no       | URLs of additional zone definition files to load (see below).                       |
 | `localComponents` | no       | Host-local components to make available to zones, indexed by name.                  |
 | `hooks`           | no       | Host-side overrides of the phase runners (see below).                               |
 
@@ -764,9 +766,37 @@ await linidModuleFederation.init({
     '/modules/AccountsPage.json',
     '/modules/OrganizationalUnitPage.json',
   ],
+  extraZones: ['/zones/supersetGraphs.json'],
   localComponents: { ExportApplicationScriptBtn },
 });
 ```
+
+### Loading Extra Zones
+
+Zones can be declared outside module configuration files through the `extraZones` option. Each entry is the URL of a
+JSON file holding an array of `ModuleZoneDefinition` entries, in the same format as the `zones` field of a module
+configuration (see [Configuring Zones in Module Configuration](./components-plugin-zones.md#-configuring-zones-in-module-configuration)):
+
+```json
+[
+  {
+    "zone": "moduleAccountDetailsPage.content.after",
+    "plugin": "catalogUI/SupersetWidgetCard",
+    "props": {
+      "supersetDomain": "https://superset.example.com",
+      "dashboardSlug": "accounts"
+    }
+  },
+  {
+    "zone": "moduleAccountDetailsPage.header.actions",
+    "component": "ExportApplicationScriptBtn"
+  }
+]
+```
+
+All files are fetched during initialization and their zones are registered after the zones declared by the modules,
+in file order. A file that cannot be loaded or does not hold an array of valid zone definitions (a `zone` name plus
+exactly one of a `plugin` or a `component` name) is logged and skipped, without aborting the initialization.
 
 ### Hooking into Host-Side Phases
 

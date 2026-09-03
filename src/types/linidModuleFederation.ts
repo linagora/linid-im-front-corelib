@@ -80,6 +80,14 @@ export interface LinidModuleFederationInitOptions {
   modules: string[];
 
   /**
+   * URLs of additional zone definition files to load (e.g. `/zones/supersetGraphs.json`).
+   *
+   * Each file holds a JSON array of `ModuleZoneDefinition` entries, registered after the zones declared by the
+   * modules.
+   */
+  extraZones?: string[];
+
+  /**
    * Host-local components to make available to zones, indexed by name.
    */
   localComponents?: Record<string, Component>;

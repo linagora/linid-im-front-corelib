@@ -213,6 +213,25 @@ describe('Test object: linidModuleFederation', () => {
       expect(loadRemote).not.toHaveBeenCalled();
     });
 
+    it('should skip a module whose configuration file holds an invalid configuration', async () => {
+      const files = {
+        '/modules/no-lifecycle.json': { ...config, lifecycleRemote: undefined },
+        '/modules/bad-zones.json': { ...config, zones: ['bad'] },
+      };
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url) => ({ ok: true, url, json: async () => files[url] }))
+      );
+
+      await linidModuleFederation.init({
+        router,
+        remotes,
+        modules: Object.keys(files),
+      });
+
+      expect(loadRemote).not.toHaveBeenCalled();
+    });
+
     it('should register module routes on the router, replacing existing ones', async () => {
       stubFetch(config);
       loadRemote.mockImplementation(async (remote) => {
@@ -286,6 +305,84 @@ describe('Test object: linidModuleFederation', () => {
           props: undefined,
         },
       ]);
+    });
+
+    it('should register the zones of the extra zone files after the module zones', async () => {
+      const files = {
+        '/modules/test.json': {
+          ...config,
+          zones: [{ zone: 'header', component: 'ModuleComponent' }],
+        },
+        '/zones/a.json': [
+          { zone: 'header', plugin: 'testModule/RemoteComponent' },
+        ],
+        '/zones/b.json': [
+          { zone: 'footer', component: 'ExtraComponent', props: { a: 1 } },
+        ],
+      };
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url) => ({ ok: true, url, json: async () => files[url] }))
+      );
+
+      await linidModuleFederation.init({
+        router,
+        remotes,
+        modules,
+        extraZones: ['/zones/a.json', '/zones/b.json'],
+      });
+
+      const zoneStore = useLinidZoneStore();
+      expect(zoneStore.zones.header).toEqual([
+        { type: 'component', component: 'ModuleComponent', props: undefined },
+        {
+          type: 'federated',
+          plugin: 'testModule/RemoteComponent',
+          props: undefined,
+        },
+      ]);
+      expect(zoneStore.zones.footer).toEqual([
+        { type: 'component', component: 'ExtraComponent', props: { a: 1 } },
+      ]);
+    });
+
+    it('should skip an extra zone file that fails to load or holds invalid zone definitions', async () => {
+      const files = {
+        '/zones/missing.json': { ok: false },
+        '/zones/object.json': { zone: 'x' },
+        '/zones/invalid-entry.json': ['bad'],
+        '/zones/no-zone.json': [{ component: 'ExtraComponent' }],
+        '/zones/no-target.json': [{ zone: 'footer' }],
+        '/zones/both-targets.json': [
+          { zone: 'footer', plugin: 'testModule/X', component: 'Y' },
+        ],
+        '/zones/wrong-target-type.json': [
+          { zone: 'footer', plugin: 'testModule/X', component: 1 },
+        ],
+        '/zones/valid.json': [{ zone: 'footer', component: 'ExtraComponent' }],
+      };
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url) =>
+          url === '/zones/missing.json'
+            ? { ok: false }
+            : { ok: true, url, json: async () => files[url] }
+        )
+      );
+
+      await linidModuleFederation.init({
+        router,
+        remotes,
+        modules: [],
+        extraZones: Object.keys(files),
+      });
+
+      const zoneStore = useLinidZoneStore();
+      expect(zoneStore.zones).toEqual({
+        footer: [
+          { type: 'component', component: 'ExtraComponent', props: undefined },
+        ],
+      });
     });
 
     it('should run the provided hook after the default phase runner', async () => {

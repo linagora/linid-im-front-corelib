@@ -48,46 +48,160 @@ import type { LinidRoute } from '../types/linidRoute';
 import type {
   FederatedModule,
   ModuleHostConfig,
+  ModuleZoneDefinition,
   RemoteModule,
 } from '../types/module';
 import type { ModuleLifecycleResult } from '../types/moduleLifecycle';
 import { ModuleLifecyclePhase } from '../types/moduleLifecycle';
 
 /**
- * Loads and aggregates the configuration files of all federated modules.
+ * Fetches a list of JSON files in parallel.
  *
- * Each configuration file is fetched in parallel, and any module that fails to load is filtered out: a failure to
- * load an individual module configuration does not abort the overall process.
- * @param modules - URLs of the module configuration files to load.
- * @returns A promise resolving to the list of successfully loaded module host configurations.
+ * A file that fails to load or holds unexpected content is logged and filtered out: an individual failure does not
+ * abort the overall process.
+ * @param files - URLs of the JSON files to load.
+ * @param isValid - Predicate accepting the parsed content of a file.
+ * @returns A promise resolving to the parsed content of the successfully loaded files.
  */
-async function getModulesConfiguration(
-  modules: string[]
-): Promise<ModuleHostConfig<unknown>[]> {
-  const moduleConfigs = await Promise.all(
-    modules.map(async (moduleFile) => {
+async function fetchJsonFiles<T>(
+  files: string[],
+  isValid: (content: unknown) => content is T
+): Promise<T[]> {
+  const contents = await Promise.all(
+    files.map(async (file) => {
       try {
-        const moduleResponse = await fetch(moduleFile);
+        const response = await fetch(file);
 
-        if (!moduleResponse.ok) {
+        if (!response.ok) {
           return null;
         }
 
-        console.debug(
-          `[LinID CoreLib] Loaded config for module: ${moduleResponse.url}`
-        );
-        return moduleResponse.json();
+        const content: unknown = await response.json();
+
+        if (!isValid(content)) {
+          console.error(`[LinID CoreLib] Invalid content in file: ${file}`);
+          return null;
+        }
+
+        console.debug(`[LinID CoreLib] Loaded file: ${response.url}`);
+        return content;
       } catch {
-        console.error(`[LinID CoreLib] Config file not found: ${moduleFile}`);
+        console.error(`[LinID CoreLib] File not found: ${file}`);
         return null;
       }
     })
   );
 
-  // Filter out failed fetches
-  return moduleConfigs.filter(
-    (config): config is ModuleHostConfig<unknown> => config !== null
+  // The declaration build resolves the awaited items to `Awaited<T>`, which is not assignable to `T` for a generic.
+  return contents.filter((content) => content !== null) as T[];
+}
+
+/**
+ * Checks that a value is a zone definition: an object carrying a `zone` name and exactly one of a `plugin` or a
+ * `component` name.
+ * @param value - The value to check.
+ * @returns `true` when the value is a valid zone definition.
+ */
+function isModuleZoneDefinition(value: unknown): value is ModuleZoneDefinition {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const { zone, plugin, component } = value as Record<string, unknown>;
+  const targets = [plugin, component];
+
+  return (
+    typeof zone === 'string' &&
+    targets.every(
+      (target) => target === undefined || typeof target === 'string'
+    ) &&
+    targets.filter((target) => target !== undefined).length === 1
   );
+}
+
+/**
+ * Checks that a value is a module host configuration: an object carrying the string fields consumed by the host
+ * (`instanceId`, `remoteName`, `lifecycleRemote`, `routesRemote`, `i18nRemote`, `basePath`) and, when set, valid zone
+ * definitions.
+ * @param value - The value to check.
+ * @returns `true` when the value is a valid module host configuration.
+ */
+function isModuleHostConfig(
+  value: unknown
+): value is ModuleHostConfig<unknown> {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const config = value as Record<string, unknown>;
+  const stringFields = [
+    'instanceId',
+    'remoteName',
+    'lifecycleRemote',
+    'routesRemote',
+    'i18nRemote',
+    'basePath',
+  ];
+
+  return (
+    stringFields.every((field) => typeof config[field] === 'string') &&
+    (config.zones === undefined ||
+      (Array.isArray(config.zones) &&
+        config.zones.every(isModuleZoneDefinition)))
+  );
+}
+
+/**
+ * Loads and aggregates the configuration files of all federated modules.
+ * @param modules - URLs of the module configuration files to load.
+ * @returns A promise resolving to the list of successfully loaded module host configurations.
+ */
+function getModulesConfiguration(
+  modules: string[]
+): Promise<ModuleHostConfig<unknown>[]> {
+  return fetchJsonFiles(modules, isModuleHostConfig);
+}
+
+/**
+ * Loads and aggregates the zone definitions of all extra zone files.
+ * @param files - URLs of the zone definition files to load.
+ * @returns A promise resolving to the zone definitions of the successfully loaded files, in file order.
+ */
+async function getExtraZones(files: string[]): Promise<ModuleZoneDefinition[]> {
+  const zoneFiles = await fetchJsonFiles(
+    files,
+    (content): content is ModuleZoneDefinition[] =>
+      Array.isArray(content) && content.every(isModuleZoneDefinition)
+  );
+
+  return zoneFiles.flat();
+}
+
+/**
+ * Registers zone definitions in the zone store.
+ *
+ * An entry carrying a `component` references a local component by name, while an entry carrying a `plugin` references
+ * an element exposed through module federation.
+ * @param zones - The zone definitions to register.
+ */
+function registerZones(zones: ModuleZoneDefinition[]): void {
+  const linidZoneStore = useLinidZoneStore();
+
+  zones.forEach((zoneDefinition) => {
+    if ('component' in zoneDefinition && zoneDefinition.component) {
+      linidZoneStore.registerComponent(
+        zoneDefinition.zone,
+        zoneDefinition.component,
+        zoneDefinition.props
+      );
+    } else if ('plugin' in zoneDefinition && zoneDefinition.plugin) {
+      linidZoneStore.registerPlugin(
+        zoneDefinition.zone,
+        zoneDefinition.plugin,
+        zoneDefinition.props
+      );
+    }
+  });
 }
 
 /**
@@ -346,8 +460,7 @@ async function ready(
  * - Late-bound dependencies.
  * - Final application wiring that requires all modules to be available.
  *
- * Zones declared in the module configuration are registered here. An entry carrying a `component` references a local
- * component by name, while an entry carrying a `plugin` references an element exposed through module federation.
+ * Zones declared in the module configuration are registered here.
  * @param module - The remote module lifecycle implementation.
  * @param config - The host configuration associated with this module instance.
  * @param _router - The host application router (unused in this phase).
@@ -358,23 +471,7 @@ async function postInit(
   config: ModuleHostConfig<unknown>,
   _router: Router
 ): Promise<ModuleLifecycleResult> {
-  const linidZoneStore = useLinidZoneStore();
-
-  config.zones?.forEach((zoneDefinition) => {
-    if ('component' in zoneDefinition && zoneDefinition.component) {
-      linidZoneStore.registerComponent(
-        zoneDefinition.zone,
-        zoneDefinition.component,
-        zoneDefinition.props
-      );
-    } else if ('plugin' in zoneDefinition && zoneDefinition.plugin) {
-      linidZoneStore.registerPlugin(
-        zoneDefinition.zone,
-        zoneDefinition.plugin,
-        zoneDefinition.props
-      );
-    }
-  });
+  registerZones(config.zones ?? []);
 
   return module.postInit(config);
 }
@@ -400,17 +497,19 @@ const phaseRunners: Record<
  *
  * 1. Registers the given remotes and shares the Module Federation instance with the corelib.
  * 2. Makes the given host-local components available to zones.
- * 3. Loads the given module configuration files.
+ * 3. Loads the given module configuration files and extra zone files.
  * 4. Dynamically loads each remote module's lifecycle entry point.
  * 5. Executes all lifecycle phases sequentially for each module, ensuring deterministic and ordered initialization.
+ * 6. Registers the zones of the extra zone files, after the zones declared by the modules.
  *
  * Any phase can be extended through the `hooks` option; a hook is executed after the default host-side behavior of
  * its phase.
- * @param options - The initialization options, including the host application router, remotes and modules.
+ * @param options - The initialization options, including the host application router, remotes, modules and extra
+ *   zone files.
  * @returns Resolves once all modules have completed every lifecycle phase.
  */
 async function init(options: LinidModuleFederationInitOptions): Promise<void> {
-  const { router, remotes, modules, localComponents } = options;
+  const { router, remotes, modules, extraZones, localComponents } = options;
   const runners = { ...phaseRunners };
 
   Object.entries(options.hooks ?? {}).forEach(([phase, hook]) => {
@@ -434,7 +533,10 @@ async function init(options: LinidModuleFederationInitOptions): Promise<void> {
     registerLocalComponents(localComponents);
   }
 
-  const configurations = await getModulesConfiguration(modules);
+  const [configurations, zones] = await Promise.all([
+    getModulesConfiguration(modules),
+    getExtraZones(extraZones ?? []),
+  ]);
   const loadedModules = new Map<string, RemoteModule<unknown>>();
 
   for (const configuration of configurations) {
@@ -465,6 +567,8 @@ async function init(options: LinidModuleFederationInitOptions): Promise<void> {
       );
     }
   }
+
+  registerZones(zones);
 }
 
 /**

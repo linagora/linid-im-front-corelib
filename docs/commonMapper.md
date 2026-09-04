@@ -7,14 +7,15 @@ operations on dates, records, and attributes.
 
 ## Overview
 
-`useCommonMapper` provides four helpers for data transformation and formatting:
+`useCommonMapper` provides five helpers for data transformation and formatting:
 
-| Function                          | Description                                                       |
-|-----------------------------------|-------------------------------------------------------------------|
-| [`toDate`](#todate)               | Converts ISO date strings to locale-formatted date strings        |
-| [`toDateISO`](#todateiso)         | Converts locale-formatted dates to canonical ISO 8601 UTC strings |
-| [`toEmptyRecord`](#toemptyrecord) | Creates an empty record from field definitions                    |
-| [`toDayJs`](#todayjs)             | Parses any date value into a Dayjs instance                       |
+| Function                          | Description                                                                            |
+|-----------------------------------|------------------------------------------------------------------------------------------|
+| [`toDate`](#todate)               | Converts ISO date strings to locale-formatted date strings                             |
+| [`toDateISO`](#todateiso)         | Converts locale-formatted dates to canonical ISO 8601 UTC strings                      |
+| [`formatDate`](#formatdate)       | Formats a date value into a given output format, with an optional strict input format  |
+| [`toEmptyRecord`](#toemptyrecord) | Creates an empty record from field definitions                                         |
+| [`toDayJs`](#todayjs)             | Parses any date value into a Dayjs instance                                            |
 
 ---
 
@@ -23,7 +24,7 @@ operations on dates, records, and attributes.
 ```ts
 import { useCommonMapper } from '@linagora/linid-im-front-corelib';
 
-const { toDate, toDateISO, toEmptyRecord, toDayJs } = useCommonMapper();
+const { toDate, toDateISO, formatDate, toEmptyRecord, toDayJs } = useCommonMapper();
 ```
 
 ---
@@ -172,6 +173,52 @@ toDateISO('2024-07-20', 'application.dateFormat'); // '' — ISO format doesn't 
 
 ---
 
+## `formatDate`
+
+Formats a date value into a given output format. When `inputFormat` is provided, the input is parsed strictly against
+it; otherwise dayjs parses the value using its default detection (e.g., ISO strings, timestamps, or `Date` instances).
+
+```ts
+formatDate(date: string | number | Date, outputFormat: string, inputFormat?: string): string
+```
+
+### Parameters
+
+| Parameter      | Type                       | Required | Description                                                                                              |
+|-----------------|----------------------------|----------|------------------------------------------------------------------------------------------------------------|
+| `date`          | `string \| number \| Date` | yes      | Date value to format (ISO string, timestamp, locale-formatted string, or `Date` instance).                |
+| `outputFormat`  | `string`                   | yes      | Format string describing the desired output (e.g., `'DD/MM/YYYY'`).                                      |
+| `inputFormat`   | `string`                   | no       | Format string describing how to parse `date` when it is not natively recognized by dayjs (e.g., `'DD/MM/YYYY'`). |
+
+### Returns
+
+The formatted date string, or `'Invalid Date'` if the input cannot be parsed.
+
+### Behavior
+
+- **Without `inputFormat`**: `date` is parsed by dayjs in non-strict mode (any format dayjs recognizes), then formatted
+  according to `outputFormat`.
+- **With `inputFormat`**: `date` is parsed strictly against `inputFormat`; if it does not match, the returned Dayjs
+  instance is invalid and `.format()` yields `'Invalid Date'`.
+- Unlike [`toDate`](#todate) and [`toDateISO`](#todateiso), `formatDate` does not depend on i18n — both formats are
+  passed explicitly by the caller.
+
+### Examples
+
+```ts
+// Default parsing (no inputFormat)
+formatDate('2024-07-20T12:34:56.000Z', 'YYYY-MM-DD'); // '2024-07-20'
+formatDate(Date.UTC(2024, 6, 20, 12, 34, 56), 'YYYY-MM-DD'); // '2024-07-20'
+
+// Strict parsing with inputFormat
+formatDate('30/06/2024', 'YYYY-MM-DD', 'DD/MM/YYYY'); // '2024-06-30'
+
+// Format mismatch
+formatDate('not-a-valid-date', 'YYYY-MM-DD', 'DD/MM/YYYY'); // 'Invalid Date'
+```
+
+---
+
 ## `toEmptyRecord`
 
 Creates an empty object (record) with one key per field, each initialized to an empty string. Use this to seed reactive
@@ -272,7 +319,7 @@ Here's a complete example integrating all functions:
 ```ts
 import { useCommonMapper } from '@linagora/linid-im-front-corelib';
 
-const { toDate, toDateISO, toEmptyRecord, toDayJs } = useCommonMapper();
+const { toDate, toDateISO, formatDate, toEmptyRecord, toDayJs } = useCommonMapper();
 
 // Display a date from API in locale format
 const apiDate = '2024-07-20T12:34:56.000Z';
@@ -281,6 +328,9 @@ console.log(toDate(apiDate, 'application.dateFormat')); // Formatted date
 // Prepare a date for API submission
 const userInput = '24/07/2024';
 const isoDate = toDateISO(userInput, 'application.dateFormat'); // ISO format for API
+
+// Reformat a date without relying on i18n
+console.log(formatDate(apiDate, 'DD/MM/YYYY')); // '20/07/2024'
 
 // Create a form object from field definitions
 const form = reactive(

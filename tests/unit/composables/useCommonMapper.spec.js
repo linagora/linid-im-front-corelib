@@ -152,6 +152,41 @@ describe('Test mapper: useCommonMapper', () => {
     });
   });
 
+  describe('Test function: formatDate', () => {
+    it('should format a date using dayjs default parsing when no inputFormat is given', () => {
+      const { formatDate } = useCommonMapper();
+
+      const result = formatDate('2024-07-20T12:34:56.000Z', 'YYYY-MM-DD');
+
+      expect(result).toBe('2024-07-20');
+    });
+
+    it('should format a timestamp using dayjs default parsing when no inputFormat is given', () => {
+      const { formatDate } = useCommonMapper();
+
+      const timestamp = Date.UTC(2024, 6, 20, 12, 34, 56);
+      const result = formatDate(timestamp, 'YYYY-MM-DD');
+
+      expect(result).toBe('2024-07-20');
+    });
+
+    it('should parse the date with inputFormat when provided', () => {
+      const { formatDate } = useCommonMapper();
+
+      const result = formatDate('30/06/2024', 'YYYY-MM-DD', 'DD/MM/YYYY');
+
+      expect(result).toBe('2024-06-30');
+    });
+
+    it('should return "Invalid Date" when the value does not match inputFormat', () => {
+      const { formatDate } = useCommonMapper();
+
+      const result = formatDate('not-a-valid-date', 'YYYY-MM-DD', 'DD/MM/YYYY');
+
+      expect(result).toBe('Invalid Date');
+    });
+  });
+
   describe('Test function: toDayJs', () => {
     it('should parse an ISO 8601 string into a Dayjs object', () => {
       const { toDayJs } = useCommonMapper();

@@ -73,7 +73,9 @@ describe('Test mapper: useCommonMapper', () => {
       tMock.mockReturnValue('DD/MM/YYYY');
       const { toDate } = useCommonMapper();
 
-      expect(toDate('2024-06-30T12:34:56.789003', 'application.dateFormat')).toBe('30/06/2024');
+      expect(
+        toDate('2024-06-30T12:34:56.789003', 'application.dateFormat')
+      ).toBe('30/06/2024');
     });
   });
 
@@ -149,6 +151,69 @@ describe('Test mapper: useCommonMapper', () => {
       const fields = [{ name: 'foo', type: 'text', rules: [] }];
 
       expect(toEmptyRecord(fields)).not.toBe(toEmptyRecord(fields));
+    });
+  });
+
+  describe('Test function: formatDate', () => {
+    it('should format a date using dayjs default parsing when no inputFormat is given', () => {
+      const { formatDate } = useCommonMapper();
+
+      const result = formatDate('2024-07-20T12:34:56.000Z', 'YYYY-MM-DD');
+
+      expect(result).toBe('2024-07-20');
+    });
+
+    it('should return "" for falsy values (null/undefined/empty)', () => {
+      const { formatDate } = useCommonMapper();
+
+      expect(formatDate(null, 'YYYY-MM-DD')).toBe('');
+      expect(formatDate(undefined, 'YYYY-MM-DD')).toBe('');
+      expect(formatDate('', 'YYYY-MM-DD')).toBe('');
+    });
+
+    it('should parse the date with inputFormat when provided', () => {
+      const { formatDate } = useCommonMapper();
+
+      const result = formatDate('30/06/2024', 'YYYY-MM-DD', 'DD/MM/YYYY');
+
+      expect(result).toBe('2024-06-30');
+    });
+
+    it('should return "" when the value does not match inputFormat', () => {
+      const { formatDate } = useCommonMapper();
+
+      const result = formatDate('not-a-valid-date', 'YYYY-MM-DD', 'DD/MM/YYYY');
+
+      expect(result).toBe('');
+    });
+
+    it('should return "" for a well-formed but calendrically invalid date matching inputFormat', () => {
+      const { formatDate } = useCommonMapper();
+
+      const result = formatDate('31/02/2024', 'YYYY-MM-DD', 'DD/MM/YYYY');
+
+      expect(result).toBe('');
+    });
+
+    it('should format a Date instance using dayjs default parsing when no inputFormat is given', () => {
+      const { formatDate } = useCommonMapper();
+
+      // The 6 is July because it begin at 0 not one (0 is january)
+      const result = formatDate(new Date(Date.UTC(2024, 6, 20)), 'YYYY-MM-DD');
+
+      expect(result).toBe('2024-07-20');
+    });
+
+    it('should return "" when the value is otherwise parseable but does not match inputFormat', () => {
+      const { formatDate } = useCommonMapper();
+
+      const result = formatDate(
+        '2024-07-20T12:34:56.000Z',
+        'YYYY-MM-DD',
+        'DD/MM/YYYY'
+      );
+
+      expect(result).toBe('');
     });
   });
 

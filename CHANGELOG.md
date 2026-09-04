@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.95](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.94...v0.0.95) (2026-09-04)
+
+
+### Features
+
+* support loading extra zones during module federation initialization ([4cdb860](https://github.com/linagora/linid-im-front-corelib/commit/4cdb860f39d5284afd5ba58a1a8025d3c7cb2315))
+
 ### [0.0.94](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.93...v0.0.94) (2026-09-01)
 
 

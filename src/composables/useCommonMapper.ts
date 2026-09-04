@@ -100,6 +100,27 @@ export function useCommonMapper() {
   };
 
   /**
+   * Formats a date value into a given output format.
+   * @param date Date value to format. Typed as `unknown` since it typically comes from an untyped entity attribute.
+   * @param outputFormat Desired output format (e.g., "DD/MM/YYYY").
+   * @param inputFormat Optional format to strictly parse `date` against (e.g., "DD/MM/YYYY"). When omitted, `date`
+   *   is parsed using dayjs's default, non-strict detection.
+   * @returns Formatted date string, or "" if `date` is falsy or does not match the expected format.
+   */
+  const formatDate = (
+    date: unknown,
+    outputFormat: string,
+    inputFormat?: string
+  ): string => {
+    const value = date?.toString();
+    if (!value) {
+      return '';
+    }
+    const parsed = inputFormat ? dayjs(value, inputFormat, true) : dayjs(value);
+    return parsed.isValid() ? parsed.format(outputFormat) : '';
+  };
+
+  /**
    * Builds an empty record where every field in {@link fields} is initialised to `''`. Use this to seed a reactive
    * form object whose shape is driven by runtime configuration.
    * @param fields - Attribute definitions that describe the form fields.
@@ -128,5 +149,6 @@ export function useCommonMapper() {
     toDateISO,
     toEmptyRecord,
     toDayJs,
+    formatDate,
   };
 }

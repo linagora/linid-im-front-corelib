@@ -24,8 +24,8 @@
  * LinID Identity Manager software.
  */
 
+import { QDATE_DEFAULT_MASK } from '../constants/quasarDate';
 import { useFieldValidation } from './useFieldValidation';
-import { QDATE_DEFAULT_MASK } from './useQuasarDate';
 
 /**
  * Composable for field validation compatible with Quasar framework.

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.96](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.95...v0.0.96) (2026-09-04)
+
+
+### Features
+
+* add formatDate function ([fec7df7](https://github.com/linagora/linid-im-front-corelib/commit/fec7df7a0a8cd8a6e5faffec6f4c139a9c0bf778))
+* add quasarDate constant file ([6703ba0](https://github.com/linagora/linid-im-front-corelib/commit/6703ba0f10fad97401d4a91a7aa3d6234d120f30))
+
 ### [0.0.95](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.94...v0.0.95) (2026-09-04)
 
 

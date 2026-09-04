@@ -38,7 +38,6 @@ export { useNotify } from './composables/useNotify';
 export { useNunjucks } from './composables/useNunjucks';
 export type { RenderResult } from './composables/useNunjucks';
 export { usePagination } from './composables/usePagination';
-export { QDATE_DEFAULT_MASK, useQuasarDate } from './composables/useQuasarDate';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
 export { useQuasarRules } from './composables/useQuasarRules';
 export {
@@ -243,3 +242,6 @@ export type { LinidFilterOperator, LinidFilterType } from './types/linidFilter';
 
 // Types - Formatter
 export type { FormatterConfiguration } from './types/formatter';
+
+// Constants - quasarDate
+export { QDATE_DEFAULT_MASK } from './constants/quasarDate';

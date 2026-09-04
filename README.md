@@ -143,6 +143,10 @@ A full technical documentation is available in the `docs/` directory:
   Learn how to apply named formatters declared in configuration to raw values before display.
   → [`docs/use-value-formatter.md`](docs/valueFormatter.md)
 
+- 📐 **Constants**
+  Reference of the constant.
+  → [`docs/constants/index.md`](docs/constants/index.md)
+
 More documents will be added as the library evolves.
 
 ---

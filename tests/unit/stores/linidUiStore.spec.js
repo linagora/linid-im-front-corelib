@@ -30,8 +30,8 @@ describe('Test store: linidUiStore', () => {
   describe('Test action: addMainNavigationMenuItems', () => {
     it('should add items to the main navigation menu', async () => {
       const items = [
-        { id: 'home', label: 'Home', route: '/' },
-        { id: 'about', label: 'About', route: '/about' },
+        { id: 'home', labelKey: 'nav.home', path: '/' },
+        { id: 'about', labelKey: 'nav.about', path: '/about' },
       ];
       store.addMainNavigationMenuItems(...items);
       expect(store.mainNavigationItems).toEqual(items);

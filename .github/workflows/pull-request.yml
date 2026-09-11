@@ -146,3 +146,44 @@ jobs:
         with:
           file_path: ./coverage.txt
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  next-version-hint:
+    name: SemVer impact
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Determine next bump
+        run: |
+          BUMP="patch"
+          BREAKING_COMMITS=""
+          FEAT_COMMITS=""
+
+          while IFS= read -r sha; do
+            SUBJECT=$(git log -1 --format=%s "$sha")
+            BODY=$(git log -1 --format=%b "$sha")
+
+            if [[ "$SUBJECT" =~ ^[a-z]+(\(.+\))?! ]] || echo "$BODY" | grep -q "BREAKING CHANGE"; then
+              BUMP="major"
+              BREAKING_COMMITS+="- \`$SUBJECT\` ($sha)"$'\n'
+            elif [[ "$SUBJECT" =~ ^feat(\(.+\))?: ]] && [ "$BUMP" != "major" ]; then
+              BUMP="minor"
+              FEAT_COMMITS+="- \`$SUBJECT\` ($sha)"$'\n'
+            fi
+          done < <(git log origin/main..HEAD --format=%H)
+
+          {
+            echo "### 🔎 Expected SemVer impact: \`$BUMP\`"
+            echo ""
+            [ -n "$BREAKING_COMMITS" ] && printf "**⚠️ Breaking change detected (MAJOR):**\n%s\n" "$BREAKING_COMMITS"
+            [ -n "$FEAT_COMMITS" ] && printf "**✨ New feature detected (MINOR):**\n%s\n" "$FEAT_COMMITS"
+          } > semver-check.txt
+
+      - name: Comment PR
+        uses: JoseThen/comment-pr@v1.2.0
+        with:
+          file_path: ./semver-check.txt
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

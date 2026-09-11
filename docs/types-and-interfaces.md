@@ -1419,8 +1419,8 @@ Describes a single item in the main navigation menu.
 export interface NavigationMenuItem {
   /** Unique identifier of the navigation item. */
   id: string;
-  /** Label of the navigation item. */
-  label: string;
+  /** I18n key used to resolve the label of the navigation item. */
+  labelKey: string;
   /** Path/route of the navigation item. */
   path: string;
 }

@@ -213,10 +213,9 @@ async postInit(config: ModuleHostConfig<MyModuleOptions>): Promise<ModuleLifecyc
   }
   // Register module in main navigation items of Ui Store
   const store = useLinidUiStore();
-  const { t } = useScopedI18n('user');
 
   store.addMainNavigationMenuItems(
-    { id: config.instanceId, label: t(`${config.instanceId}.menu.label`), path: config.basePath || '/users' }
+    { id: config.instanceId, labelKey: `${config.instanceId}.NavigationMenu.label`, path: config.basePath || '/users' }
   );
 
   // Access other modules from host's module registry
@@ -286,7 +285,7 @@ return {
 
 For a standard page module, you do not need to write a lifecycle class at all. The corelib provides a `createModulePageLifecycle` factory that returns a ready-to-expose module instance with the default page integration behavior:
 
-- Optionally registers an entry in the host application's main navigation menu during `postInit`, when the host configuration sets `options.addNavigationMenu` to `true`. The menu item uses the module instance identifier as id, the localized label `<instanceId>.NavigationMenu.label`, and the configured base path as target.
+- Optionally registers an entry in the host application's main navigation menu during `postInit`, when the host configuration sets `options.addNavigationMenu` to `true`. The menu item uses the module instance identifier as id, the i18n key `<instanceId>.NavigationMenu.label` as label key, and the configured base path as target.
 - Registers the given dialog components once in the host layout dialog zone during `postInit`. The zone is provided through the required `dialogZone` option (e.g. `base-layout.dialogComponent`).
 
 ```typescript
@@ -452,11 +451,10 @@ class MyModule implements RemoteModule<MyModuleOptions> {
 
     // Register module in main navigation items of Ui Store
     const store = useLinidUiStore();
-    const { t } = useScopedI18n('my-module');
 
     store.addMainNavigationMenuItems({
       id: config.instanceId,
-      label: t(`${config.instanceId}.menu.label`),
+      labelKey: `${config.instanceId}.NavigationMenu.label`,
       path: config.basePath || '/my-module',
     });
 

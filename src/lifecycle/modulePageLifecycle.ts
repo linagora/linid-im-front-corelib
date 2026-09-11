@@ -24,8 +24,6 @@
  * LinID Identity Manager software.
  */
 
-import type { ComposerTranslation } from 'vue-i18n';
-import { getI18nInstance } from '../services/i18nService';
 import { useLinidUiStore } from '../stores/linidUiStore';
 import { useLinidZoneStore } from '../stores/linidZoneStore';
 import type { ModuleHostConfig } from '../types/module';
@@ -76,20 +74,19 @@ class ModulePageLifecycle<
    *
    * Navigation menu registration is controlled by the
    * {@link ModulePageLifecycleHostOptions.addNavigationMenu} option. When
-   * enabled, the menu item uses the module instance identifier for its id, a
-   * localized label, and the configured base path as its navigation target.
+   * enabled, the menu item uses the module instance identifier for its id, an
+   * i18n key for its label, and the configured base path as its navigation
+   * target.
    * @param config - The configuration object provided by the host application.
    * @returns A promise that resolves to the result of the module lifecycle operation.
    */
   override async postInit(
     config: ModuleHostConfig<T>
   ): Promise<ModuleLifecycleResult> {
-    const t = getI18nInstance().global.t as ComposerTranslation;
-
     if (config.options?.addNavigationMenu) {
       useLinidUiStore().addMainNavigationMenuItems({
         id: config.instanceId,
-        label: t(`${config.instanceId}.NavigationMenu.label`),
+        labelKey: `${config.instanceId}.NavigationMenu.label`,
         path: config.basePath,
       });
     }

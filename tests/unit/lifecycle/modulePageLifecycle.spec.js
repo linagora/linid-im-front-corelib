@@ -1,15 +1,10 @@
 import { createPinia, setActivePinia } from 'pinia';
 import { createModulePageLifecycle } from 'src/lifecycle/modulePageLifecycle';
 import { BasicRemoteModule } from 'src/lifecycle/skeleton';
-import * as i18nService from 'src/services/i18nService';
 import * as piniaStoreService from 'src/services/piniaStoreService';
 import { useLinidUiStore } from 'src/stores/linidUiStore';
 import { useLinidZoneStore } from 'src/stores/linidZoneStore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-vi.mock('src/services/i18nService', () => ({
-  getI18nInstance: vi.fn(),
-}));
 
 vi.mock('src/services/piniaStoreService', () => ({
   getPiniaStore: vi.fn(),
@@ -31,9 +26,6 @@ describe('Test function: createModulePageLifecycle', () => {
     pinia = createPinia();
     setActivePinia(pinia);
     vi.mocked(piniaStoreService.getPiniaStore).mockReturnValue(pinia);
-    vi.mocked(i18nService.getI18nInstance).mockReturnValue({
-      global: { t: vi.fn((key) => `translated:${key}`) },
-    });
   });
 
   describe('Test metadata', () => {
@@ -72,7 +64,7 @@ describe('Test function: createModulePageLifecycle', () => {
       expect(useLinidUiStore().mainNavigationItems).toEqual([
         {
           id: 'test-module',
-          label: 'translated:test-module.NavigationMenu.label',
+          labelKey: 'test-module.NavigationMenu.label',
           path: '/test-module',
         },
       ]);

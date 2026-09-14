@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.99](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.98...v0.0.99) (2026-09-14)
+
+
+### Bug Fixes
+
+* sort property of Pagination interface follows Spring Data convention ([2a10abe](https://github.com/linagora/linid-im-front-corelib/commit/2a10abef72b0bd2b8a966da7001e592e81ec5872))
+* toQuasarPagination preserve sort state ([2b7f31a](https://github.com/linagora/linid-im-front-corelib/commit/2b7f31a4fc67c1aa05d377cba1a7f7433ca9219f))
+
 ### [0.0.98](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.97...v0.0.98) (2026-09-11)
 
 

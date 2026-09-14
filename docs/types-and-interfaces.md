@@ -776,17 +776,18 @@ export interface QuasarPagination {
   /** Total number of rows (optional). */
   rowsNumber?: number;
 
-  /** Column used for sorting (optional). */
-  sortBy?: string;
+  /** Column used for sorting, or `null` when no sort is active. */
+  sortBy: string | null;
 
-  /** Whether sorting is descending (optional). */
-  descending?: boolean;
+  /** Whether sorting is descending (true) or ascending (false). */
+  descending: boolean;
 }
 ```
 
 **Notes:**
 
 - Page indexing is **1-based**, unlike backend pagination.
+- `sortBy` and `descending` are **required**; an inactive sort is `sortBy: null`, not `undefined`.
 - Usually converted to `Pagination` before API requests.
 
 ---

@@ -209,14 +209,14 @@ export interface QuasarPagination {
   rowsNumber?: number;
 
   /**
-   * Column used for sorting (optional).
+   * Column used for sorting, or `null` when no sort is active.
    */
-  sortBy?: string;
+  sortBy: string | null;
 
   /**
-   * Whether sorting is descending (true) or ascending (false) (optional).
+   * Whether sorting is descending (true) or ascending (false).
    */
-  descending?: boolean;
+  descending: boolean;
 }
 
 /**

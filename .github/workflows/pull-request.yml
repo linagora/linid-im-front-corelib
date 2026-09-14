@@ -156,33 +156,34 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Determine next bump
+      - name: Detect breaking changes
+        id: semver
         run: |
-          BUMP="patch"
           BREAKING_COMMITS=""
-          FEAT_COMMITS=""
 
           while IFS= read -r sha; do
             SUBJECT=$(git log -1 --format=%s "$sha")
             BODY=$(git log -1 --format=%b "$sha")
 
-            if [[ "$SUBJECT" =~ ^[a-z]+(\(.+\))?! ]] || echo "$BODY" | grep -q "BREAKING CHANGE"; then
-              BUMP="major"
+            if [[ "$SUBJECT" =~ ^[a-z]+(\(.+\))?!: ]] || printf '%s' "$BODY" | grep -q "BREAKING CHANGE"; then
               BREAKING_COMMITS+="- \`$SUBJECT\` ($sha)"$'\n'
-            elif [[ "$SUBJECT" =~ ^feat(\(.+\))?: ]] && [ "$BUMP" != "major" ]; then
-              BUMP="minor"
-              FEAT_COMMITS+="- \`$SUBJECT\` ($sha)"$'\n'
             fi
           done < <(git log origin/main..HEAD --format=%H)
 
-          {
-            echo "### 🔎 Expected SemVer impact: \`$BUMP\`"
-            echo ""
-            [ -n "$BREAKING_COMMITS" ] && printf "**⚠️ Breaking change detected (MAJOR):**\n%s\n" "$BREAKING_COMMITS"
-            [ -n "$FEAT_COMMITS" ] && printf "**✨ New feature detected (MINOR):**\n%s\n" "$FEAT_COMMITS"
-          } > semver-check.txt
+          if [ -n "$BREAKING_COMMITS" ]; then
+            {
+              echo "### 🔎 Expected SemVer impact: \`major\`"
+              echo ""
+              printf "**⚠️ Breaking change detected (MAJOR):**\n%s\n" "$BREAKING_COMMITS"
+            } > semver-check.txt
+            echo "breaking=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No breaking change detected in origin/main..HEAD."
+            echo "breaking=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Comment PR
+        if: steps.semver.outputs.breaking == 'true'
         uses: JoseThen/comment-pr@v1.2.0
         with:
           file_path: ./semver-check.txt

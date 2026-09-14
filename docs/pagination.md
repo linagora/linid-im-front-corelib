@@ -78,7 +78,10 @@ const apiPagination = toPagination(quasarPagination);
 Converts a generic `Page<T>` response from the API to a Quasar-compatible pagination format.
 
 ```ts
-function toQuasarPagination<T>(page: Page<T>): QuasarPagination;
+function toQuasarPagination<T>(
+  page: Page<T>,
+  current: QuasarPagination
+): QuasarPagination;
 ```
 
 **Conversion rules:**
@@ -86,6 +89,20 @@ function toQuasarPagination<T>(page: Page<T>): QuasarPagination;
 - `page`: API uses 0-based indexing → Quasar uses 1-based indexing (`number + 1`)
 - `rowsPerPage`: Maps from `size`
 - `rowsNumber`: Maps from `totalElements`
+- `sortBy`: Carried forward from `current`, or `null` when its sort is empty
+- `descending`: Carried forward from `current`, independently of `sortBy`
+
+Both sort fields are **always present** on the returned object. `sortBy: null` is the value Quasar
+uses for "no active sort".
+
+> **Why `current` is required**
+>
+> `Page<T>.pageable.sort` only exposes `{ sorted, unsorted, empty }` — it does not include the
+> column name or sort direction. Those fields can only be carried forward from the caller's existing
+> pagination value, so there is no sensible default for `current`: omitting it could only reset
+> `sortBy` and `descending`, making Quasar lose the active sort on the next server request. The
+> parameter is mandatory so that the compiler — not this page — catches call sites that would drop
+> the sort state.
 
 **Example:**
 
@@ -98,8 +115,8 @@ const apiResponse = {
   // ... other Page properties
 };
 
-const quasarPagination = toQuasarPagination(apiResponse);
-// Result: { page: 1, rowsPerPage: 10, rowsNumber: 45 }
+pagination.value = toQuasarPagination(apiResponse, pagination.value);
+// Result: { page: 1, rowsPerPage: 10, rowsNumber: 45, sortBy: 'name', descending: true }
 ```
 
 ---
@@ -110,7 +127,10 @@ const quasarPagination = toQuasarPagination(apiResponse);
 <script setup lang="ts">
 import { ref } from 'vue';
 import { usePagination } from '@linagora/linid-im-front-corelib';
-import type { QTableRequestEvent, QuasarPagination } from '@linagora/linid-im-front-corelib';
+import type {
+  QTableRequestEvent,
+  QuasarPagination,
+} from '@linagora/linid-im-front-corelib';
 
 const { toPagination, toQuasarPagination } = usePagination();
 
@@ -120,6 +140,8 @@ const pagination = ref<QuasarPagination>({
   page: 1,
   rowsPerPage: 10,
   rowsNumber: 0,
+  sortBy: 'updateDate',
+  descending: false,
 });
 
 async function onRequest(props: QTableRequestEvent) {
@@ -134,8 +156,8 @@ async function onRequest(props: QTableRequestEvent) {
   // Update rows
   rows.value = response.content;
 
-  // Convert API response back to Quasar format
-  pagination.value = toQuasarPagination(response);
+  // Convert API response back to Quasar format, preserving sort state
+  pagination.value = toQuasarPagination(response, pagination.value);
 
   loading.value = false;
 }
@@ -171,13 +193,20 @@ interface Pagination {
 
 ```ts
 interface QuasarPagination {
-  page: number;        // 1-based page index
+  page: number; // 1-based page index
   rowsPerPage: number;
   rowsNumber?: number; // Total number of rows
-  sortBy?: string;
-  descending?: boolean;
+  sortBy: string | null; // null when no sort is active
+  descending: boolean; // applied even when sortBy is null
 }
 ```
+
+> `sortBy` and `descending` are required, and `sortBy` accepts `null` rather
+> than `undefined`. Object literals typed as `QuasarPagination` must now provide both fields. This
+> matches the shape Quasar itself emits on `@update:pagination`.
+>
+> `toQuasarPagination` also takes a second, **mandatory** `current` argument: existing single-argument
+> calls no longer compile and must pass the pagination value being replaced.
 
 ### Page\<T\>
 
@@ -213,7 +242,10 @@ For complete type definitions, see [`docs/types-and-interfaces.md`](types-and-in
 ```ts
 function usePagination(): {
   toPagination: (pagination: QuasarPagination) => Pagination;
-  toQuasarPagination: <T>(page: Page<T>) => QuasarPagination;
+  toQuasarPagination: <T>(
+    page: Page<T>,
+    current: QuasarPagination
+  ) => QuasarPagination;
 };
 ```
 
@@ -223,7 +255,7 @@ The composable takes no parameters.
 
 ### Return Value
 
-| Property            | Type                                           | Description                                    |
-| ------------------- | ---------------------------------------------- | ---------------------------------------------- |
-| `toPagination`      | `(pagination: QuasarPagination) => Pagination` | Converts Quasar format to API format           |
-| `toQuasarPagination`| `<T>(page: Page<T>) => QuasarPagination`       | Converts API Page response to Quasar format    |
+| Property             | Type                                                                | Description                                                            |
+| -------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `toPagination`       | `(pagination: QuasarPagination) => Pagination`                      | Converts Quasar format to API format                                   |
+| `toQuasarPagination` | `<T>(page: Page<T>, current: QuasarPagination) => QuasarPagination` | Converts API Page response to Quasar format, preserving the sort state |

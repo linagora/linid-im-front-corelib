@@ -60,13 +60,21 @@ export function usePagination() {
    * Converts a generic `Page<T>` object to a Quasar-compatible pagination format.
    * @template T Type of the elements contained in the page.
    * @param page - The page object containing pagination data.
+   * @param current - The current Quasar pagination. Required, because `Page<T>`
+   * does not carry the sort column or direction: they can only be preserved from
+   * the caller's existing pagination value.
    * @returns A pagination object formatted for Quasar.
    */
-  function toQuasarPagination<T>(page: Page<T>): QuasarPagination {
+  function toQuasarPagination<T>(
+    page: Page<T>,
+    current: QuasarPagination
+  ): QuasarPagination {
     return {
       page: page.number + 1,
       rowsPerPage: page.size,
       rowsNumber: page.totalElements,
+      sortBy: current.sortBy || null,
+      descending: current.descending,
     };
   }
 

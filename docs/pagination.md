@@ -27,10 +27,10 @@ const { toPagination, toQuasarPagination } = usePagination();
 
 ### 2.2 Available Methods
 
-| Method              | Description                                              |
-| ------------------- | -------------------------------------------------------- |
-| `toPagination`      | Converts Quasar pagination to API pagination format      |
-| `toQuasarPagination`| Converts API Page response to Quasar pagination format   |
+| Method               | Description                                            |
+| -------------------- | ------------------------------------------------------ |
+| `toPagination`       | Converts Quasar pagination to API pagination format    |
+| `toQuasarPagination` | Converts API Page response to Quasar pagination format |
 
 ---
 
@@ -48,8 +48,16 @@ function toPagination(pagination: QuasarPagination): Pagination;
 
 - `page`: Quasar uses 1-based indexing → API uses 0-based indexing (`page - 1`)
 - `size`: Maps from `rowsPerPage` (defaults to 5)
-- `sort`: Maps from `sortBy` (defaults to `'updateDate'`)
-- `direction`: `'desc'` if `descending` is true, otherwise `'asc'`
+- `sort`: A single `'<column>,<direction>'` string. The column maps from `sortBy`, defaulting to
+  `'updateDate'` when no sort is active. The direction is `'desc'` when `descending` is true,
+  otherwise `'asc'`, and is applied even when no column is active — so an unset `sortBy` with
+  `descending: true` asks for the default column, newest first
+
+> **Why `sort` is a single string**
+>
+> The backend expects the Spring Data convention, where the sort column and its direction are
+> combined in one query parameter (`?sort=name,desc`). There is no separate `direction` field on
+> `Pagination`.
 
 **Example:**
 
@@ -62,7 +70,7 @@ const quasarPagination = {
 };
 
 const apiPagination = toPagination(quasarPagination);
-// Result: { page: 1, size: 10, sort: 'name', direction: 'desc' }
+// Result: { page: 1, size: 10, sort: 'name,desc' }
 ```
 
 ### 3.2 toQuasarPagination
@@ -153,10 +161,9 @@ The following types are used by this composable and are exported from the librar
 
 ```ts
 interface Pagination {
-  page: number;        // 0-based page index
-  size: number;        // Number of items per page
-  sort?: string;       // Property name for sorting
-  direction?: 'asc' | 'desc';
+  page: number; // 0-based page index
+  size: number; // Number of items per page
+  sort?: string; // '<column>,<direction>', e.g. 'name,desc'
 }
 ```
 

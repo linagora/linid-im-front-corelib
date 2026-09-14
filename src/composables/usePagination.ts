@@ -42,14 +42,17 @@ export function usePagination() {
   /**
    * Converts a Quasar-style pagination object to a generic `Pagination` format.
    * @param pagination - The Quasar pagination object.
-   * @returns A new pagination object.
+   * @returns A new pagination object, whose `sort` combines the column and the
+   * direction in a single `'<column>,<direction>'` string.
    */
   function toPagination(pagination: QuasarPagination): Pagination {
+    const sortBy = pagination.sortBy || 'updateDate';
+    const direction = pagination.descending ? 'desc' : 'asc';
+
     return {
       page: (pagination.page || 1) - 1,
       size: pagination.rowsPerPage || 5,
-      sort: pagination.sortBy || 'updateDate',
-      direction: pagination.descending ? 'desc' : 'asc',
+      sort: `${sortBy},${direction}`,
     };
   }
 

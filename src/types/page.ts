@@ -158,19 +158,15 @@ export interface Pagination {
   page: number;
 
   /**
-   * Total number of items.
+   * Page size (number of items per page).
    */
   size: number;
 
   /**
-   * Property name used for ordering.
+   * Ordering, as a single `'<column>,<direction>'` string (e.g. `'name,desc'`),
+   * following the Spring Data convention expected by the backend.
    */
   sort?: string;
-
-  /**
-   * Sort direction, either ascending ('asc') or descending ('desc').
-   */
-  direction?: 'asc' | 'desc';
 }
 
 /**

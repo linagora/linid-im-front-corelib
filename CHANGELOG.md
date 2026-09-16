@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.100](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.99...v0.0.100) (2026-09-16)
+
+
+### Features
+
+* add q-card-section ui design ([12e117e](https://github.com/linagora/linid-im-front-corelib/commit/12e117ec0a90731509ba6bae2579bb4853842f2e))
+
 ### [0.0.99](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.98...v0.0.99) (2026-09-16)
 
 

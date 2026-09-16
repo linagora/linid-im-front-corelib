@@ -243,6 +243,7 @@ export type QComponentName =
   | 'q-btn-dropdown'
   | 'q-card'
   | 'q-card-actions'
+  | 'q-card-section'
   | 'q-checkbox'
   | 'q-date'
   | 'q-dialog'
@@ -285,6 +286,7 @@ export type LinidQComponentProps =
   | LinidQBtnDropdownProps
   | LinidQCardProps
   | LinidQCardActionsProps
+  | LinidQCardSectionProps
   | LinidQCheckboxProps
   | LinidQChipProps
   | LinidQDateProps
@@ -548,6 +550,17 @@ vertical
 
 For details, refer to
 the [Quasar QCardActions API documentation](https://quasar.dev/vue-components/card#qcardactions-api).
+
+### q-card-section
+
+The following props are officially supported and design-validated in our system:
+
+```
+horizontal
+```
+
+For details, refer to
+the [Quasar QCardSection API documentation](https://quasar.dev/vue-components/card#qcardsection-api).
 
 ### q-checkbox
 

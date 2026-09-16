@@ -33,6 +33,7 @@ import type {
   QBtnProps,
   QCardActionsProps,
   QCardProps,
+  QCardSectionProps,
   QCheckboxProps,
   QChipProps,
   QDateProps,
@@ -263,6 +264,11 @@ const Q_CARD_PROPS = ['dark', 'square', 'flat', 'bordered'] as const;
  * List of QCardActionsProps keys for type-safe UI design retrieval.
  */
 const Q_CARD_ACTIONS_PROPS = ['align', 'vertical'] as const;
+
+/**
+ * List of QCardSectionProps keys for type-safe UI design retrieval.
+ */
+const Q_CARD_SECTION_PROPS = ['horizontal'] as const;
 
 /**
  * List of QIconProps keys for type-safe UI design retrieval.
@@ -791,6 +797,7 @@ export const Q_COMPONENT_PROPS: Record<QComponentName, readonly string[]> = {
   'q-btn-dropdown': Q_BTN_DROPDOWN_PROPS,
   'q-card': Q_CARD_PROPS,
   'q-card-actions': Q_CARD_ACTIONS_PROPS,
+  'q-card-section': Q_CARD_SECTION_PROPS,
   'q-checkbox': Q_CHECKBOX_PROPS,
   'q-date': Q_DATE_PROPS,
   'q-dialog': Q_DIALOG_PROPS,
@@ -910,6 +917,14 @@ export type LinidQCardProps = Pick<QCardProps, (typeof Q_CARD_PROPS)[number]>;
 export type LinidQCardActionsProps = Pick<
   QCardActionsProps,
   (typeof Q_CARD_ACTIONS_PROPS)[number]
+>;
+
+/**
+ * Subset of QCardSection props supported in UI design configuration.
+ */
+export type LinidQCardSectionProps = Pick<
+  QCardSectionProps,
+  (typeof Q_CARD_SECTION_PROPS)[number]
 >;
 
 /**
@@ -1160,6 +1175,7 @@ export type LinidQComponentProps =
   | LinidQBtnProps
   | LinidQCardActionsProps
   | LinidQCardProps
+  | LinidQCardSectionProps
   | LinidQCheckboxProps
   | LinidQDateProps
   | LinidQDialogProps
@@ -1206,6 +1222,7 @@ export type QComponentName =
   | 'q-btn-dropdown'
   | 'q-card'
   | 'q-card-actions'
+  | 'q-card-section'
   | 'q-checkbox'
   | 'q-date'
   | 'q-dialog'

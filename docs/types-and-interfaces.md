@@ -1037,6 +1037,10 @@ See description in [Ui design documentation](./ui-design.md#q-card).
 
 See description in [Ui design documentation](./ui-design.md#q-card-actions).
 
+### LinidQCardSectionProps
+
+See description in [Ui design documentation](./ui-design.md#q-card-section).
+
 ### LinidQCheckboxProps
 
 See description in [Ui design documentation](./ui-design.md#q-checkbox).
@@ -1668,6 +1672,7 @@ const filterSet = LinidFilterSet.fromString(
 | `LinidQTableProps`              | QTable component properties supported by Ui Design                                               |
 | `LinidQCardProps`               | QCard component properties supported by Ui Design                                                |
 | `LinidQCardActionsProps`        | QCardActions component properties supported by Ui                                                |
+| `LinidQCardSectionProps`        | QCardSection component properties supported by Ui Design                                         |
 | `LinidQIconProps`               | QIcon component properties supported by Ui Design                                                |
 | `LinidQChipProps`               | QChip component properties supported by Ui Design                                                |
 | `LinidQCheckboxProps`           | QCheckbox component properties supported by Ui Design                                            |

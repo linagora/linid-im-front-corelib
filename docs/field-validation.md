@@ -69,7 +69,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 
 - **`validateFromApi(instanceId, fieldName, value)`**: Validates a value against the backend API
 - **`required(value)`**: Validates that a value is provided
-- **`email(value)`**: Validates that a value matches a basic email shape
+- **`email(value)`**: Validates that a value matches a basic email shape. Empty values (`null`, `undefined`, `''`) are skipped
 - **`minLength(value, min)`**: Validates minimum string length
 - **`maxLength(value, max)`**: Validates maximum string length
 - **`min(value, min)`**: Validates minimum numeric value
@@ -86,7 +86,7 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 
 - **`validateFromApi(instanceId, fieldName)`**: Returns a validator bound to the given instance and field. The returned function validates a value against the backend API.
 - **`required`**: Validates that a value is provided (same as above)
-- **`email`**: Validates that a value matches a basic email shape (same as above)
+- **`email`**: Validates that a value matches a basic email shape, empty values are skipped (same as above)
 - **`minLength(min)`**: Returns a validator for minimum string length
 - **`maxLength(max)`**: Returns a validator for maximum string length
 - **`min(min)`**: Returns a validator for minimum numeric value
@@ -631,6 +631,16 @@ interface LinidAttributeConfiguration<T> {
 - **value**: `unknown` - The value to check for presence
 - **Returns**: `true | string` - `true` if present, error message otherwise
 - **Use case**: Mandatory fields
+
+#### email(value)
+
+- **value**: `unknown` - The value to check against the email shape
+- **Returns**: `true | string` - `true` if the value is empty or matches an email shape, error message otherwise
+- **Use case**: Email input format validation
+- **Notes**:
+  - The pattern is pragmatic, not RFC 5322 compliant: local part allows letters, digits and `._%+-`; domain allows letters, digits, `.` and `-`; the top-level label is at least two letters.
+  - **Empty values** (`null`, `undefined`, `''`) intentionally return `true` — presence enforcement is the responsibility of the `required` validator, not `email`.
+  - Non-empty values that are not strings (`number`, `boolean`, object…) return the error message.
 
 #### minLength(minValue)
 

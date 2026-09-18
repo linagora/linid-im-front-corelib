@@ -167,10 +167,18 @@ describe('Test composable: useFieldValidation', () => {
       expect(email('a@b.cd')).toBe(true);
     });
 
+    it('should return true for empty values', () => {
+      const { email } = useFieldValidation('test-instance.email');
+
+      expect(email('')).toBe(true);
+      expect(email(null)).toBe(true);
+      expect(email(undefined)).toBe(true);
+      expect(mockT).not.toHaveBeenCalled();
+    });
+
     it('should return error message for malformed email addresses', () => {
       const { email } = useFieldValidation('test-instance.email');
 
-      expect(email('')).toBe('translated.validation.email');
       expect(email('foo')).toBe('translated.validation.email');
       expect(email('foo@')).toBe('translated.validation.email');
       expect(email('@bar.tld')).toBe('translated.validation.email');
@@ -180,12 +188,14 @@ describe('Test composable: useFieldValidation', () => {
       expect(mockT).toHaveBeenCalledWith('validation.email');
     });
 
-    it('should return error message for non-string values', () => {
+    it('should return error message for non-empty non-string values', () => {
       const { email } = useFieldValidation('test-instance.email');
 
-      expect(email(undefined)).toBe('translated.validation.email');
-      expect(email(null)).toBe('translated.validation.email');
       expect(email(42)).toBe('translated.validation.email');
+      expect(email(true)).toBe('translated.validation.email');
+      expect(email({ address: 'john.doe@example.com' })).toBe(
+        'translated.validation.email'
+      );
     });
   });
 

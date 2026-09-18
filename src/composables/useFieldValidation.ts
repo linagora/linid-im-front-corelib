@@ -101,10 +101,16 @@ export function useFieldValidation(i18nScope: string) {
    * letters. Aligned with the "99% of real addresses" pattern from
    * https://www.regular-expressions.info/email.html — pragmatic, not
    * RFC 5322 compliant.
+   * Empty values (`null`, `undefined`, `''`) are skipped and return `true`,
+   * so this rule can be combined with `required` without producing duplicate errors.
    * @param value - The value to validate.
-   * @returns `true` if the value matches an email shape, or an error message string otherwise.
+   * @returns `true` if the value is empty or matches an email shape,
+   *          or an error message string otherwise.
    */
   function email(value: unknown): true | string {
+    if (value == null || value === '') {
+      return true;
+    }
     if (
       typeof value !== 'string' ||
       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)

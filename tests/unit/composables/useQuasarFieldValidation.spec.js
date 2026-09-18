@@ -134,7 +134,7 @@ describe('Test composable: useQuasarFieldValidation', () => {
 
       expect(email('john.doe@example.com')).toBe(true);
       expect(email('foo')).toBe('translated.validation.email');
-      expect(email(undefined)).toBe('translated.validation.email');
+      expect(email(undefined)).toBe(true);
     });
   });
 

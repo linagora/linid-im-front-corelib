@@ -44,6 +44,7 @@ export function setNunjucksEnv(env: Environment): void {
     return;
   }
   nunjucksEnv = env;
+  initNunjucks();
 }
 
 /**
@@ -58,4 +59,26 @@ export function getNunjucksEnv(): Environment {
     );
   }
   return nunjucksEnv;
+}
+
+/**
+ * Initializes the Nunjucks environment with custom global helpers.
+ */
+function initNunjucks() {
+  nunjucksEnv?.addGlobal('hasItem', hasItem);
+}
+
+/**
+ * Checks whether an array contains an item matching the given attribute and value.
+ * @param array The array of objects to search.
+ * @param attribute The attribute name to check.
+ * @param value The expected attribute value.
+ * @returns Whether an item matching the attribute and value exists.
+ */
+function hasItem(
+  array: Record<string, unknown>[] | null | undefined,
+  attribute: string,
+  value: unknown
+) {
+  return array?.some((item) => item[attribute] === value) ?? false;
 }

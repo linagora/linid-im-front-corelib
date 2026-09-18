@@ -12,7 +12,7 @@ describe('Test service: nunjucksService', () => {
 
   describe('Test function: setNunjucksEnv', () => {
     it('should set the Nunjucks environment successfully', () => {
-      const mockEnv = { render: vi.fn() };
+      const mockEnv = { render: vi.fn(), addGlobal: vi.fn() };
 
       setNunjucksEnv(mockEnv);
 
@@ -23,8 +23,8 @@ describe('Test service: nunjucksService', () => {
       const consoleWarnSpy = vi
         .spyOn(globalThis.console, 'warn')
         .mockImplementation(() => {});
-      const firstEnv = { render: vi.fn() };
-      const secondEnv = { render: vi.fn() };
+      const firstEnv = { render: vi.fn(), addGlobal: vi.fn() };
+      const secondEnv = { render: vi.fn(), addGlobal: vi.fn() };
 
       setNunjucksEnv(firstEnv);
       setNunjucksEnv(secondEnv);

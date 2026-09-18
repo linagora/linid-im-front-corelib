@@ -169,3 +169,29 @@ render('{{ entity.details }}', ctx);
 renderString('{{ entity.details }}', ctx);
 // → '[object Object]' — stringified by Nunjucks
 ```
+
+## Nunjucks Globals
+
+The shared Nunjucks environment is initialized with custom global utility functions that can be used directly from any
+Nunjucks template.
+
+| Global                | Description                                                                   |
+| --------------------- | ----------------------------------------------------------------------------- |
+| [`hasItem`](#hasitem) | Checks whether an array contains an item matching a given attribute and value |
+
+---
+
+### `hasItem`
+
+Checks whether an array contains an item with the given attribute value.
+
+```
+hasItem(
+  array: Record <string, unknown> [] | null | undefined,
+  attribute: string,
+  value: unknown
+): boolean
+
+// Usage:
+{{ hasItem(items, 'id', entity.id) }} // Display 'true' or 'false'
+```

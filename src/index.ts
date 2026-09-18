@@ -40,6 +40,7 @@ export type { RenderResult } from './composables/useNunjucks';
 export { usePagination } from './composables/usePagination';
 export { useQuasarFieldValidation } from './composables/useQuasarFieldValidation';
 export { useQuasarRules } from './composables/useQuasarRules';
+export { useResolvedEndpoint } from './composables/useResolvedEndpoint';
 export {
   changeLocale,
   resolveLocale,
@@ -248,6 +249,9 @@ export type { LinidFilterOperator, LinidFilterType } from './types/linidFilter';
 
 // Types - Formatter
 export type { FormatterConfiguration } from './types/formatter';
+
+// Types - Resolved endpoint
+export type { EndpointState, ResolvedEndpoint } from './types/resolvedEndpoint';
 
 // Constants - quasarDate
 export { QDATE_DEFAULT_MASK } from './constants/quasarDate';

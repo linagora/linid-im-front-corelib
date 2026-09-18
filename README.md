@@ -127,6 +127,11 @@ A full technical documentation is available in the `docs/` directory:
   Learn how to render configuration values as Nunjucks templates, and when a rendered string becomes an object.
   → [`docs/nunjucks.md`](docs/nunjucks.md)
 
+- 🔌 **Templated Endpoints (`useResolvedEndpoint`)**
+  Learn how to resolve a backend endpoint templated on the data being edited, and how to wait for the values it
+  depends on instead of requesting a malformed URL.
+  → [`docs/useResolvedEndpoint.md`](docs/useResolvedEndpoint.md)
+
 - ⚙️ **Field Validation (`useFieldValidation`, `useQuasarFieldValidation` & `useQuasarRules`)**
   Learn how to implement field validation compatible with Quasar framework.
   → [`docs/field-validation.md`](docs/field-validation.md)

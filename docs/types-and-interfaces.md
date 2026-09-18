@@ -148,20 +148,16 @@ export interface FederatedModule<T> {
 </template>
 
 <script setup lang="ts">
-  // Default export is automatic
+// Default export is automatic
 </script>
 ```
 
 ```typescript
 // ❌ Wrong - named export only
-export const MyComponent = defineComponent({
-  /* ... */
-});
+export const MyComponent = defineComponent({/* ... */});
 
 // ✅ Correct - default export
-export default defineComponent({
-  /* ... */
-});
+export default defineComponent({/* ... */});
 ```
 
 ### ModuleHostConfig
@@ -321,8 +317,9 @@ export interface BaseModuleZoneDefinition<T = Record<string, unknown>> {
   props?: T;
 }
 
-export interface FederatedModuleZoneDefinition<T = Record<string, unknown>>
-  extends BaseModuleZoneDefinition<T> {
+export interface FederatedModuleZoneDefinition<
+  T = Record<string, unknown>,
+> extends BaseModuleZoneDefinition<T> {
   /**
    * Name of the exposed element to render in the zone.
    */
@@ -331,8 +328,9 @@ export interface FederatedModuleZoneDefinition<T = Record<string, unknown>>
   component?: never;
 }
 
-export interface ComponentModuleZoneDefinition<T = Record<string, unknown>>
-  extends BaseModuleZoneDefinition<T> {
+export interface ComponentModuleZoneDefinition<
+  T = Record<string, unknown>,
+> extends BaseModuleZoneDefinition<T> {
   /**
    * Name of the component to render in the zone.
    */
@@ -342,8 +340,7 @@ export interface ComponentModuleZoneDefinition<T = Record<string, unknown>>
 }
 
 export type ModuleZoneDefinition<T = Record<string, unknown>> =
-  | FederatedModuleZoneDefinition<T>
-  | ComponentModuleZoneDefinition<T>;
+  FederatedModuleZoneDefinition<T> | ComponentModuleZoneDefinition<T>;
 ```
 
 **Usage:**
@@ -393,7 +390,7 @@ customized by consumers.
 #### Supported Input Types
 
 | Input Type    | Description                             |
-|---------------|-----------------------------------------|
+| ------------- | --------------------------------------- |
 | `Text`        | Text-based inputs (QInput)              |
 | `Number`      | Numeric inputs (QInput number)          |
 | `Boolean`     | Toggle/checkbox (QToggle)               |
@@ -481,13 +478,7 @@ the exception: it takes no parameter and is applied directly.
 
 ```ts
 export type ValidatorName =
-  | 'email'
-  | 'min'
-  | 'max'
-  | 'minLength'
-  | 'maxLength'
-  | 'pattern'
-  | 'unique';
+  'email' | 'min' | 'max' | 'minLength' | 'maxLength' | 'pattern' | 'unique';
 ```
 
 **Usage:**
@@ -1398,6 +1389,108 @@ const column: ColumnDefinition = {
 
 ---
 
+## 🔌 Resolved endpoint types
+
+Types describing a backend endpoint configured as a Nunjucks template, as resolved by the
+[`useResolvedEndpoint`](./useResolvedEndpoint.md) composable.
+
+Defined in `src/types/resolvedEndpoint.ts`.
+
+### EndpointState
+
+The state of a templated endpoint. It is a **discriminated union** rather than a set of flags, so the three cases a
+caller has to handle cannot be conflated, and so nothing can be read out of a state that has none to offer: there is
+no endpoint to request while the template is still waiting on its context, and no error to display once it renders.
+
+```ts
+export type EndpointState =
+  | {
+      /** Waiting on context values. This is not an error, and nothing should be reported. */
+      status: 'pending';
+    }
+  | {
+      /** Unusable configuration: no endpoint configured, or a template that failed to render. */
+      status: 'invalid';
+      /** The error raised while rendering, or `null` when no endpoint was configured at all. */
+      error: Error | null;
+    }
+  | {
+      /** Usable endpoint. */
+      status: 'ready';
+      /** The rendered endpoint, ready to be requested. */
+      endpoint: string;
+    };
+```
+
+**Usage:**
+
+- Branch on `status`; TypeScript narrows `endpoint` and `error` to the variant that carries them.
+- `error` carries no control flow of its own — a render failure always yields `invalid` — but it tells the two
+  unusable configurations apart: an `Error` means a broken template, `null` means no endpoint was configured.
+- See [The three states](./useResolvedEndpoint.md#the-three-states) for what each state expects from a caller.
+
+**Example:**
+
+```ts
+import type { EndpointState } from '@linagora/linid-im-front-corelib';
+
+function describe(state: EndpointState): string {
+  switch (state.status) {
+    case 'pending':
+      return 'waiting';
+    case 'invalid':
+      return state.error
+        ? `broken template: ${state.error.message}`
+        : 'no route';
+    case 'ready':
+      return `GET ${state.endpoint}`;
+  }
+}
+```
+
+### ResolvedEndpoint
+
+What `useResolvedEndpoint` returns.
+
+```ts
+export interface ResolvedEndpoint {
+  /** The state of the endpoint, and everything a caller needs to branch on. */
+  state: ComputedRef<EndpointState>;
+}
+```
+
+**Usage:**
+
+- `state` keeps its object identity for as long as it says the same thing, so `watch(state, …)` can be used
+  directly: a re-render that reaches the same endpoint does not retrigger the watcher.
+
+### EndpointGaps & Rendering
+
+Internal to `useResolvedEndpoint`: exported from `src/types/resolvedEndpoint.ts` so the composable can import them,
+but **not** re-exported from the package entry point.
+
+```ts
+/** The gaps of an endpoint: the places where a value is expected but absent. */
+export interface EndpointGaps {
+  emptySegments: number;
+  emptyParameters: number;
+}
+
+/** The outcome of rendering a template, from which the endpoint state is derived. */
+export interface Rendering {
+  source: string;
+  endpoint: string;
+  error: Error | null;
+  templated: boolean;
+}
+```
+
+`EndpointGaps` is what [How resolution is decided](./useResolvedEndpoint.md#how-resolution-is-decided) counts on
+both the template and its rendered form. `Rendering` keeps a single render whole, so the state can say both what the
+endpoint is and why it is in the state it is in without rendering twice.
+
+---
+
 ## 🖼️ Linid Ui Store types
 
 ### LinidUiState
@@ -1456,7 +1549,7 @@ export const LINID_FILTER_NEGATION_PREFIX = 'not_';
 ```
 
 | Constant                       | Value    | Meaning                                                             |
-|--------------------------------|----------|---------------------------------------------------------------------|
+| ------------------------------ | -------- | ------------------------------------------------------------------- |
 | `LINID_FILTER_OR_SEPARATOR`    | `'\|'`   | Separates value expressions combined with OR within a `LinidFilter` |
 | `LINID_FILTER_NEGATION_PREFIX` | `'not_'` | Prefix marking a `LinidFilterValue` expression as negated           |
 
@@ -1477,7 +1570,7 @@ export type LinidFilterOperator = 'lk_' | '' | 'gt_' | 'lt_';
 ```
 
 | Operator | Meaning         |
-|----------|-----------------|
+| -------- | --------------- |
 | `lk_`    | Like / contains |
 | `''`     | Equality        |
 | `gt_`    | Greater than    |
@@ -1617,10 +1710,7 @@ const preference = {
   value: 'status=active|pending&createdAt=gt_2026-01-01',
 };
 
-const filterSet = LinidFilterSet.fromString(
-  preference.label,
-  preference.value
-);
+const filterSet = LinidFilterSet.fromString(preference.label, preference.value);
 
 // LinidFilterSet { label: 'My Active Projects', filters: [...] }
 ```
@@ -1715,6 +1805,10 @@ const filterSet = LinidFilterSet.fromString(
 | `LinidFilterSetUserPreference`  | Represents the persisted form of a saved filter set (favorite search) stored in user preferences |
 | `ValueFormatter`                | Contract every formatter implementation must satisfy (internal, not re-exported)                 |
 | `FormatterConfiguration`        | Formatting properties mixed into field and column definitions                                    |
+| `EndpointState`                 | Discriminated union of the three states of a templated backend endpoint                          |
+| `ResolvedEndpoint`              | What `useResolvedEndpoint` returns: the endpoint state as a computed                             |
+| `EndpointGaps`                  | Empty path segments and valueless query parameters of an endpoint (internal, not re-exported)    |
+| `Rendering`                     | Outcome of rendering an endpoint template (internal, not re-exported)                            |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

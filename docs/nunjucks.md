@@ -13,6 +13,8 @@ This document describes the `useNunjucks` composable, which exposes utility func
 | [`render`](#render)             | Recursively renders all string properties of a value as Nunjucks templates |
 | [`renderString`](#renderstring) | Renders a single template string, always returning a string                |
 
+Two helpers describing the Nunjucks **syntax** rather than the environment live in `nunjucksService`, and need no initialized environment: [`isTemplate`](services.md#istemplate), which tells whether a string needs rendering at all, and [`stripComments`](services.md#stripcomments), for callers that inspect a raw template.
+
 ### Prerequisites
 
 `useNunjucks` delegates to the Nunjucks environment singleton initialized by `setNunjucksEnv`. That singleton must be set up **once** at application startup, before any call to `useNunjucks`:

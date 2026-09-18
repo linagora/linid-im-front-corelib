@@ -1033,9 +1033,9 @@ setNestedValue(obj: PlainObject, path: string, value: unknown): PlainObject;
 
 #### Returns
 
-| Type          | Description                                    |
-| ------------- | ---------------------------------------------- |
-| `PlainObject` | A new object with the value set at the path    |
+| Type          | Description                                 |
+| ------------- | ------------------------------------------- |
+| `PlainObject` | A new object with the value set at the path |
 
 #### Behavior
 
@@ -1234,6 +1234,8 @@ Provides a singleton Nunjucks `Environment` instance shared across all modules, 
 | ----------------------------------- | ------------------------------------------------------- |
 | [`setNunjucksEnv`](#setnunjucksenv) | Initializes the shared Nunjucks environment (call once) |
 | [`getNunjucksEnv`](#getnunjucksenv) | Returns the shared Nunjucks environment instance        |
+| [`isTemplate`](#istemplate)         | Tells whether a string carries any Nunjucks construct   |
+| [`stripComments`](#stripcomments)   | Removes every Nunjucks comment from a string            |
 
 ---
 
@@ -1300,6 +1302,82 @@ None.
 
 - If called before initialization, throws:  
   `[LinID CoreLib] Nunjucks environment is not initialized. Call setNunjucksEnv() first.`
+
+---
+
+### `isTemplate`
+
+Tells whether a string carries any Nunjucks construct, and therefore depends on a context to yield its final value. A string without one renders to itself, so a caller can skip both the render and whatever extra handling a templated value requires.
+
+```typescript
+import { isTemplate } from '@linagora/linid-im-front-corelib';
+
+isTemplate('/api/organizations/{{ entity.id }}/units'); // → true
+isTemplate('/api/{% if entity.scoped %}scoped{% endif %}'); // → true
+isTemplate('/api/types{# deprecated #}'); // → true
+isTemplate('/api/{{ entity.id }'); // → true  (malformed, but still a template)
+
+isTemplate('/api/types'); // → false
+isTemplate('/api/types{id}'); // → false (a brace opening no construct)
+```
+
+#### Parameters
+
+| Parameter | Type     | Description            |
+| --------- | -------- | ---------------------- |
+| `value`   | `string` | The string to inspect. |
+
+#### Returns
+
+| Type      | Description                                                                                          |
+| --------- | ---------------------------------------------------------------------------------------------------- |
+| `boolean` | `true` when the string carries an expression (`{{`), a tag (`{%`) or a comment (`{#`), else `false`. |
+
+#### Behavior
+
+1. **No environment required:** it describes the Nunjucks syntax, not the shared environment, so it answers before `setNunjucksEnv` has ever been called.
+2. **Purely lexical:** a string is reported as a template as soon as it carries an opening delimiter, even a malformed one. It answers _"does this need rendering?"_, never _"will rendering succeed?"_.
+
+#### Why it exists
+
+Callers that special-case templated values kept writing `value.includes('{{')`, which misses the two other constructs entirely: a string built only from `{% if %}` is a template that such a check reports as literal. Detection belongs next to the module that owns the engine rather than in each caller.
+
+---
+
+### `stripComments`
+
+Removes every Nunjucks comment (`{# … #}`) from a string, leaving everything else untouched.
+
+```typescript
+import { stripComments } from '@linagora/linid-im-front-corelib';
+
+stripComments('/api/types{# deprecated #}'); // → '/api/types'
+stripComments('{# scoped #}/api/{{ entity.id }}'); // → '/api/{{ entity.id }}'
+stripComments('/api/{% if x %}a{% endif %}'); // → unchanged: only comments are removed
+stripComments('/api/types{# deprecated'); // → unchanged: unterminated comment
+```
+
+#### Parameters
+
+| Parameter | Type     | Description          |
+| --------- | -------- | -------------------- |
+| `value`   | `string` | The string to strip. |
+
+#### Returns
+
+| Type     | Description                               |
+| -------- | ----------------------------------------- |
+| `string` | The string without its Nunjucks comments. |
+
+#### Behavior
+
+1. **No environment required:** like [`isTemplate`](#istemplate), it describes the Nunjucks syntax, not the shared environment.
+2. **Comments only:** expressions (`{{ … }}`) and tags (`{% … %}`) are left in place.
+3. **Unterminated comments are kept:** nothing marks where a `{#` without its `#}` was meant to end, and such a template fails to render anyway.
+
+#### Why it exists
+
+Rendering already drops comments, so a caller normally never sees one. It matters for callers that inspect a **raw** template, where a comment's delimiters collide with the syntax they are reading: `#` opens a URL fragment, so `new URL()` silently discards everything a comment precedes. [`useResolvedEndpoint`](./useResolvedEndpoint.md#how-resolution-is-decided) strips comments for exactly that reason before weighing a templated endpoint.
 
 ---
 

@@ -82,7 +82,12 @@ export {
   getModuleHostConfiguration,
   registerModuleHostConfiguration,
 } from './services/linidModuleConfigurationService';
-export { getNunjucksEnv, setNunjucksEnv } from './services/nunjucksService';
+export {
+  getNunjucksEnv,
+  isTemplate,
+  setNunjucksEnv,
+  stripComments,
+} from './services/nunjucksService';
 export {
   deepEqual,
   deepEqualUnordered,

@@ -27,6 +27,41 @@
 import type { Environment } from 'nunjucks';
 
 /**
+ * Matches the opening delimiter of any Nunjucks construct: an expression (`{{`), a tag (`{%`) or a comment (`{#`).
+ */
+const TEMPLATE_DELIMITER = /\{[{%#]/;
+
+/**
+ * Matches a Nunjucks comment, `{# … #}`.
+ */
+const NUNJUCKS_COMMENT = /\{#[\s\S]*?#\}/g;
+
+/**
+ * Determines whether a string carries any Nunjucks construct, and therefore depends on a context to yield its final value.
+ * A string without one renders to itself, so callers can skip both the render and whatever handling a templated value requires.
+ * Detection is purely lexical: a string carrying an opening delimiter is reported as a template even if it is malformed.
+ * It describes the syntax rather than the environment, so it needs no initialized environment to answer.
+ * @param value - The string to inspect.
+ * @returns `true` if the string carries an expression (`{{`), a tag (`{%`) or a comment (`{#`), otherwise `false`.
+ */
+export function isTemplate(value: string): boolean {
+  return TEMPLATE_DELIMITER.test(value);
+}
+
+/**
+ * Removes every Nunjucks comment from a string, leaving everything else untouched.
+ * Rendering already drops comments, so this is for callers that must inspect a raw template and would otherwise trip on
+ * the delimiters of a comment — `#` opening a URL fragment, for instance.
+ * An unterminated comment is left in place, since nothing marks where it was meant to end.
+ * Like {@link isTemplate}, it describes the syntax rather than the environment, so it needs no initialized environment.
+ * @param value - The string to strip.
+ * @returns The string without its Nunjucks comments.
+ */
+export function stripComments(value: string): string {
+  return value.replace(NUNJUCKS_COMMENT, '');
+}
+
+/**
  * Singleton Nunjucks environment instance shared across all modules.
  */
 let nunjucksEnv: Environment | null = null;

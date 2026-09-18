@@ -123,6 +123,10 @@ A full technical documentation is available in the `docs/` directory:
   Learn how to convert between backend pagination models and Quasar QTable pagination formats.
   → [`docs/pagination.md`](docs/pagination.md)
 
+- 🧩 **Nunjucks Templates (`useNunjucks`)**
+  Learn how to render configuration values as Nunjucks templates, and when a rendered string becomes an object.
+  → [`docs/nunjucks.md`](docs/nunjucks.md)
+
 - ⚙️ **Field Validation (`useFieldValidation`, `useQuasarFieldValidation` & `useQuasarRules`)**
   Learn how to implement field validation compatible with Quasar framework.
   → [`docs/field-validation.md`](docs/field-validation.md)

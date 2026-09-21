@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.101](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.100...v0.0.101) (2026-09-21)
+
+
+### Features
+
+* update email validation to allow empty values ([b2fbd52](https://github.com/linagora/linid-im-front-corelib/commit/b2fbd528125aa6ce5aaf1def088fc2356547177d))
+
 ### [0.0.100](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.99...v0.0.100) (2026-09-16)
 
 

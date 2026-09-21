@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.102](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.101...v0.0.102) (2026-09-21)
+
+
+### Features
+
+* add hasItem to nunjucks function ([cacc2d0](https://github.com/linagora/linid-im-front-corelib/commit/cacc2d039ed563b97a3dbfdf229abf4e4614d109))
+
 ### [0.0.101](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.100...v0.0.101) (2026-09-21)
 
 

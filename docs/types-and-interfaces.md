@@ -489,7 +489,9 @@ export type ValidatorName =
   | 'minLength'
   | 'maxLength'
   | 'pattern'
-  | 'unique';
+  | 'unique'
+  | 'maxFileSize'
+  | 'allowedExtensions';
 ```
 
 **Usage:**

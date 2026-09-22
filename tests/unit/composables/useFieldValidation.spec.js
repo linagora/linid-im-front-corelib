@@ -364,6 +364,124 @@ describe('Test composable: useFieldValidation', () => {
     });
   });
 
+  describe('Test function: maxFileSize', () => {
+    const megabyte = 1024 * 1024;
+
+    it('should return true when the file is within the maximum size', () => {
+      const { maxFileSize } = useFieldValidation('test-instance.avatar');
+
+      expect(
+        maxFileSize(new globalThis.File(['a'.repeat(10)], 'a.png'), 1)
+      ).toBe(true);
+      expect(
+        maxFileSize(new globalThis.File(['a'.repeat(megabyte)], 'a.png'), 1)
+      ).toBe(true);
+    });
+
+    it('should return error message when the file exceeds the maximum size', () => {
+      const { maxFileSize } = useFieldValidation('test-instance.avatar');
+
+      const result = maxFileSize(
+        new globalThis.File(['a'.repeat(megabyte + 1)], 'a.png'),
+        1
+      );
+      expect(result).toBe(
+        'translated.validation.maxFileSize.{"maxFileSize":1}'
+      );
+      expect(mockT).toHaveBeenCalledWith('validation.maxFileSize', {
+        maxFileSize: 1,
+      });
+    });
+
+    it('should return true when value is null, undefined or an empty selection', () => {
+      const { maxFileSize } = useFieldValidation('test-instance.avatar');
+
+      expect(maxFileSize(null, 1)).toBe(true);
+      expect(maxFileSize(undefined, 1)).toBe(true);
+      expect(maxFileSize([], 1)).toBe(true);
+    });
+
+    it('should check every file of a multiple selection', () => {
+      const { maxFileSize } = useFieldValidation('test-instance.avatar');
+      const small = new globalThis.File(['a'], 'a.png');
+      const large = new globalThis.File(['a'.repeat(megabyte + 1)], 'b.png');
+
+      expect(maxFileSize([small, small], 1)).toBe(true);
+      expect(maxFileSize([small, large], 1)).toBe(
+        'translated.validation.maxFileSize.{"maxFileSize":1}'
+      );
+    });
+  });
+
+  describe('Test function: allowedExtensions', () => {
+    it('should return true when the extension is allowed, regardless of case', () => {
+      const { allowedExtensions } = useFieldValidation('test-instance.avatar');
+
+      expect(
+        allowedExtensions(new globalThis.File([''], 'a.png'), ['png'])
+      ).toBe(true);
+      expect(
+        allowedExtensions(new globalThis.File([''], 'a.PNG'), ['png'])
+      ).toBe(true);
+      expect(
+        allowedExtensions(new globalThis.File([''], 'a.png'), ['.PNG', 'jpg'])
+      ).toBe(true);
+      expect(
+        allowedExtensions(new globalThis.File([''], 'a.tar.gz'), ['gz'])
+      ).toBe(true);
+    });
+
+    it('should return error message when the extension is not allowed', () => {
+      const { allowedExtensions } = useFieldValidation('test-instance.avatar');
+
+      const result = allowedExtensions(new globalThis.File([''], 'a.gif'), [
+        '.PNG',
+        'jpg',
+      ]);
+      expect(result).toBe(
+        'translated.validation.allowedExtensions.{"extensions":"png, jpg"}'
+      );
+      expect(mockT).toHaveBeenCalledWith('validation.allowedExtensions', {
+        extensions: 'png, jpg',
+      });
+    });
+
+    it('should return error message when the file name has no extension', () => {
+      const { allowedExtensions } = useFieldValidation('test-instance.avatar');
+
+      expect(
+        allowedExtensions(new globalThis.File([''], 'avatar'), ['png'])
+      ).toBe('translated.validation.allowedExtensions.{"extensions":"png"}');
+    });
+
+    it('should return true when no extension is configured', () => {
+      const { allowedExtensions } = useFieldValidation('test-instance.avatar');
+
+      expect(allowedExtensions(new globalThis.File([''], 'a.gif'), [])).toBe(
+        true
+      );
+    });
+
+    it('should return true when value is null, undefined or an empty selection', () => {
+      const { allowedExtensions } = useFieldValidation('test-instance.avatar');
+
+      expect(allowedExtensions(null, ['png'])).toBe(true);
+      expect(allowedExtensions(undefined, ['png'])).toBe(true);
+      expect(allowedExtensions([], ['png'])).toBe(true);
+    });
+
+    it('should check every file of a multiple selection', () => {
+      const { allowedExtensions } = useFieldValidation('test-instance.avatar');
+      const png = new globalThis.File([''], 'a.png');
+      const gif = new globalThis.File([''], 'b.gif');
+
+      expect(allowedExtensions([png, png], ['png'])).toBe(true);
+      expect(allowedExtensions([png, gif], ['png'])).toBe(
+        'translated.validation.allowedExtensions.{"extensions":"png"}'
+      );
+    });
+  });
+
   describe('Test function: validDate', () => {
     it('should return true for a valid date matching the format', () => {
       const { validDate } = useFieldValidation('test-instance.date');

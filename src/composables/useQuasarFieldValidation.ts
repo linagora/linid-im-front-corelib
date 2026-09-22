@@ -43,6 +43,8 @@ export function useQuasarFieldValidation(i18nScope: string) {
     max,
     pattern,
     unique,
+    maxFileSize,
+    allowedExtensions,
     validDate,
     afterDate,
     beforeDate,
@@ -68,6 +70,12 @@ export function useQuasarFieldValidation(i18nScope: string) {
     pattern: (patternValue: string) => (value: string) =>
       pattern(value, patternValue),
     unique: (items: unknown[]) => (value: unknown) => unique(value, items),
+    maxFileSize:
+      (maxSize: number) => (value: File | File[] | null | undefined) =>
+        maxFileSize(value, maxSize),
+    allowedExtensions:
+      (extensions: string[]) => (value: File | File[] | null | undefined) =>
+        allowedExtensions(value, extensions),
     validDate: (format?: string) => (value: unknown) =>
       validDate(value, format || QDATE_DEFAULT_MASK),
     afterDate: (compareTo: string, format?: string) => (value: unknown) =>

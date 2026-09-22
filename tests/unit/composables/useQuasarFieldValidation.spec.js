@@ -48,6 +48,8 @@ describe('Test composable: useQuasarFieldValidation', () => {
     expect(validators).toHaveProperty('maxLength');
     expect(validators).toHaveProperty('pattern');
     expect(validators).toHaveProperty('unique');
+    expect(validators).toHaveProperty('maxFileSize');
+    expect(validators).toHaveProperty('allowedExtensions');
     expect(validators).toHaveProperty('validDate');
     expect(validators).toHaveProperty('afterDate');
     expect(validators).toHaveProperty('beforeDate');
@@ -104,6 +106,54 @@ describe('Test composable: useQuasarFieldValidation', () => {
     const uniqueValidator = unique(['roleA']);
     expect(uniqueValidator('roleB')).toBe(true);
     expect(uniqueValidator('roleA')).toContain('translated.validation.unique');
+  });
+
+  describe('Test function: maxFileSize', () => {
+    it('should return a curried validator bound to the maximum size in megabytes', () => {
+      const { maxFileSize } = useQuasarFieldValidation(
+        'test-instance.fields.avatar'
+      );
+
+      const maxFileSizeValidator = maxFileSize(1);
+      expect(maxFileSizeValidator(new globalThis.File(['a'], 'a.png'))).toBe(
+        true
+      );
+      expect(
+        maxFileSizeValidator(
+          new globalThis.File(['a'.repeat(1024 * 1024 + 1)], 'a.png')
+        )
+      ).toBe('translated.validation.maxFileSize.{"maxFileSize":1}');
+      expect(maxFileSizeValidator(null)).toBe(true);
+      expect(
+        maxFileSizeValidator([
+          new globalThis.File(['a'], 'a.png'),
+          new globalThis.File(['a'.repeat(1024 * 1024 + 1)], 'b.png'),
+        ])
+      ).toBe('translated.validation.maxFileSize.{"maxFileSize":1}');
+    });
+  });
+
+  describe('Test function: allowedExtensions', () => {
+    it('should return a curried validator bound to the allowed extensions', () => {
+      const { allowedExtensions } = useQuasarFieldValidation(
+        'test-instance.fields.avatar'
+      );
+
+      const allowedExtensionsValidator = allowedExtensions(['png']);
+      expect(
+        allowedExtensionsValidator(new globalThis.File([''], 'a.PNG'))
+      ).toBe(true);
+      expect(
+        allowedExtensionsValidator(new globalThis.File([''], 'a.gif'))
+      ).toBe('translated.validation.allowedExtensions.{"extensions":"png"}');
+      expect(allowedExtensionsValidator(null)).toBe(true);
+      expect(
+        allowedExtensionsValidator([
+          new globalThis.File([''], 'a.png'),
+          new globalThis.File([''], 'b.gif'),
+        ])
+      ).toBe('translated.validation.allowedExtensions.{"extensions":"png"}');
+    });
   });
 
   describe('Test function: min', () => {

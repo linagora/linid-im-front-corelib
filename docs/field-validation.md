@@ -76,6 +76,8 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 - **`max(value, max)`**: Validates maximum numeric value
 - **`pattern(value, pattern)`**: Validates against a regex pattern
 - **`unique(value, items)`**: Validates that a value is not already present in a list
+- **`maxFileSize(value, maxSize)`**: Validates that a `File`, or every file of a `File[]` multiple selection, does not exceed `maxSize` megabytes. Empty values (`null`, `undefined`, `[]`) are skipped
+- **`allowedExtensions(value, extensions)`**: Validates that the extension of a `File` name, or of every file of a `File[]` multiple selection, is in `extensions` (compared case-insensitively, with or without leading dot); a name without extension is rejected. Empty values and an empty list are skipped
 - **`validDate(value, format?)`**: Validates that a value parses to a valid date — strings against `format` with strict parsing, other types (`number`, `Date`, `Dayjs`) via dayjs directly. Empty values (`null`, `undefined`, `''`) are skipped. `format` defaults to `'YYYY-MM-DD'` (ISO 8601) if not provided.
 - **`afterDate(value, compareTo, format?)`**: Validates that a date is strictly after `compareTo`. Empty or unparseable values are skipped. `format` defaults to `'YYYY-MM-DD'`.
 - **`beforeDate(value, compareTo, format?)`**: Validates that a date is strictly before `compareTo`. Empty or unparseable values are skipped. `format` defaults to `'YYYY-MM-DD'`.
@@ -93,6 +95,8 @@ const rules = useQuasarRules('user-module', attributeConfig, [
 - **`max(max)`**: Returns a validator for maximum numeric value
 - **`pattern(pattern)`**: Returns a validator for regex pattern matching
 - **`unique(items)`**: Returns a validator that checks the value is not already in the list
+- **`maxFileSize(maxSize)`**: Returns a validator that checks a `File`, or every file of a `File[]`, does not exceed `maxSize` megabytes
+- **`allowedExtensions(extensions)`**: Returns a validator that checks the extension of a `File` name, or of every file of a `File[]`, is one of `extensions`
 - **`validDate(format?)`**: Returns a validator that checks the value parses to a valid date. `format` defaults to `'YYYY/MM/DD'` to match Quasar's [QDate](https://quasar.dev/vue-components/date#qdate-api) default mask.
 - **`afterDate(compareTo, format?)`**: Returns a validator that checks the date is strictly after `compareTo`. `format` defaults to `'YYYY/MM/DD'`.
 - **`beforeDate(compareTo, format?)`**: Returns a validator that checks the date is strictly before `compareTo`. `format` defaults to `'YYYY/MM/DD'`.
@@ -436,7 +440,17 @@ const { fromDate, upToDate } = useQuasarFieldValidation('user-module.fields.star
 > - **Day-level granularity**: comparison is performed at day granularity in the **browser's local timezone**. String values parsed against `format` (e.g. `'YYYY-MM-DD'` or `'YYYY/MM/DD'`) are treated as local midnight and are therefore timezone-neutral. For values that carry an absolute moment (`Date` instances, timestamps, ISO strings with explicit offsets), the local-timezone calendar day is used, and the verdict can differ across timezones — a moment that falls on one day in one timezone may fall on a different day in another. Normalize `value` to UTC before passing it in if you need timezone-independent comparison.
 > - **Defaults**: the Quasar wrapper defaults `format` to `'YYYY/MM/DD'`, which matches the default mask of Quasar's [QDate](https://quasar.dev/vue-components/date#qdate-api) — so `v-model` values from `<q-date>` validate out of the box.
 
-### 5.9 Combining Validators
+### 5.9 File Validation
+
+```ts
+const { maxFileSize, allowedExtensions } = useQuasarFieldValidation('user-module.fields.avatar');
+
+:rules="[maxFileSize(10), allowedExtensions(['png', 'jpg'])]" // Size in megabytes; extensions without their leading dot
+```
+
+> **Note**: Both validators accept the `File` of a single selection or the `File[]` of a `QFile` with `multiple`, and check every file. A `null`, `undefined` or empty selection always passes (considered the responsibility of `required`). Extensions are compared case-insensitively, a leading dot in the configured list is ignored, and a file name without extension is rejected.
+
+### 5.10 Combining Validators
 
 ```ts
 const validation = useQuasarFieldValidation('user-module.fields.email');
@@ -451,7 +465,7 @@ const emailPattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
 ]"
 ```
 
-### 5.10 Using useQuasarRules for Automatic Rule Generation
+### 5.11 Using useQuasarRules for Automatic Rule Generation
 
 ```ts
 import { useQuasarRules } from '@linagora/linid-im-front-corelib';
@@ -514,6 +528,14 @@ function useFieldValidation(i18nScope: string): {
   max: (value: number, maxValue: number) => true | string;
   pattern: (value: string, pattern: string) => true | string;
   unique: (value: unknown, items: unknown[]) => true | string;
+  maxFileSize: (
+    value: File | File[] | null | undefined,
+    maxSize: number
+  ) => true | string;
+  allowedExtensions: (
+    value: File | File[] | null | undefined,
+    extensions: string[]
+  ) => true | string;
   validDate: (value: unknown, format?: string) => true | string;
   afterDate: (
     value: unknown,
@@ -558,6 +580,12 @@ function useQuasarFieldValidation(i18nScope: string): {
   max: (maxValue: number) => (value: string | number) => true | string;
   pattern: (pattern: string) => (value: string) => true | string;
   unique: (items: unknown[]) => (value: unknown) => true | string;
+  maxFileSize: (
+    maxSize: number
+  ) => (value: File | File[] | null | undefined) => true | string;
+  allowedExtensions: (
+    extensions: string[]
+  ) => (value: File | File[] | null | undefined) => true | string;
   validDate: (format?: string) => (value: unknown) => true | string;
   afterDate: (
     compareTo: string,
@@ -596,7 +624,9 @@ type ValidatorName =
   | 'minLength'
   | 'maxLength'
   | 'pattern'
-  | 'unique';
+  | 'unique'
+  | 'maxFileSize'
+  | 'allowedExtensions';
 
 // LinidAttributeConfiguration interface (simplified)
 interface LinidAttributeConfiguration<T> {
@@ -610,6 +640,8 @@ interface LinidAttributeConfiguration<T> {
     maxLength?: number;
     pattern?: string;
     unique?: unknown[];
+    maxFileSize?: number;
+    allowedExtensions?: string[];
   };
 }
 ```
@@ -681,6 +713,20 @@ interface LinidAttributeConfiguration<T> {
 - **Use case**: Ensure a value does not already exist in a list (e.g. unique username)
 - **Note**: For primitives, comparison uses `String()` conversion (`1` and `"1"` are equal). For objects and arrays, deep equality is used. Returns `true` if value is `null` or `undefined`.
 
+#### maxFileSize(maxSize)
+
+- **maxSize**: `number` - The maximum allowed file size, in megabytes
+- **Returns**: `(value: File | File[] | null | undefined) => true | string` - Validator function
+- **Use case**: Bound the size of an uploaded file, e.g. an avatar image
+- **Note**: Checks every file of a multiple selection. Returns `true` if the value is `null`, `undefined` or an empty selection.
+
+#### allowedExtensions(extensions)
+
+- **extensions**: `string[]` - The allowed extensions, with or without leading dot (e.g. `['png', '.jpg']`)
+- **Returns**: `(value: File | File[] | null | undefined) => true | string` - Validator function
+- **Use case**: Restrict an upload to a set of file types, e.g. images
+- **Note**: Extensions are compared case-insensitively; a file name without extension is rejected. Checks every file of a multiple selection. Returns `true` if the value is `null`, `undefined`, an empty selection, or if `extensions` is empty.
+
 #### validDate(format?)
 
 - **format**: `string | undefined` - Optional date format string (e.g. `'YYYY-MM-DD'`, `'DD/MM/YYYY'`). Defaults to `'YYYY/MM/DD'` in the Quasar wrapper to match Quasar's [QDate](https://quasar.dev/vue-components/date#qdate-api) default mask; the base `useFieldValidation` falls back to `'YYYY-MM-DD'`.
@@ -706,7 +752,7 @@ interface LinidAttributeConfiguration<T> {
 
 - **instanceId**: `string` - The unique identifier of the module instance
 - **attributeConfig**: `LinidAttributeConfiguration<T>` - The configuration of the attribute being validated
-- **validatorsNames**: `ValidatorName[]` - Array of validator names to include (`'email'`, `'min'`, `'max'`, `'minLength'`, `'maxLength'`, `'pattern'`, `'unique'`)
+- **validatorsNames**: `ValidatorName[]` - Array of validator names to include (`'email'`, `'min'`, `'max'`, `'minLength'`, `'maxLength'`, `'pattern'`, `'unique'`, `'maxFileSize'`, `'allowedExtensions'`)
 - **i18nScope**: `string` - The i18n scope passed to `useQuasarFieldValidation` for error message translation (e.g. `'user-module.fields.email'`)
 - **Returns**: `ValidationRule[]` - Array of validation functions ready to use in Quasar's `rules` prop
 - **Use case**: Automatic rule generation from configuration
@@ -755,6 +801,14 @@ All validation error messages must be defined in your i18n files under the scope
           "dateInPast": "Date must be today or in the future.",
           "unknownError": "Unknown error while validating the date."
         }
+      },
+      "avatar": {
+        "validation": {
+          "required": "An image is required.",
+          "maxFileSize": "The image must not exceed {maxFileSize} MB.",
+          "allowedExtensions": "Allowed extensions: {extensions}.",
+          "unknownError": "Unknown error while validating the image."
+        }
       }
     }
   }
@@ -767,6 +821,8 @@ All validation error messages must be defined in your i18n files under the scope
 - **min/max**: `{ min }` or `{ max }`
 - **pattern**: `{ pattern }`
 - **invalidDate**: `{ format }` — the format string passed to `validDate`
+- **maxFileSize**: `{ maxFileSize }` — the maximum size in megabytes
+- **allowedExtensions**: `{ extensions }` — the allowed extensions, normalized and comma-separated (e.g. `png, jpg`)
 
 ## 8. Best Practices
 

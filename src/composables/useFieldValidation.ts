@@ -51,6 +51,28 @@ function hasTranslatedError(error: unknown): error is AxiosError {
 }
 
 /**
+ * Normalizes a file field value to the list of selected files.
+ * @param value - A single file, the files of a multiple selection, or an empty value.
+ * @returns The selected files, empty when the value is empty.
+ */
+function toFiles(value: File | File[] | null | undefined): File[] {
+  if (value == null) {
+    return [];
+  }
+
+  return Array.isArray(value) ? value : [value];
+}
+
+/**
+ * Extracts the lowercase extension of a file name.
+ * @param name - The file name.
+ * @returns The extension without its leading dot, or an empty string when the name has none.
+ */
+function extensionOf(name: string): string {
+  return /\.([^.]+)$/.exec(name)?.[1]?.toLowerCase() ?? '';
+}
+
+/**
  * Composable for field validation. It exposes various validation methods
  * that can be used to validate form fields.
  * @param i18nScope - I18n scope for localizing the validators.
@@ -211,6 +233,65 @@ export function useFieldValidation(i18nScope: string) {
     if (isDuplicate) {
       return t('validation.unique');
     }
+    return true;
+  }
+
+  /**
+   * Validates that a file, or every file of a multiple selection, does not exceed a maximum size, expressed in
+   * megabytes.
+   * Empty values (`null`, `undefined`, `[]`) are skipped and return `true`, so this rule can be combined with
+   * `required` without producing duplicate errors.
+   * @param value - The file to validate, or the files of a multiple selection.
+   * @param maxSize - The maximum allowed size, in megabytes.
+   * @returns `true` if the value is empty or every file is within the limit, or an error message string if a file
+   *          exceeds it.
+   */
+  function maxFileSize(
+    value: File | File[] | null | undefined,
+    maxSize: number
+  ): true | string {
+    const exceeds = toFiles(value).some(
+      (file) => file.size > maxSize * 1024 * 1024
+    );
+
+    if (exceeds) {
+      return t('validation.maxFileSize', { maxFileSize: maxSize });
+    }
+
+    return true;
+  }
+
+  /**
+   * Validates that the extension of a file name, or of every file name of a multiple selection, is one of the
+   * allowed extensions. Extensions are compared case-insensitively and without their leading dot; a name without
+   * extension is rejected.
+   * Empty values (`null`, `undefined`, `[]`) and an empty list are skipped and return `true`.
+   * @param value - The file to validate, or the files of a multiple selection.
+   * @param extensions - The allowed extensions, with or without leading dot (e.g. `['png', '.jpg']`).
+   * @returns `true` if the value is empty, the list is empty or every extension is allowed, or an error message
+   *          string otherwise.
+   */
+  function allowedExtensions(
+    value: File | File[] | null | undefined,
+    extensions: string[]
+  ): true | string {
+    if (extensions.length === 0) {
+      return true;
+    }
+
+    const allowed = extensions.map((extension) =>
+      extension.toLowerCase().replace(/^\./, '')
+    );
+    const rejected = toFiles(value).some(
+      (file) => !allowed.includes(extensionOf(file.name))
+    );
+
+    if (rejected) {
+      return t('validation.allowedExtensions', {
+        extensions: allowed.join(', '),
+      });
+    }
+
     return true;
   }
 
@@ -379,6 +460,8 @@ export function useFieldValidation(i18nScope: string) {
     max,
     pattern,
     unique,
+    maxFileSize,
+    allowedExtensions,
     validDate,
     afterDate,
     beforeDate,

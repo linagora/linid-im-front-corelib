@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.103](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.102...v0.0.103) (2026-09-23)
+
+
+### Features
+
+* add File to AttributeInputType ([a6d0b84](https://github.com/linagora/linid-im-front-corelib/commit/a6d0b848a20b0cef3c1993791d8967db2309572f))
+* add maxFileSize and allowedExtensions validators ([f0d4327](https://github.com/linagora/linid-im-front-corelib/commit/f0d43276a8af7fa877bb2872c74e72f0368ea6b1))
+
 ### [0.0.102](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.101...v0.0.102) (2026-09-21)
 
 

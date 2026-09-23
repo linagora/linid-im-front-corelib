@@ -77,9 +77,12 @@ export class LinidFilterSet {
    *
    * Each `&`-separated segment containing the `=` separator is parsed as a `name=value` pair via
    * {@link LinidFilter.fromString} (which in turn uses `LinidFilterValue.fromString`); segments
-   * without `=` are silently dropped instead of producing a filter with a guessed name. Since
-   * `type`/`options` aren't derivable from the string, parsed filters get placeholder values —
-   * match them back to known definitions by `name`.
+   * without `=` are silently dropped instead of producing a filter with a guessed name.
+   *
+   * `type`, `options` and `dynamicLabelOptions` aren't derivable from the string: pass the filter
+   * `definitions` declared in the configuration and each parsed filter is matched to the one
+   * carrying the same `name`, so that a restored favorite resolves its dynamic labels like a
+   * freshly applied filter. A parsed filter matching no definition keeps placeholder values.
    *
    * `value` tolerates `null`/`undefined`/any non-string at runtime (e.g. `localStorage.getItem(...)`,
    * or across a Module Federation boundary): like an empty string, it produces an empty `filters`
@@ -87,12 +90,14 @@ export class LinidFilterSet {
    * @param id - Unique identifier of the filter set.
    * @param label - User-friendly name of the favorite search.
    * @param value - The `&`-separated string of `name=value` pairs, as produced by `toString()`.
+   * @param definitions - Filter definitions the parsed filters are matched against, by `name`.
    * @returns The parsed filter set.
    */
   static fromString(
     id: string,
     label: string,
-    value: string | null | undefined
+    value: string | null | undefined,
+    definitions: LinidFilter[] = []
   ): LinidFilterSet {
     const filters =
       typeof value !== 'string' || value === ''
@@ -107,7 +112,11 @@ export class LinidFilterSet {
               const name = pair.slice(0, separatorIndex);
               const input = pair.slice(separatorIndex + 1);
 
-              return LinidFilter.fromString(name, input);
+              return LinidFilter.fromString(
+                name,
+                input,
+                definitions.find((definition) => definition.name === name)
+              );
             });
 
     return new LinidFilterSet(id, label, filters);

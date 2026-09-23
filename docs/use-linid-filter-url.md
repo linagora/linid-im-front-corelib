@@ -67,9 +67,7 @@ const { setFiltersInUrl, getFiltersFromUrl } = useLinidFilterUrl(router, route);
 ```ts
 import { LinidFilter } from '../filters/linidFilter';
 
-const filters: LinidFilter[] = [
-  /* ... LinidFilter instances ... */
-];
+const filters: LinidFilter[] = [/* ... LinidFilter instances ... */];
 
 // Keep the "page" and "sort" query params, replace everything else with the filters
 setFiltersInUrl(filters, ['page', 'sort']);
@@ -94,7 +92,9 @@ const extractedFilters = getFiltersFromUrl(knownFilters);
 ```
 
 - Only query params whose key matches a `name` in `knownFilters` are extracted; unrelated query params are ignored.
-- Each matching value is rebuilt via `LinidFilter.fromString(name, value)`.
+- Each matching value is rebuilt via `LinidFilter.fromString(name, value, definition)`, where `definition` is the
+  matched reference filter: the rebuilt filter carries its `type`, `options` and `dynamicLabelOptions`, so a filter
+  restored from the URL behaves like the one the user applied — dynamic label resolution included.
 - If a key has multiple values in the URL, one `LinidFilter` is created per value.
 - `null` values are filtered out before being passed to `LinidFilter.fromString`.
 

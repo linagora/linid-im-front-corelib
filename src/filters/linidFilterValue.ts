@@ -58,19 +58,29 @@ export class LinidFilterValue {
   value: string;
 
   /**
+   * Item resolved from the dynamic label request, as configured by
+   * `LinidFilter.dynamicLabelOptions`. Display information only: it is never part of the value
+   * expression produced by {@link LinidFilterValue.toString}.
+   */
+  item?: Record<string, unknown>;
+
+  /**
    * Creates a new filter value.
    * @param isNegation - Whether the comparison must be negated.
    * @param operator - The comparison operator applied to the value.
    * @param value - The raw filter value.
+   * @param item - Item resolved from the dynamic label request.
    */
   constructor(
     isNegation: boolean,
     operator: LinidFilterOperator,
-    value: string
+    value: string,
+    item?: Record<string, unknown>
   ) {
     this.isNegation = isNegation;
     this.operator = operator;
     this.value = value;
+    this.item = item;
   }
 
   /**
@@ -108,7 +118,8 @@ export class LinidFilterValue {
   }
 
   /**
-   * Reconstructs the filter value expression from its negation, operator and value.
+   * Reconstructs the filter value expression from its negation, operator and value. `item` is
+   * display information only and is never serialized.
    * @returns The filter value expression (e.g. `not_lk_paris`).
    */
   toString(): string {

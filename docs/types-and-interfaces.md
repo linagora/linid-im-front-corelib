@@ -148,20 +148,16 @@ export interface FederatedModule<T> {
 </template>
 
 <script setup lang="ts">
-  // Default export is automatic
+// Default export is automatic
 </script>
 ```
 
 ```typescript
 // ❌ Wrong - named export only
-export const MyComponent = defineComponent({
-  /* ... */
-});
+export const MyComponent = defineComponent({/* ... */});
 
 // ✅ Correct - default export
-export default defineComponent({
-  /* ... */
-});
+export default defineComponent({/* ... */});
 ```
 
 ### ModuleHostConfig
@@ -321,8 +317,9 @@ export interface BaseModuleZoneDefinition<T = Record<string, unknown>> {
   props?: T;
 }
 
-export interface FederatedModuleZoneDefinition<T = Record<string, unknown>>
-  extends BaseModuleZoneDefinition<T> {
+export interface FederatedModuleZoneDefinition<
+  T = Record<string, unknown>,
+> extends BaseModuleZoneDefinition<T> {
   /**
    * Name of the exposed element to render in the zone.
    */
@@ -331,8 +328,9 @@ export interface FederatedModuleZoneDefinition<T = Record<string, unknown>>
   component?: never;
 }
 
-export interface ComponentModuleZoneDefinition<T = Record<string, unknown>>
-  extends BaseModuleZoneDefinition<T> {
+export interface ComponentModuleZoneDefinition<
+  T = Record<string, unknown>,
+> extends BaseModuleZoneDefinition<T> {
   /**
    * Name of the component to render in the zone.
    */
@@ -342,8 +340,7 @@ export interface ComponentModuleZoneDefinition<T = Record<string, unknown>>
 }
 
 export type ModuleZoneDefinition<T = Record<string, unknown>> =
-  | FederatedModuleZoneDefinition<T>
-  | ComponentModuleZoneDefinition<T>;
+  FederatedModuleZoneDefinition<T> | ComponentModuleZoneDefinition<T>;
 ```
 
 **Usage:**
@@ -393,7 +390,7 @@ customized by consumers.
 #### Supported Input Types
 
 | Input Type    | Description                             |
-|---------------|-----------------------------------------|
+| ------------- | --------------------------------------- |
 | `Text`        | Text-based inputs (QInput)              |
 | `Number`      | Numeric inputs (QInput number)          |
 | `Boolean`     | Toggle/checkbox (QToggle)               |
@@ -1441,8 +1438,9 @@ export interface NavigationMenuItem {
 
 ## 🔍 Filter types
 
-Types describing a filter that can be applied to a list of entities. `LinidFilterType`, `LinidFilterOperator`
-and the two filter expression separator constants below are defined in `src/types/linidFilter.ts`.
+Types describing a filter that can be applied to a list of entities. `LinidFilterType`, `LinidFilterOperator`,
+`LinidFilterDynamicLabelOptions` and the two filter expression separator constants below are defined in
+`src/types/linidFilter.ts`.
 
 The filter itself (`LinidFilter`) and the applied values (`LinidFilterValue`) are **classes**, not plain type
 shapes — they carry parsing logic (`fromString`/`toString`) in addition to their data, and are exported as
@@ -1460,7 +1458,7 @@ export const LINID_FILTER_NEGATION_PREFIX = 'not_';
 ```
 
 | Constant                       | Value    | Meaning                                                             |
-|--------------------------------|----------|---------------------------------------------------------------------|
+| ------------------------------ | -------- | ------------------------------------------------------------------- |
 | `LINID_FILTER_OR_SEPARATOR`    | `'\|'`   | Separates value expressions combined with OR within a `LinidFilter` |
 | `LINID_FILTER_NEGATION_PREFIX` | `'not_'` | Prefix marking a `LinidFilterValue` expression as negated           |
 
@@ -1481,11 +1479,45 @@ export type LinidFilterOperator = 'lk_' | '' | 'gt_' | 'lt_';
 ```
 
 | Operator | Meaning         |
-|----------|-----------------|
+| -------- | --------------- |
 | `lk_`    | Like / contains |
 | `''`     | Equality        |
 | `gt_`    | Greater than    |
 | `lt_`    | Lower than      |
+
+### LinidFilterDynamicLabelOptions
+
+Describes how to resolve the item behind each value of a filter whose values are identifiers
+(e.g. UUIDs) and therefore can't be displayed as-is. It is carried by `LinidFilter.dynamicLabelOptions`
+and consumed by the layer rendering the filter values: `LinidFilter` and `LinidFilterValue` never perform
+any request themselves. See [`docs/filters.md`](./filters.md#65-dynamic-item-resolution-dynamiclabeloptions)
+for the resolution rules and examples.
+
+```ts
+export interface LinidFilterDynamicLabelOptions {
+  multipleRequests?: boolean;
+  url: string;
+  responseItemsPath?: string;
+  valuePath?: string;
+}
+```
+
+| Property            | Type      | Description                                                                              |
+| ------------------- | --------- | ---------------------------------------------------------------------------------------- |
+| `multipleRequests`  | `boolean` | Whether to perform one request per value. Defaults to `false` (one request for all)      |
+| `url`               | `string`  | Nunjucks URL template: `{{ value }}` when `multipleRequests`, `{{ values }}` otherwise   |
+| `responseItemsPath` | `string`  | Path to the collection of items in the response. Only when `multipleRequests` is `false` |
+| `valuePath`         | `string`  | Path, within an item, to the attribute matching `LinidFilterValue.value`. Same condition |
+
+**Example:**
+
+```ts
+const dynamicLabelOptions: LinidFilterDynamicLabelOptions = {
+  url: "/organizational-units?ids={{ values | join('|') }}",
+  responseItemsPath: 'content',
+  valuePath: 'id',
+};
+```
 
 ### LinidFilter\<T\>
 
@@ -1503,17 +1535,20 @@ export class LinidFilter<T = Record<string, unknown>> {
   type: LinidFilterType;
   options: T;
   values: LinidFilterValue[];
+  dynamicLabelOptions?: LinidFilterDynamicLabelOptions;
 
   constructor(
     name: string,
     type: LinidFilterType,
     options: T,
-    values: LinidFilterValue[]
+    values: LinidFilterValue[],
+    dynamicLabelOptions?: LinidFilterDynamicLabelOptions
   );
 
   static fromString<T = Record<string, unknown>>(
     name: string,
-    input: string
+    input: string,
+    definition?: LinidFilter<T>
   ): LinidFilter<T>;
 
   toString(): string;
@@ -1563,7 +1598,8 @@ export class LinidFilterSet {
   static fromString(
     id: string,
     label: string,
-    value: string | null | undefined
+    value: string | null | undefined,
+    definitions?: LinidFilter[]
   ): LinidFilterSet;
 
   toString(): string;
@@ -1621,10 +1657,7 @@ const preference = {
   value: 'status=active|pending&createdAt=gt_2026-01-01',
 };
 
-const filterSet = LinidFilterSet.fromString(
-  preference.label,
-  preference.value
-);
+const filterSet = LinidFilterSet.fromString(preference.label, preference.value);
 
 // LinidFilterSet { label: 'My Active Projects', filters: [...] }
 ```
@@ -1633,92 +1666,93 @@ const filterSet = LinidFilterSet.fromString(
 
 ## 🧰 Summary
 
-| Type / Interface                | Purpose                                                                                          |
-| ------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `LinidZoneEntry`                | Defines the contract for a plugin component                                                      |
-| `LinidZoneState`                | Defines the structure of the zone store                                                          |
-| `FederatedModule`               | Defines the structure of a federated component module                                            |
-| `ModuleHostConfig`              | Configuration provided to remote modules                                                         |
-| `RemoteModule`                  | Defines the structure of a remote module                                                         |
-| `AttributeInputType`            | Union of input types: Text, Number, Boolean, Date, List, DynamicList, TextArea, Email, File      |
-| `LinidAttributeConfiguration`   | Generic interface describing an entity attribute                                                 |
-| `ValidatorName`                 | Available validator names for field validation                                                   |
-| `LinidEntityConfiguration`      | Describes an entity and its attributes                                                           |
-| `LinidApiErrorResponseBody`     | Standard error response structure from LinID APIs                                                |
-| `LinidApiEndpointConfiguration` | Describes a REST route                                                                           |
-| `LinidConfigurationState`       | Defines the structure of the configuration store                                                 |
-| `LinidRoute`                    | Defines the structure of a route (recursive children)                                            |
-| `LinidRoutes`                   | Array of LinidRoute for nested routes                                                            |
-| `Page<T>`                       | Paginated API response                                                                           |
-| `Pagination`                    | Backend pagination model                                                                         |
-| `QTableRequestEvent`            | Quasar table server-side request payload                                                         |
-| `QuasarPagination`              | Quasar-specific pagination structure                                                             |
-| `QueryFilter`                   | Flexible query parameter map                                                                     |
-| `ModuleLifecyclePhase`          | Enum of module lifecycle phases                                                                  |
-| `ModuleLifecycleResult`         | Result of a lifecycle phase execution                                                            |
-| `ModuleLifecycleHooks`          | Lifecycle hooks for remote modules                                                               |
-| `UiDesignValue`                 | Single primitive value in the UI configuration                                                   |
-| `UiDesignNamespace`             | Namespace with key-value pairs of UI configuration values                                        |
-| `UiDesign`                      | The full UI design configuration                                                                 |
-| `QComponentName`                | Valid Quasar component names for type-safe UI design                                             |
-| `LinidQComponentProps`          | All supported Quasar component props subsets                                                     |
-| `ThirdPartyComponentName`       | Valid third-party component names for type-safe UI design                                        |
-| `LinidThirdPartyComponentProps` | All supported third-party component props subsets                                                |
-| `LinidDraggableProps`           | vue-draggable-next (SortableJS) component properties supported by Ui Design                      |
-| `LinidQBtnProps`                | QBtn component properties supported by Ui Design                                                 |
-| `LinidQTabsProps`               | QTabs component properties supported by Ui Design                                                |
-| `LinidQRouteTabProps`           | QRouteTab component properties supported by Ui Design                                            |
-| `LinidQHeaderProps`             | QHeader component properties supported by Ui Design                                              |
-| `LinidQToolbarProps`            | QToolbar component properties supported by Ui Design                                             |
-| `LinidQToolbarTitleProps`       | QToolbarTitle component properties supported by Ui Design                                        |
-| `LinidQAvatarProps`             | QAvatar component properties supported by Ui Design                                              |
-| `LinidQBadgeProps`              | QBadge component properties supported by Ui Design                                               |
-| `LinidQTableProps`              | QTable component properties supported by Ui Design                                               |
-| `LinidQCardProps`               | QCard component properties supported by Ui Design                                                |
-| `LinidQCardActionsProps`        | QCardActions component properties supported by Ui                                                |
-| `LinidQCardSectionProps`        | QCardSection component properties supported by Ui Design                                         |
-| `LinidQIconProps`               | QIcon component properties supported by Ui Design                                                |
-| `LinidQChipProps`               | QChip component properties supported by Ui Design                                                |
-| `LinidQCheckboxProps`           | QCheckbox component properties supported by Ui Design                                            |
-| `LinidQToggleProps`             | QToggle component properties supported by Ui Design                                              |
-| `LinidQInputProps`              | QInput component properties supported by Ui Design                                               |
-| `LinidQDateProps`               | QDate component properties supported by Ui Design                                                |
-| `LinidQImgProps`                | QImg component properties supported by Ui Design                                                 |
-| `LinidQFieldProps`              | QField component properties supported by Ui Design                                               |
-| `LinidQFileProps`               | QFile component properties supported by Ui Design                                                |
-| `LinidQFormProps`               | QForm component properties supported by Ui Design                                                |
-| `LinidQSelectProps`             | QSelect component properties supported by Ui Design                                              |
-| `LinidQSeparatorProps`          | QSeparator component properties supported by Ui Design                                           |
-| `LinidQSpinnerProps`            | QSpinner component properties supported by Ui Design                                             |
-| `LinidQBtnDropdownProps`        | QBtnDropdown component properties supported by Ui Design                                         |
-| `LinidQListProps`               | QList component properties supported by Ui Design                                                |
-| `LinidQItemProps`               | QItem component properties supported by Ui Design                                                |
-| `LinidQItemSectionProps`        | QItemSection component properties supported by Ui Design                                         |
-| `LinidQItemLabelProps`          | QItemLabel component properties supported by Ui Design                                           |
-| `LinidQDialogProps`             | QDialog component properties supported by Ui Design                                              |
-| `LinidQBannerProps`             | QBanner component properties supported by Ui Design                                              |
-| `LinidQMenuProps`               | QMenu component properties supported by Ui Design                                                |
-| `LinidQTreeProps`               | QTree component properties supported by Ui Design                                                |
-| `LinidQSplitterProps`           | QSplitter component properties supported by Ui Design                                            |
-| `LinidQOptionGroupProps`        | QOptionGroup component properties supported by Ui Design                                         |
-| `LinidQScrollAreaProps`         | QScrollArea component properties supported by Ui Design                                          |
-| `TreeNode`                      | Represents a node in the tree structure (recursive)                                              |
-| `TreeNodeType`                  | Describes a node type and its default actions                                                    |
-| `MenuItem`                      | Generic menu entry consumed by the federated DropdownButton                                      |
-| `DropdownClickPayload`          | Generic click payload emitted by the federated DropdownButton                                    |
-| `LinidUiState`                  | Defines the structure of the UI store                                                            |
-| `LinidUser`                     | Represents an authenticated user in the system                                                   |
-| `LinidUserState`                | Defines the structure of the user store                                                          |
-| `NavigationMenuItem`            | Describes a main navigation menu item                                                            |
-| `LinidFilterType`               | Union type for filter categories: date, text, number, list, tree                                 |
-| `LinidFilterOperator`           | Union type for filter value comparison operators                                                 |
-| `LINID_FILTER_OR_SEPARATOR`     | Runtime constant (`'\|'`) separating values combined with OR in a filter expression              |
-| `LINID_FILTER_NEGATION_PREFIX`  | Runtime constant (`'not_'`) marking a filter value expression as negated                         |
-| `LinidFilter<T>`                | Generic class representing a filter, converted to a query parameter value                        |
-| `LinidFilterSet`                | Class representing a saved filter set (favorite search): a label and its `LinidFilter[]`         |
-| `LinidFilterSetUserPreference`  | Represents the persisted form of a saved filter set (favorite search) stored in user preferences |
-| `ValueFormatter`                | Contract every formatter implementation must satisfy (internal, not re-exported)                 |
-| `FormatterConfiguration`        | Formatting properties mixed into field and column definitions                                    |
+| Type / Interface                 | Purpose                                                                                          |
+| -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `LinidZoneEntry`                 | Defines the contract for a plugin component                                                      |
+| `LinidZoneState`                 | Defines the structure of the zone store                                                          |
+| `FederatedModule`                | Defines the structure of a federated component module                                            |
+| `ModuleHostConfig`               | Configuration provided to remote modules                                                         |
+| `RemoteModule`                   | Defines the structure of a remote module                                                         |
+| `AttributeInputType`             | Union of input types: Text, Number, Boolean, Date, List, DynamicList, TextArea, Email, File      |
+| `LinidAttributeConfiguration`    | Generic interface describing an entity attribute                                                 |
+| `ValidatorName`                  | Available validator names for field validation                                                   |
+| `LinidEntityConfiguration`       | Describes an entity and its attributes                                                           |
+| `LinidApiErrorResponseBody`      | Standard error response structure from LinID APIs                                                |
+| `LinidApiEndpointConfiguration`  | Describes a REST route                                                                           |
+| `LinidConfigurationState`        | Defines the structure of the configuration store                                                 |
+| `LinidRoute`                     | Defines the structure of a route (recursive children)                                            |
+| `LinidRoutes`                    | Array of LinidRoute for nested routes                                                            |
+| `Page<T>`                        | Paginated API response                                                                           |
+| `Pagination`                     | Backend pagination model                                                                         |
+| `QTableRequestEvent`             | Quasar table server-side request payload                                                         |
+| `QuasarPagination`               | Quasar-specific pagination structure                                                             |
+| `QueryFilter`                    | Flexible query parameter map                                                                     |
+| `ModuleLifecyclePhase`           | Enum of module lifecycle phases                                                                  |
+| `ModuleLifecycleResult`          | Result of a lifecycle phase execution                                                            |
+| `ModuleLifecycleHooks`           | Lifecycle hooks for remote modules                                                               |
+| `UiDesignValue`                  | Single primitive value in the UI configuration                                                   |
+| `UiDesignNamespace`              | Namespace with key-value pairs of UI configuration values                                        |
+| `UiDesign`                       | The full UI design configuration                                                                 |
+| `QComponentName`                 | Valid Quasar component names for type-safe UI design                                             |
+| `LinidQComponentProps`           | All supported Quasar component props subsets                                                     |
+| `ThirdPartyComponentName`        | Valid third-party component names for type-safe UI design                                        |
+| `LinidThirdPartyComponentProps`  | All supported third-party component props subsets                                                |
+| `LinidDraggableProps`            | vue-draggable-next (SortableJS) component properties supported by Ui Design                      |
+| `LinidQBtnProps`                 | QBtn component properties supported by Ui Design                                                 |
+| `LinidQTabsProps`                | QTabs component properties supported by Ui Design                                                |
+| `LinidQRouteTabProps`            | QRouteTab component properties supported by Ui Design                                            |
+| `LinidQHeaderProps`              | QHeader component properties supported by Ui Design                                              |
+| `LinidQToolbarProps`             | QToolbar component properties supported by Ui Design                                             |
+| `LinidQToolbarTitleProps`        | QToolbarTitle component properties supported by Ui Design                                        |
+| `LinidQAvatarProps`              | QAvatar component properties supported by Ui Design                                              |
+| `LinidQBadgeProps`               | QBadge component properties supported by Ui Design                                               |
+| `LinidQTableProps`               | QTable component properties supported by Ui Design                                               |
+| `LinidQCardProps`                | QCard component properties supported by Ui Design                                                |
+| `LinidQCardActionsProps`         | QCardActions component properties supported by Ui                                                |
+| `LinidQCardSectionProps`         | QCardSection component properties supported by Ui Design                                         |
+| `LinidQIconProps`                | QIcon component properties supported by Ui Design                                                |
+| `LinidQChipProps`                | QChip component properties supported by Ui Design                                                |
+| `LinidQCheckboxProps`            | QCheckbox component properties supported by Ui Design                                            |
+| `LinidQToggleProps`              | QToggle component properties supported by Ui Design                                              |
+| `LinidQInputProps`               | QInput component properties supported by Ui Design                                               |
+| `LinidQDateProps`                | QDate component properties supported by Ui Design                                                |
+| `LinidQImgProps`                 | QImg component properties supported by Ui Design                                                 |
+| `LinidQFieldProps`               | QField component properties supported by Ui Design                                               |
+| `LinidQFileProps`                | QFile component properties supported by Ui Design                                                |
+| `LinidQFormProps`                | QForm component properties supported by Ui Design                                                |
+| `LinidQSelectProps`              | QSelect component properties supported by Ui Design                                              |
+| `LinidQSeparatorProps`           | QSeparator component properties supported by Ui Design                                           |
+| `LinidQSpinnerProps`             | QSpinner component properties supported by Ui Design                                             |
+| `LinidQBtnDropdownProps`         | QBtnDropdown component properties supported by Ui Design                                         |
+| `LinidQListProps`                | QList component properties supported by Ui Design                                                |
+| `LinidQItemProps`                | QItem component properties supported by Ui Design                                                |
+| `LinidQItemSectionProps`         | QItemSection component properties supported by Ui Design                                         |
+| `LinidQItemLabelProps`           | QItemLabel component properties supported by Ui Design                                           |
+| `LinidQDialogProps`              | QDialog component properties supported by Ui Design                                              |
+| `LinidQBannerProps`              | QBanner component properties supported by Ui Design                                              |
+| `LinidQMenuProps`                | QMenu component properties supported by Ui Design                                                |
+| `LinidQTreeProps`                | QTree component properties supported by Ui Design                                                |
+| `LinidQSplitterProps`            | QSplitter component properties supported by Ui Design                                            |
+| `LinidQOptionGroupProps`         | QOptionGroup component properties supported by Ui Design                                         |
+| `LinidQScrollAreaProps`          | QScrollArea component properties supported by Ui Design                                          |
+| `TreeNode`                       | Represents a node in the tree structure (recursive)                                              |
+| `TreeNodeType`                   | Describes a node type and its default actions                                                    |
+| `MenuItem`                       | Generic menu entry consumed by the federated DropdownButton                                      |
+| `DropdownClickPayload`           | Generic click payload emitted by the federated DropdownButton                                    |
+| `LinidUiState`                   | Defines the structure of the UI store                                                            |
+| `LinidUser`                      | Represents an authenticated user in the system                                                   |
+| `LinidUserState`                 | Defines the structure of the user store                                                          |
+| `NavigationMenuItem`             | Describes a main navigation menu item                                                            |
+| `LinidFilterType`                | Union type for filter categories: date, text, number, list, tree                                 |
+| `LinidFilterOperator`            | Union type for filter value comparison operators                                                 |
+| `LINID_FILTER_OR_SEPARATOR`      | Runtime constant (`'\|'`) separating values combined with OR in a filter expression              |
+| `LINID_FILTER_NEGATION_PREFIX`   | Runtime constant (`'not_'`) marking a filter value expression as negated                         |
+| `LinidFilter<T>`                 | Generic class representing a filter, converted to a query parameter value                        |
+| `LinidFilterDynamicLabelOptions` | Configuration describing how to resolve the item displayed behind each filter value              |
+| `LinidFilterSet`                 | Class representing a saved filter set (favorite search): a label and its `LinidFilter[]`         |
+| `LinidFilterSetUserPreference`   | Represents the persisted form of a saved filter set (favorite search) stored in user preferences |
+| `ValueFormatter`                 | Contract every formatter implementation must satisfy (internal, not re-exported)                 |
+| `FormatterConfiguration`         | Formatting properties mixed into field and column definitions                                    |
 
 These types enforce **consistency and type safety** across all front-end modules and plugins.
 

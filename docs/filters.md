@@ -71,22 +71,34 @@ class LinidFilterValue {
   isNegation: boolean;
   operator: LinidFilterOperator; // 'lk_' | '' | 'gt_' | 'lt_'
   value: string;
+  item?: Record<string, unknown>;
 }
 ```
 
-| Property     | Type                  | Description                                                          |
-| ------------ | --------------------- | -------------------------------------------------------------------- |
-| `isNegation` | `boolean`             | Whether the comparison must be negated                               |
-| `operator`   | `LinidFilterOperator` | The comparison operator applied to the value                         |
-| `value`      | `string`              | The raw value, with the negation marker and operator prefix stripped |
+| Property     | Type                      | Description                                                          |
+| ------------ | ------------------------- | -------------------------------------------------------------------- |
+| `isNegation` | `boolean`                 | Whether the comparison must be negated                               |
+| `operator`   | `LinidFilterOperator`     | The comparison operator applied to the value                         |
+| `value`      | `string`                  | The raw value, with the negation marker and operator prefix stripped |
+| `item`       | `Record<string, unknown>` | Item resolved from the dynamic label request — display only          |
+
+`item` is only relevant for filters carrying `dynamicLabelOptions` — see
+[section 6.5](#65-dynamic-item-resolution-dynamiclabeloptions). It is **display information only**: it is
+never part of the value expression produced by `toString()`.
 
 ### 3.2 constructor
 
 ```ts
-new LinidFilterValue(isNegation: boolean, operator: LinidFilterOperator, value: string);
+new LinidFilterValue(
+  isNegation: boolean,
+  operator: LinidFilterOperator,
+  value: string,
+  item?: Record<string, unknown>
+);
 ```
 
-Builds a `LinidFilterValue` directly from its already-parsed parts.
+Builds a `LinidFilterValue` directly from its already-parsed parts. `item` is optional: it is left
+`undefined` for values that don't need — or have not yet gone through — dynamic item resolution.
 
 ### 3.3 fromString (static)
 
@@ -106,8 +118,19 @@ It returns the same neutral result as for an empty string: `{ isNegation: false,
 toString(): string;
 ```
 
-Reconstructs the filter value expression from `isNegation`, `operator` and `value`. `fromString` and `toString`
+Reconstructs the filter value expression from `isNegation`, `operator` and `value`. `item` is never
+serialized, so a resolved item never changes the query parameter sent to the API. `fromString` and `toString`
 round-trip: `LinidFilterValue.fromString(expr).toString() === expr`.
+
+```ts
+const value = new LinidFilterValue(false, '', '123', {
+  id: 123,
+  name: 'Paris',
+});
+
+value.toString(); // '123'
+value.item?.name; // 'Paris'
+```
 
 ---
 
@@ -186,16 +209,18 @@ class LinidFilter<T = Record<string, unknown>> {
   type: LinidFilterType;
   options: T;
   values: LinidFilterValue[];
+  dynamicLabelOptions?: LinidFilterDynamicLabelOptions;
 }
 ```
 
-| Property  | Type                 | Description                                                             |
-| --------- | -------------------- | ----------------------------------------------------------------------- |
-| `id`      | `string`             | Auto generated unique identifier of the filter (set by the constructor) |
-| `name`    | `string`             | Identifier of the filter                                                |
-| `type`    | `LinidFilterType`    | Defines the filter category and expected behavior                       |
-| `options` | `T`                  | Configuration object of the filter, defined by the consumer             |
-| `values`  | `LinidFilterValue[]` | List of applied filter values                                           |
+| Property              | Type                             | Description                                                             |
+| --------------------- | -------------------------------- | ----------------------------------------------------------------------- |
+| `id`                  | `string`                         | Auto generated unique identifier of the filter (set by the constructor) |
+| `name`                | `string`                         | Identifier of the filter                                                |
+| `type`                | `LinidFilterType`                | Defines the filter category and expected behavior                       |
+| `options`             | `T`                              | Configuration object of the filter, defined by the consumer             |
+| `values`              | `LinidFilterValue[]`             | List of applied filter values                                           |
+| `dynamicLabelOptions` | `LinidFilterDynamicLabelOptions` | Dynamic item resolution configuration (see section 6.5)                 |
 
 ### 6.2 constructor
 
@@ -204,19 +229,22 @@ new LinidFilter<T>(
   name: string,
   type: LinidFilterType,
   options: T,
-  values: LinidFilterValue[]
+  values: LinidFilterValue[],
+  dynamicLabelOptions?: LinidFilterDynamicLabelOptions
 );
 ```
 
 Builds a `LinidFilter` directly from its already-parsed parts. `id` is not a constructor parameter — it is
-auto generated (via `crypto.randomUUID()`) for every instance.
+auto generated (via `crypto.randomUUID()`) for every instance. `dynamicLabelOptions` is optional: filters
+without it keep their current behavior.
 
 ### 6.3 fromString (static)
 
 ```ts
 static fromString<T = Record<string, unknown>>(
   name: string,
-  input: string
+  input: string,
+  definition?: LinidFilter<T>
 ): LinidFilter<T>;
 ```
 
@@ -226,8 +254,22 @@ parameter prefix produced by `toString()` — it is the value expression only. A
 `values` array — as does any non-string `input` received at runtime despite the `string` type (e.g. across a
 Module Federation boundary), rather than throwing.
 
-`type` and `options` are not derivable from `input`: the returned filter gets a placeholder `'text'` `type` and
-empty `options`. Callers that already track a `LinidFilter` definition should only use the parsed `values`.
+`type`, `options` and `dynamicLabelOptions` are not derivable from `input`: pass the `definition` declared in
+the configuration and they are carried over to the parsed filter, so that a filter restored from a URL behaves
+like the one the user applied — dynamic label resolution included. Without a `definition`, the returned filter
+falls back to a placeholder `'text'` `type`, empty `options` and no `dynamicLabelOptions`, and callers should
+then only use the parsed `values`. `name` is the query parameter key and always wins over `definition.name`.
+
+```ts
+const restored = LinidFilter.fromString(
+  'organizationalUnitId',
+  '1|2',
+  definition
+);
+
+restored.type; // the type of the definition, e.g. 'tree'
+restored.dynamicLabelOptions; // the one of the definition — the values can be resolved
+```
 
 ```ts
 const parsed = LinidFilter.fromString('city', 'paris|not_lk_lyon');
@@ -252,6 +294,150 @@ Reconstructs the filter as an HTTP query parameter value, with multiple values c
 ```ts
 parsed.toString(); // 'paris|not_lk_lyon'
 ```
+
+Items resolved through `dynamicLabelOptions` are display information only: they never appear in the result.
+
+### 6.5 Dynamic item resolution (`dynamicLabelOptions`)
+
+Some filters hold values that aren't readable on their own — typically identifiers (e.g. a UUID): displaying
+`c0ffee42-…` as a filter chip is useless, the name behind it is what the user needs to see. `dynamicLabelOptions`
+describes **how to fetch the item behind each value**; the resolved item is then stored on the matching
+`LinidFilterValue.item`.
+
+```ts
+export interface LinidFilterDynamicLabelOptions {
+  multipleRequests?: boolean;
+  url: string;
+  responseItemsPath?: string;
+  valuePath?: string;
+}
+```
+
+| Property            | Type      | Description                                                                                  |
+| ------------------- | --------- | -------------------------------------------------------------------------------------------- |
+| `multipleRequests`  | `boolean` | Whether to perform one request per value. Defaults to `false` (one request for all)          |
+| `url`               | `string`  | Nunjucks URL template: `{{ value }}` when `multipleRequests`, `{{ values }}` otherwise       |
+| `responseItemsPath` | `string`  | Path to the collection of items in the response. Required when `multipleRequests` is `false` |
+| `valuePath`         | `string`  | Path, within an item, to the attribute matching `LinidFilterValue.value`. Same condition     |
+
+The two template variables hold the **raw values** of the `LinidFilterValue` still missing an item — the
+`value` property alone, without the negation marker nor the operator prefix, and without the values already
+resolved:
+
+- `{{ values }}` (single request) is the **array** of those values, to be joined by the template itself, e.g.
+  `{{ values | join('|') }}`;
+- `{{ value }}` (one request per value) is the **single** value of the request being built.
+
+`responseItemsPath` and `valuePath` are **required** when `multipleRequests` is `false`, since a single
+response then holds several items to dispatch; both are **ignored** when it is `true`, where the whole
+response is the item of the value it was requested for. Both are dot-notation paths of unlimited depth
+(`content`, `page.content`, `data.items.0.attributes`), not slash-separated ones.
+
+> `LinidFilter` and `LinidFilterValue` are data/model classes: they **never perform HTTP requests**. They only
+> carry the configuration and the resolved items, so that the consuming layer (e.g. the component rendering the
+> filter values) performs the requests and writes the items back.
+
+That layer also owns the URL encoding: `url` is a template, not a ready-to-send URL. Whatever it renders —
+the separator joining the values first of all — must reach the API percent-encoded, since a raw `|` in a query
+string is rejected by servers such as Tomcat with a `400 Bad Request`. A consumer that encodes the query
+string of the rendered URL (as `LinidFilterChip` does in `linid-im-front-community-plugins`) lets a template
+keep `join('|')` as-is; otherwise, and whenever the values themselves may carry URL-special characters such as
+`&`, `=` or `#`, add the Nunjucks `urlencode` filter: `{{ values | join('|') | urlencode }}`.
+
+Resolution rules:
+
+- Filters without `dynamicLabelOptions` keep their current behavior — nothing is resolved.
+- Only values whose `item` is missing require resolution; a value that already has one triggers no request.
+- Resolved items are assigned to the `item` of their corresponding `LinidFilterValue`.
+- The complete returned item is stored, not just the displayed attribute.
+- Resolution never affects the serialized filter query parameter.
+
+#### Single request (default)
+
+With `multipleRequests` left to its `false` default, all values are resolved with a **single** request. The
+`{{ values }}` template variable holds the values to resolve, and can be combined with the Nunjucks `join`
+filter:
+
+```json
+{
+  "dynamicLabelOptions": {
+    "url": "/organizational-units?ids={{ values | join('|') }}",
+    "responseItemsPath": "content",
+    "valuePath": "id"
+  }
+}
+```
+
+For the values below:
+
+```ts
+[new LinidFilterValue(false, '', '1'), new LinidFilterValue(false, '', '2')];
+```
+
+the request is:
+
+```text
+GET /organizational-units?ids=1|2
+```
+
+`responseItemsPath` points to the collection of items in the response, and `valuePath` to the attribute of each
+item matching `LinidFilterValue.value`. Since a filter value is always a string while the attribute may be of
+any type (a number `1`, a UUID, a boolean), the comparison is made on the **string conversion** of the
+attribute: an item whose `id` is the number `1` matches the value `'1'`. An item whose `valuePath` resolves to
+nothing, or to a value no filter value matches, is simply skipped; the filter values it should have matched
+keep no item and are rendered raw, which is also what happens when the response holds no item at all:
+
+```json
+{
+  "content": [
+    { "id": 1, "name": "toto" },
+    { "id": 2, "name": "tata" }
+  ]
+}
+```
+
+so the first value receives:
+
+```ts
+{
+  value: '1',
+  item: { id: 1, name: 'toto' },
+}
+```
+
+#### One request per value
+
+With `multipleRequests` set to `true`, one request is performed **per value**, and `{{ value }}` holds the
+current value:
+
+```json
+{
+  "dynamicLabelOptions": {
+    "multipleRequests": true,
+    "url": "/organizational-units/{{ value }}"
+  }
+}
+```
+
+For the values `1` and `2`:
+
+```text
+GET /organizational-units/1
+GET /organizational-units/2
+```
+
+Each response is the item of its own value, so `responseItemsPath` and `valuePath` are not used in this mode.
+
+#### Limitations
+
+This first version of the mechanism doesn't cover every filter value format. In particular, it doesn't support:
+
+- textual values containing filter syntax characters (e.g. a value equal to `*tot`);
+- date values using operators such as "lower than", where the requested date can itself be read as part of the
+  filter expression.
+
+More generally, a filter value may carry operators or syntax meaningful to the filter parser — build the URL
+template accordingly.
 
 ---
 
@@ -292,15 +478,24 @@ Builds a `LinidFilterSet` directly from its label and filters.
 ### 7.3 fromString (static)
 
 ```ts
-static fromString(label: string, value: string | null | undefined): LinidFilterSet;
+static fromString(
+  id: string,
+  label: string,
+  value: string | null | undefined,
+  definitions?: LinidFilter[]
+): LinidFilterSet;
 ```
 
 Parses a `&`-separated string of `name=value` pairs, as produced by `toString()`, into a **new**
 `LinidFilterSet`. Each `=`-containing segment is turned into a `LinidFilter` via `LinidFilter.fromString`
 (which in turn parses each `|`-separated value with `LinidFilterValue.fromString`); segments missing `=` are
-silently dropped instead of producing a filter with a guessed name. Since `type`/`options` aren't derivable
-from the string, parsed filters carry placeholder values (see [section 6.3](#63-fromstring-static)) — match
-them back to known definitions by `name`.
+silently dropped instead of producing a filter with a guessed name.
+
+Since `type`, `options` and `dynamicLabelOptions` aren't derivable from the string, pass the filter
+`definitions` declared in the configuration: each parsed filter is matched to the definition carrying the same
+`name` and restored from it (see [section 6.3](#63-fromstring-static)), so that a restored favorite resolves
+its dynamic labels like a freshly applied filter. A parsed filter matching no definition keeps placeholder
+values.
 
 `value` tolerates `null`/`undefined`/any non-string at runtime (e.g. `localStorage.getItem(...)`, or across a
 Module Federation boundary): like an empty string, it produces an empty `filters` array instead of throwing —
@@ -382,9 +577,9 @@ export interface LinidFilterSetUserPreference {
 
 ### 8.2 Semantics
 
-* `id` is used to uniquely identify the preference entry in the user preference store.
-* `label` is purely presentational and used in UI contexts (e.g. dropdown of saved searches).
-* `value` is the canonical serialized form of a filter set and can be parsed back via:
+- `id` is used to uniquely identify the preference entry in the user preference store.
+- `label` is purely presentational and used in UI contexts (e.g. dropdown of saved searches).
+- `value` is the canonical serialized form of a filter set and can be parsed back via:
 
 ```ts
 LinidFilterSet.fromString(label, value);
@@ -401,10 +596,7 @@ const preference: LinidFilterSetUserPreference = {
   value: 'status=active|pending&createdAt=gt_2026-01-01',
 };
 
-const filterSet = LinidFilterSet.fromString(
-  preference.label,
-  preference.value
-);
+const filterSet = LinidFilterSet.fromString(preference.label, preference.value);
 ```
 
 ---

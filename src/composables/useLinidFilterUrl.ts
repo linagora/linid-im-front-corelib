@@ -88,6 +88,10 @@ export function useLinidFilterUrl(
    * known filters passed as a parameter (used to match query param names
    * to filter definitions).
    *
+   * Each rebuilt filter carries the `type`, `options` and `dynamicLabelOptions` of the definition
+   * it was matched with, so that a filter restored from the URL behaves like the one the user
+   * applied — dynamic labels included.
+   *
    * `null` values (query param present without a value) are ignored.
    * @param filters - Reference filters used to identify relevant query params.
    * @returns List of filters rebuilt from the URL.
@@ -107,7 +111,9 @@ export function useLinidFilterUrl(
         values
           .filter((value): value is string => value !== null)
           .forEach((value) => {
-            extractedFilters.push(LinidFilter.fromString(filter.name, value));
+            extractedFilters.push(
+              LinidFilter.fromString(filter.name, value, filter)
+            );
           });
       });
 

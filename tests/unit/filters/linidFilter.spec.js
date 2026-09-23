@@ -12,6 +12,29 @@ describe('Test class: LinidFilter', () => {
       expect(first.id).not.toBe('');
       expect(first.id).not.toBe(second.id);
     });
+
+    it('stores the given dynamic label options', () => {
+      const dynamicLabelOptions = {
+        url: '/organizational-units?ids={{ values | join("|") }}',
+        responseItemsPath: 'content',
+        valuePath: 'id',
+      };
+      const filter = new LinidFilter(
+        'organizationalUnit',
+        'tree',
+        {},
+        [],
+        dynamicLabelOptions
+      );
+
+      expect(filter.dynamicLabelOptions).toEqual(dynamicLabelOptions);
+    });
+
+    it('leaves dynamic label options undefined when none is given', () => {
+      const filter = new LinidFilter('city', 'text', {}, []);
+
+      expect(filter.dynamicLabelOptions).toBeUndefined();
+    });
   });
 
   describe('test method: fromString', () => {
@@ -51,6 +74,51 @@ describe('Test class: LinidFilter', () => {
       expect(result.values).toEqual([]);
     });
 
+    it('restores the type, options and dynamic label options of the given definition', () => {
+      const dynamicLabelOptions = {
+        url: "/organizational-units?id={{ values | join('|') }}",
+        responseItemsPath: 'content',
+        valuePath: 'id',
+      };
+      const definition = new LinidFilter(
+        'organizationalUnit',
+        'tree',
+        { url: '/organizational-units' },
+        [],
+        dynamicLabelOptions
+      );
+
+      const result = LinidFilter.fromString(
+        'organizationalUnit',
+        '1|2',
+        definition
+      );
+
+      expect(result.type).toBe('tree');
+      expect(result.options).toEqual({ url: '/organizational-units' });
+      expect(result.dynamicLabelOptions).toEqual(dynamicLabelOptions);
+      expect(result.values).toEqual([
+        new LinidFilterValue(false, '', '1'),
+        new LinidFilterValue(false, '', '2'),
+      ]);
+    });
+
+    it('keeps the given name over the one of the definition', () => {
+      const definition = new LinidFilter('other', 'tree', {}, []);
+
+      expect(LinidFilter.fromString('city', 'paris', definition).name).toBe(
+        'city'
+      );
+    });
+
+    it('falls back to placeholders when no definition is given', () => {
+      const result = LinidFilter.fromString('city', 'paris');
+
+      expect(result.type).toBe('text');
+      expect(result.options).toEqual({});
+      expect(result.dynamicLabelOptions).toBeUndefined();
+    });
+
     it('returns an empty values array for any non-string input', () => {
       [null, undefined, 42, false, {}, []].forEach((input) => {
         const result = LinidFilter.fromString('city', input);
@@ -82,6 +150,21 @@ describe('Test class: LinidFilter', () => {
       ]);
 
       expect(filter.toString()).toBe('paris|not_lk_lyon');
+    });
+
+    it('ignores the dynamic label options and the resolved items', () => {
+      const filter = new LinidFilter(
+        'organizationalUnit',
+        'tree',
+        {},
+        [
+          new LinidFilterValue(false, '', '1', { id: 1, name: 'toto' }),
+          new LinidFilterValue(false, '', '2', { id: 2, name: 'tata' }),
+        ],
+        { url: '/organizational-units/{{ value }}', multipleRequests: true }
+      );
+
+      expect(filter.toString()).toBe('1|2');
     });
   });
 });

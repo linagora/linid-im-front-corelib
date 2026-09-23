@@ -49,6 +49,46 @@ export type LinidFilterType = 'date' | 'text' | 'number' | 'list' | 'tree';
 export type LinidFilterOperator = 'lk_' | '' | 'gt_' | 'lt_';
 
 /**
+ * Configuration used to dynamically resolve the item associated with each value of a
+ * `LinidFilter`, for filters whose values are identifiers (e.g. UUIDs) and need additional
+ * information to be rendered in a human-readable way.
+ *
+ * It only describes *how* to retrieve the items: performing the requests is the responsibility of
+ * the consuming layer (such as the component displaying the filter values), never of `LinidFilter`
+ * or `LinidFilterValue`.
+ */
+export interface LinidFilterDynamicLabelOptions {
+  /**
+   * Whether to perform one request per filter value.
+   *
+   * Defaults to false, meaning that a single request is made for all values.
+   */
+  multipleRequests?: boolean;
+
+  /**
+   * URL template used to retrieve items.
+   *
+   * `{{value}}` is available when multipleRequests is true.
+   * `{{values}}` is available when multipleRequests is false.
+   */
+  url: string;
+
+  /**
+   * Path to the collection containing the returned items.
+   *
+   * Only used when multipleRequests is false.
+   */
+  responseItemsPath?: string;
+
+  /**
+   * Path to the value attribute within each returned item.
+   *
+   * Only used when multipleRequests is false.
+   */
+  valuePath?: string;
+}
+
+/**
  * Represents a user preference entry for a saved filter set in Linid.
  *
  * This object stores the minimal metadata required to identify and reconstruct

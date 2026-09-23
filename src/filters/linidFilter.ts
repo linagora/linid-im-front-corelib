@@ -26,6 +26,7 @@
 
 import {
   LINID_FILTER_OR_SEPARATOR,
+  type LinidFilterDynamicLabelOptions,
   type LinidFilterType,
 } from '../types/linidFilter';
 import { LinidFilterValue } from './linidFilterValue';
@@ -63,23 +64,33 @@ export class LinidFilter<T = Record<string, unknown>> {
   values: LinidFilterValue[];
 
   /**
+   * Configuration used to resolve the `item` of each value whose label can't be rendered from the
+   * raw value alone, such as an identifier. Performing the requests it describes is up to the
+   * consuming layer: this class only carries the configuration.
+   */
+  dynamicLabelOptions?: LinidFilterDynamicLabelOptions;
+
+  /**
    * Create a new filter.
    * @param name - Identifier of the filter.
    * @param type - Defines the filter category and expected behavior.
    * @param options - Configuration object of the filter, defined by the consumer.
    * @param values - List of applied filter values.
+   * @param dynamicLabelOptions - Configuration used to resolve the item of each value.
    */
   constructor(
     name: string,
     type: LinidFilterType,
     options: T,
-    values: LinidFilterValue[]
+    values: LinidFilterValue[],
+    dynamicLabelOptions?: LinidFilterDynamicLabelOptions
   ) {
     this.id = crypto.randomUUID();
     this.name = name;
     this.type = type;
     this.options = options;
     this.values = values;
+    this.dynamicLabelOptions = dynamicLabelOptions;
   }
 
   /**
@@ -88,19 +99,27 @@ export class LinidFilter<T = Record<string, unknown>> {
    * bare value expression only, never the `name=` query parameter prefix produced by
    * {@link LinidFilter.toString}.
    *
-   * `type`/`options` aren't derivable from `input`, so the result gets a placeholder `'text'`
-   * `type` and empty `options` (callers tracking a `LinidFilter` definition should only use the
-   * parsed `values`); `id` is auto generated as for any instance. A non-string `input` at runtime
-   * (this class is exported across Module Federation boundaries, where TypeScript cannot enforce
-   * the contract) is treated like an empty string: an empty `values` array, rather than throwing.
+   * `type`, `options` and `dynamicLabelOptions` aren't derivable from `input`: pass the filter
+   * `definition` declared in the configuration to carry them over, so that a filter restored from
+   * a URL or from a saved filter set behaves like the one the user applied — without it, dynamic
+   * labels can't be resolved and the values are rendered raw. When no `definition` is given, the
+   * result falls back to a placeholder `'text'` `type`, empty `options` and no
+   * `dynamicLabelOptions`. `name` is the query parameter key and always wins over
+   * `definition.name`; `id` is auto generated as for any instance.
+   *
+   * A non-string `input` at runtime (this class is exported across Module Federation boundaries,
+   * where TypeScript cannot enforce the contract) is treated like an empty string: an empty
+   * `values` array, rather than throwing.
    * @param name - Identifier of the filter.
    * @param input - The value expression, with values separated by `|`.
+   * @param definition - Filter definition to restore `type`, `options` and `dynamicLabelOptions` from.
    * @returns The parsed filter instance.
    * @template T - The type of options, defaults to Record<string, unknown>.
    */
   static fromString<T = Record<string, unknown>>(
     name: string,
-    input: string
+    input: string,
+    definition?: LinidFilter<T>
   ): LinidFilter<T> {
     const values =
       typeof input !== 'string' || input === ''
@@ -109,12 +128,19 @@ export class LinidFilter<T = Record<string, unknown>> {
             .split(LINID_FILTER_OR_SEPARATOR)
             .map((part) => LinidFilterValue.fromString(part));
 
-    return new LinidFilter<T>(name, 'text', {} as T, values);
+    return new LinidFilter<T>(
+      name,
+      definition?.type ?? 'text',
+      definition?.options ?? ({} as T),
+      values,
+      definition?.dynamicLabelOptions
+    );
   }
 
   /**
    * Reconstructs the filter as an HTTP query parameter value, ready to use with
-   * APIs powered by `spring-query-filter`.
+   * APIs powered by `spring-query-filter`. Items resolved through `dynamicLabelOptions` are
+   * display information only and never appear in the result.
    * @returns The query parameter string representation of the filter, e.g. `paris|not_lk_lyon`.
    */
   toString(): string {

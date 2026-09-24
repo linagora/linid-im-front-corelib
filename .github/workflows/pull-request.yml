@@ -90,9 +90,10 @@ jobs:
           echo '```' >> dependencies.txt
 
       - name: Comment PR
-        uses: JoseThen/comment-pr@v1.2.0
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
-          file_path: ./dependencies.txt
+          header: dependencies
+          path: ./dependencies.txt
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   check-style:
@@ -142,9 +143,10 @@ jobs:
           echo '```' >> coverage.txt
 
       - name: Comment PR
-        uses: JoseThen/comment-pr@v1.2.0
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
-          file_path: ./coverage.txt
+          header: coverage
+          path: ./coverage.txt
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   next-version-hint:
@@ -184,7 +186,8 @@ jobs:
 
       - name: Comment PR
         if: steps.semver.outputs.breaking == 'true'
-        uses: JoseThen/comment-pr@v1.2.0
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
-          file_path: ./semver-check.txt
+          header: semver
+          path: ./semver-check.txt
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

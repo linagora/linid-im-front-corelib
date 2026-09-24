@@ -110,7 +110,10 @@ export {
   LINID_FILTER_NEGATION_PREFIX,
   LINID_FILTER_OR_SEPARATOR,
 } from './types/linidFilter';
-export type { LinidFilterSetUserPreference } from './types/linidFilter';
+export type {
+  LinidFilterDynamicLabelOptions,
+  LinidFilterSetUserPreference,
+} from './types/linidFilter';
 
 // Types - Zones
 export type {

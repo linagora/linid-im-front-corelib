@@ -2,6 +2,22 @@ import { LinidFilterValue } from 'src/filters/linidFilterValue.ts';
 import { describe, expect, it } from 'vitest';
 
 describe('Test class: LinidFilterValue', () => {
+  describe('test constructor', () => {
+    it('stores the given resolved item', () => {
+      const item = { id: 123, name: 'Paris' };
+      const value = new LinidFilterValue(false, '', '123', item);
+
+      expect(value.value).toBe('123');
+      expect(value.item).toEqual(item);
+    });
+
+    it('leaves the item undefined when none is given', () => {
+      const value = new LinidFilterValue(false, '', '123');
+
+      expect(value.item).toBeUndefined();
+    });
+  });
+
   describe('test method: fromString', () => {
     it('parses a plain value with no operator and no negation', () => {
       const result = LinidFilterValue.fromString('paris');
@@ -49,6 +65,12 @@ describe('Test class: LinidFilterValue', () => {
       expect(result.isNegation).toBe(true);
       expect(result.operator).toBe('lk_');
       expect(result.value).toBe('paris');
+    });
+
+    it('leaves the item undefined, as it is not part of the expression', () => {
+      const result = LinidFilterValue.fromString('not_lk_paris');
+
+      expect(result.item).toBeUndefined();
     });
 
     it('keeps an empty value as-is', () => {
@@ -101,6 +123,15 @@ describe('Test class: LinidFilterValue', () => {
       const value = new LinidFilterValue(true, 'lk_', 'paris');
 
       expect(value.toString()).toBe('not_lk_paris');
+    });
+
+    it('ignores the resolved item', () => {
+      const value = new LinidFilterValue(false, '', '123', {
+        id: 123,
+        name: 'Paris',
+      });
+
+      expect(value.toString()).toBe('123');
     });
   });
 });

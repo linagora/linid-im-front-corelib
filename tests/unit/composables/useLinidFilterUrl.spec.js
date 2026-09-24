@@ -155,8 +155,32 @@ describe('Test composable: useLinidFilterUrl', () => {
 
       const result = getFiltersFromUrl(knownFilters);
 
-      expect(LinidFilter.fromString).toHaveBeenCalledWith('status', 'active');
+      expect(LinidFilter.fromString).toHaveBeenCalledWith(
+        'status',
+        'active',
+        knownFilters[0]
+      );
       expect(result).toEqual([{ name: 'status', value: 'active' }]);
+    });
+
+    it('should rebuild each filter from its own definition', () => {
+      route.query = { status: 'active', city: 'paris' };
+      const { getFiltersFromUrl } = useLinidFilterUrl(router, route);
+
+      const knownFilters = [createFilter('status', ''), createFilter('city', '')];
+
+      getFiltersFromUrl(knownFilters);
+
+      expect(LinidFilter.fromString).toHaveBeenCalledWith(
+        'status',
+        'active',
+        knownFilters[0]
+      );
+      expect(LinidFilter.fromString).toHaveBeenCalledWith(
+        'city',
+        'paris',
+        knownFilters[1]
+      );
     });
 
     it('should extract one filter per value when the query param is an array', () => {
@@ -171,12 +195,14 @@ describe('Test composable: useLinidFilterUrl', () => {
       expect(LinidFilter.fromString).toHaveBeenNthCalledWith(
         1,
         'status',
-        'active'
+        'active',
+        knownFilters[0]
       );
       expect(LinidFilter.fromString).toHaveBeenNthCalledWith(
         2,
         'status',
-        'pending'
+        'pending',
+        knownFilters[0]
       );
       expect(result).toEqual([
         { name: 'status', value: 'active' },

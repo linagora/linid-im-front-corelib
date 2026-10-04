@@ -75,9 +75,15 @@ export {
   deleteEntityById,
   getEntities,
   getEntityById,
+  resolveEntityAdapter,
   saveEntity,
   updateEntity,
 } from './services/linidEntityService';
+export {
+  DEFAULT_GRAPHQL_ENDPOINT,
+  graphqlEntityAdapter,
+} from './services/entityAdapters/graphqlEntityAdapter';
+export { restEntityAdapter } from './services/entityAdapters/restEntityAdapter';
 export {
   getModuleHostConfiguration,
   registerModuleHostConfiguration,
@@ -225,6 +231,21 @@ export type { ValidatorName } from './types/fieldValidation';
 
 // Types - Linid API
 export type { LinidApiErrorResponseBody } from './types/linidApi';
+export type { LinidEntityAdapter } from './types/linidEntityAdapter';
+export type {
+  LinidGraphqlApiConfiguration,
+  LinidGraphqlCreateOperation,
+  LinidGraphqlDeleteOperation,
+  LinidGraphqlError,
+  LinidGraphqlFindAllOperation,
+  LinidGraphqlFindByIdOperation,
+  LinidGraphqlIdType,
+  LinidGraphqlOperation,
+  LinidGraphqlPageMapping,
+  LinidGraphqlResponse,
+  LinidGraphqlUpdateOperation,
+  LinidGraphqlValidateOperation,
+} from './types/linidGraphql';
 
 // Types - DialogEvent
 export type { DialogEvent } from './types/dialogType';

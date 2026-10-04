@@ -626,6 +626,76 @@ This service provides a unified, module-aware way to manage backend CRUD operati
 
 ---
 
+### REST and GraphQL adapters
+
+Each operation is delegated to an adapter (`LinidEntityAdapter`) chosen from the module host configuration by `resolveEntityAdapter`:
+
+| Adapter                | Selected when                    | Transport                                                 |
+| ---------------------- | -------------------------------- | --------------------------------------------------------- |
+| `restEntityAdapter`    | No `graphql` key (default)       | REST calls on `apiEndpoint` (`GET`/`POST`/`PUT`/`DELETE`) |
+| `graphqlEntityAdapter` | A `graphql` configuration is set | `POST` of GraphQL documents on `graphql.endpoint`         |
+
+Both adapters use the shared Axios client (`getHttpClient`), so interceptors (authentication, base URL...) apply to both. REST and GraphQL modules can coexist in the same host.
+
+#### GraphQL configuration
+
+Each entity action is mapped to a GraphQL document; create, update and delete are typically mutations:
+
+```json
+{
+  "instanceId": "moduleUsers-instance",
+  "entity": "user",
+  "apiEndpoint": "",
+  "graphql": {
+    "endpoint": "/api/graphql",
+    "operations": {
+      "create": {
+        "document": "mutation CreateUser($input: UserInput!) { createUser(input: $input) { id name } }"
+      },
+      "update": {
+        "document": "mutation UpdateUser($id: ID!, $input: UserInput!) { updateUser(id: $id, input: $input) { id name } }"
+      },
+      "delete": {
+        "document": "mutation DeleteUser($id: ID!) { deleteUser(id: $id) }"
+      },
+      "findById": {
+        "document": "query User($id: ID!) { user(id: $id) { id name } }"
+      },
+      "findAll": {
+        "document": "query Users($filters: JSON, $pagination: PageInput) { users(filters: $filters, pagination: $pagination) { items { id name } total } }",
+        "pageMapping": { "content": "items", "totalElements": "total" }
+      },
+      "validate": {
+        "document": "mutation Validate($field: String!, $value: JSON) { validateUser(field: $field, value: $value) }"
+      }
+    }
+  }
+}
+```
+
+| Operation option                             | Default           | Description                                                                  |
+| -------------------------------------------- | ----------------- | ---------------------------------------------------------------------------- |
+| `endpoint`                                   | `/graphql`        | GraphQL endpoint, relative to the Axios base URL                             |
+| `document`                                   | —                 | GraphQL query or mutation sent as `query`                                    |
+| `operationName`                              | —                 | Sent as `operationName` when the document contains several operations        |
+| `resultPath`                                 | first root field  | Dot path of the result inside `data`                                         |
+| `variables`                                  | —                 | Static variables, merged with computed ones (computed ones win)              |
+| `inputVariable` (create/update)              | `input`           | Variable receiving the entity payload                                        |
+| `idVariable` (update/delete/findById)        | `id`              | Variable receiving the entity identifier                                     |
+| `idType` (update/delete/findById)            | `string`          | `number` sends the identifier as a number (`Int`, `Long`, `BigInteger`...)   |
+| `filtersVariable` (findAll)                  | `filters`         | Variable receiving the `QueryFilter` object; `null` sends each filter as a root variable |
+| `paginationVariable` (findAll)               | `pagination`      | Variable receiving `{ page, size, sort }`; `null` sends them as root variables           |
+| `pageMapping` (findAll)                      | —                 | Paths (`content`, `totalElements`, `number`, `size`) used to build `Page<T>` |
+| `fieldVariable` / `valueVariable` (validate) | `field` / `value` | Variables receiving the field name and value                                 |
+
+Without `pageMapping`, the `findAll` result must already match `Page<T>`, unless it is a plain list: the list is then used as the page content and, since no total is available, `totalElements` is estimated so that a next page is announced whenever the current page is full. When `pageMapping` has no `totalElements` value, the total is estimated the same way. When the `findAll` result is `null`, an empty page is returned. When the `findById` result is `null` (entity not found), the adapter rejects with a `404` `AxiosError`, as the REST adapter does. With `idType: "number"`, an identifier that is not a number (e.g. `''` or `'abc'`) is rejected before any request is sent. The `validate` operation is optional; without it, `validate` resolves and every value is considered valid.
+
+#### GraphQL errors
+
+When the response contains `errors`, the adapter throws an `AxiosError` whose `response.data` is a `LinidApiErrorResponseBody` built from the first error (`message`, `extensions.errorKey`, `extensions.errorContext`). This also applies when the server returns the GraphQL `errors` with an HTTP error status (e.g. `400`). The status comes from `extensions.status`, then from the HTTP error status, and defaults to `400`, so `useFieldValidation().validateFromApi` behaves the same with REST and GraphQL.
+
+---
+
 ## 🍍 Pinia Store Service
 
 Provides a singleton Pinia store instance shared across all modules, ensuring a unified state management context for the entire application.
@@ -1033,9 +1103,9 @@ setNestedValue(obj: PlainObject, path: string, value: unknown): PlainObject;
 
 #### Returns
 
-| Type          | Description                                    |
-| ------------- | ---------------------------------------------- |
-| `PlainObject` | A new object with the value set at the path    |
+| Type          | Description                                 |
+| ------------- | ------------------------------------------- |
+| `PlainObject` | A new object with the value set at the path |
 
 #### Behavior
 

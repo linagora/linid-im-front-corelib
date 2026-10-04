@@ -24,6 +24,7 @@
  * LinID Identity Manager software.
  */
 
+import type { LinidGraphqlApiConfiguration } from './linidGraphql';
 import type { ModuleLifecycleHooks } from './moduleLifecycle';
 
 /**
@@ -115,8 +116,15 @@ export interface ModuleHostConfig<T> {
   /**
    * Base URL for the module's API endpoints.
    * All API requests from the module should be prefixed with this endpoint.
+   * Used by the REST (OpenAPI) adapter.
    */
   apiEndpoint: string;
+
+  /**
+   * Optional GraphQL API configuration.
+   * When defined, entity operations use the GraphQL adapter instead of the REST `apiEndpoint`.
+   */
+  graphql?: LinidGraphqlApiConfiguration;
 
   /**
    * Base path (default route) for the module in the host application.

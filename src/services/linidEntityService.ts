@@ -24,9 +24,34 @@
  * LinID Identity Manager software.
  */
 
+import type { LinidEntityAdapter } from '../types/linidEntityAdapter';
+import type { ModuleHostConfig } from '../types/module';
 import type { Page, Pagination, QueryFilter } from '../types/page';
-import { getHttpClient } from './httpClientService';
+import { graphqlEntityAdapter } from './entityAdapters/graphqlEntityAdapter';
+import { restEntityAdapter } from './entityAdapters/restEntityAdapter';
 import { getModuleHostConfiguration } from './linidModuleConfigurationService';
+
+/**
+ * Selects the adapter matching the backend protocol of a module instance:
+ * GraphQL when a `graphql` configuration is provided, REST otherwise.
+ * @param configuration - Configuration of the module instance.
+ * @returns The entity adapter to use.
+ */
+export function resolveEntityAdapter(
+  configuration: ModuleHostConfig<unknown>
+): LinidEntityAdapter {
+  return configuration.graphql ? graphqlEntityAdapter : restEntityAdapter;
+}
+
+/**
+ * Returns the configuration and the adapter of a module instance.
+ * @param instanceId - The unique identifier of the module instance.
+ * @returns The module configuration and its entity adapter.
+ */
+function resolve(instanceId: string) {
+  const configuration = getModuleHostConfiguration<unknown>(instanceId);
+  return { configuration, adapter: resolveEntityAdapter(configuration) };
+}
 
 /**
  * Saves a new entity to the backend.
@@ -40,11 +65,8 @@ export async function saveEntity<T, Y>(
   instanceId: string,
   record: T
 ): Promise<Y> {
-  const configuration = getModuleHostConfiguration(instanceId);
-
-  return getHttpClient()
-    .post<Y>(`/${configuration.apiEndpoint}`, record)
-    .then(({ data }) => data);
+  const { configuration, adapter } = resolve(instanceId);
+  return adapter.save<T, Y>(configuration, record);
 }
 
 /**
@@ -61,11 +83,8 @@ export async function updateEntity<T, Y>(
   entityId: string,
   record: T
 ): Promise<Y> {
-  const configuration = getModuleHostConfiguration(instanceId);
-
-  return getHttpClient()
-    .put<Y>(`/${configuration.apiEndpoint}/${entityId}`, record)
-    .then(({ data }) => data);
+  const { configuration, adapter } = resolve(instanceId);
+  return adapter.update<T, Y>(configuration, entityId, record);
 }
 
 /**
@@ -81,13 +100,8 @@ export async function getEntities<T>(
   filters: QueryFilter,
   pagination: Pagination
 ): Promise<Page<T>> {
-  const configuration = getModuleHostConfiguration(instanceId);
-
-  return getHttpClient()
-    .get<Page<T>>(`/${configuration.apiEndpoint}`, {
-      params: { ...filters, ...pagination },
-    })
-    .then(({ data }) => data);
+  const { configuration, adapter } = resolve(instanceId);
+  return adapter.findAll<T>(configuration, filters, pagination);
 }
 
 /**
@@ -101,11 +115,8 @@ export async function getEntityById<T>(
   instanceId: string,
   entityId: string
 ): Promise<T> {
-  const configuration = getModuleHostConfiguration(instanceId);
-
-  return getHttpClient()
-    .get<T>(`/${configuration.apiEndpoint}/${entityId}`)
-    .then(({ data }) => data);
+  const { configuration, adapter } = resolve(instanceId);
+  return adapter.findById<T>(configuration, entityId);
 }
 
 /**
@@ -118,9 +129,8 @@ export async function deleteEntityById(
   instanceId: string,
   entityId: string
 ): Promise<void> {
-  const configuration = getModuleHostConfiguration(instanceId);
-
-  return getHttpClient().delete(`/${configuration.apiEndpoint}/${entityId}`);
+  const { configuration, adapter } = resolve(instanceId);
+  return adapter.delete(configuration, entityId);
 }
 
 /**
@@ -135,11 +145,6 @@ export async function validate(
   fieldName: string,
   fieldValue: unknown
 ): Promise<void> {
-  const configuration = getModuleHostConfiguration(instanceId);
-
-  await getHttpClient().post<void>(
-    `/${configuration.apiEndpoint}/validate/${fieldName}`,
-    fieldValue,
-    { headers: { 'Content-Type': 'application/json' } }
-  );
+  const { configuration, adapter } = resolve(instanceId);
+  await adapter.validate(configuration, fieldName, fieldValue);
 }

@@ -227,6 +227,13 @@ export interface ModuleHostConfig<T> {
   apiEndpoint: string;
 
   /**
+   * Optional GraphQL API configuration.
+   * When defined, entity operations use the GraphQL adapter instead of the REST `apiEndpoint`.
+   * See the Entity Service documentation for details.
+   */
+  graphql?: LinidGraphqlApiConfiguration;
+
+  /**
    * Base path (default route) for the module in the host application.
    * Used to mount the module at a specific route.
    */

@@ -1181,6 +1181,9 @@ export type TreeNodeType = {
 
   /** Default actions for nodes of this type. */
   actions?: string[];
+
+  /** Whether the nodes of this type can be selected. Defaults to true. */
+  selectable?: boolean;
 };
 ```
 
@@ -1190,6 +1193,7 @@ export type TreeNodeType = {
 import type { TreeNodeType } from '@linagora/linid-im-front-corelib';
 
 const nodeTypes: TreeNodeType[] = [
+  { type: 'root', selectable: false },
   { type: 'group', actions: ['import', 'export'] },
   { type: 'user', actions: ['view', 'edit', 'delete'] },
 ];

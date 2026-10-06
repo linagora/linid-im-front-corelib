@@ -64,4 +64,9 @@ export type TreeNodeType = {
    * Default actions associated with this node type.
    */
   actions?: string[];
+  /**
+   * Whether the nodes of this type can be selected. Defaults to true; when
+   * false, the nodes are still rendered and expandable, but not selectable.
+   */
+  selectable?: boolean;
 };

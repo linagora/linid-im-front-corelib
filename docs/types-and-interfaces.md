@@ -403,6 +403,7 @@ customized by consumers.
 | `TextArea`    | Multi-line text input (QInput textarea) |
 | `Email`       | Email input (QInput email)              |
 | `File`        | File picker (QFile)                     |
+| `Tree`        | Tree node picker (QTree)                |
 
 > **Note:** The available input types depend on the inputs defined in `linid-im-front-community-plugins`. Custom plugins
 > can extend these types.
@@ -427,7 +428,8 @@ interface LinidAttributeConfiguration<T = Record<string, unknown>> {
     | 'DynamicList'
     | 'TextArea'
     | 'Email'
-    | 'File';
+    | 'File'
+    | 'Tree';
   inputSettings: T;
 }
 ```
@@ -1640,7 +1642,7 @@ const filterSet = LinidFilterSet.fromString(
 | `FederatedModule`               | Defines the structure of a federated component module                                            |
 | `ModuleHostConfig`              | Configuration provided to remote modules                                                         |
 | `RemoteModule`                  | Defines the structure of a remote module                                                         |
-| `AttributeInputType`            | Union of input types: Text, Number, Boolean, Date, List, DynamicList, TextArea, Email, File      |
+| `AttributeInputType`            | Input type union: Text, Number, Boolean, Date, List, DynamicList, TextArea, Email, File, Tree    |
 | `LinidAttributeConfiguration`   | Generic interface describing an entity attribute                                                 |
 | `ValidatorName`                 | Available validator names for field validation                                                   |
 | `LinidEntityConfiguration`      | Describes an entity and its attributes                                                           |

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.106](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.105...v0.0.106) (2026-10-08)
+
+
+### Features
+
+* add dynamic label resolution for filter values ([eff876b](https://github.com/linagora/linid-im-front-corelib/commit/eff876b85ced20eefefeb3e14e65f5d8d95b491c))
+
 ### [0.0.105](https://github.com/linagora/linid-im-front-corelib/compare/v0.0.104...v0.0.105) (2026-10-06)
 
 
